@@ -1,0 +1,48 @@
+
+\usepackage{lmodern}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+
+\usepackage{xspace}
+\newcommand{\ie}[0]{{\em i.e.},\xspace}
+\newcommand{\vs}[0]{{\em vs.}\xspace}
+\newcommand{\eg}[0]{{\em e.g.},\xspace}
+\newcommand{\etal}[0]{{\em et al.}\xspace}
+\newcommand{\wrt}[0]{{\em w.r.t.}\xspace}
+\newcommand{\aka}[0]{{\em a.k.a.}\xspace}
+\newcommand{\via}[0]{{\em via}\xspace}
+\newcommand{\mad}[0]{Madeus\xspace}
+\newcommand{\implem}[0]{PoC\xspace}
+\newcommand{\llc}{L\textsuperscript{2}C\xspace}
+\newcommand{\net}[0]{\emph{internal-net}\xspace}
+
+\usepackage{caption}
+
+\usepackage{hyperref}
+\usepackage{url}
+
+\usepackage[textwidth=17mm]{todonotes}
+\newcommand{\customtodo}[4]{
+        \todo[color=#2,inline,size=\small]{
+                \ifx&#3&
+                        \textbf{#1} #4
+                \else
+                        \textbf{#1$\Rightarrow$#3} #4
+                \fi
+        }
+}
+\newcommand{\MC}[2][]{\customtodo{MC}{red!50}{#1}{#2}}
+\newcommand{\HC}[2][]{\customtodo{HC}{red!20}{#1}{#2}}
+\newcommand{\CP}[2][]{\customtodo{CP}{blue!20}{#1}{#2}}
+\newcommand{\DP}[2][]{\customtodo{DP}{blue!50}{#1}{#2}}
+\newcommand{\CS}[2][]{\customtodo{CS}{green!20}{#1}{#2}}
+
+\usepackage{subfig}
+\usepackage{amsmath}
+\usepackage{bbding}
+\usepackage{pifont}
+\usepackage{wasysym}
+\usepackage{amssymb}
+\usepackage{booktabs} % For formal tables
+

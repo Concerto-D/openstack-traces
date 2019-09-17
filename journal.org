@@ -1,0 +1,44 @@
+
+* TODO Choisir un journal                              :dim:hélène:christian:
+** TODO Vérifier journaux "Distributed Systems" FGCS, TPDS             :dim:
+** TODO Vérifier journaux "Software Engineering" JSS, TSE           :hélène:
+
+
+* TODO Créer 2 repo git                                                 :dim:
+** Rédaction journal
+** Expérimentations
+
+
+* Plan
+** TODO Introduction                                            :dim:hélène:
+** TODO Related works                                  :dim:hélène:maverick:
+DEADLINE: <2019-09-13 ven.>
+** TODO Overview                                                :dim:hélène:
+DEADLINE: <2019-09-27 ven.>
+** TODO Formal model                                       :maverick:hélène:
+DEADLINE: <2019-09-20 ven.>
+** TODO Performance model                                  :maverick:hélène:
+DEADLINE: <2019-09-20 ven.>
+** TODO Experiments
+**** TODO Prototype evaluation                         :maverick:charlene:
+DEADLINE: <2019-09-20 ven.>
+**** TODO Theoretical performance model evaluation     :maverick:charlene:
+DEADLINE: <2019-09-20 ven.>
+**** TODO Use case 1: OpenStack                             :dim:charlene:
+DEADLINE: <2019-10-18 ven.>
+***** TODO Finir la ré-écriture en Concerto                         :dim:
+DEADLINE: <2019-10-04 ven.>
+****** TODO Relancer les benchs d'antan, avec timer de tâches      
+****** TODO Vérifier conformité théorique                     :maverick:
+- sans SPMD à priori
+***** Concerto                                                 :charlene:
+****** TODO Squelette en Concerto/Madeus
+****** TODO enoslib pour résa vagrant/g5k                 :dim:matthieu:
+****** TODO Lancement des playbooks                                :dim:
+****** TODO Vérifier conformité théorique                     :maverick:
+***** Squelette Aeolus                                         :charlene:
+****** TODO Idem
+****** TODO Vérifier conformité théorique                     :maverick:
+**** TODO Use case 2: (Spark ?)                             :dim:charlene:
+** TODO Conclusion                                              :dim:hélène:
+

@@ -1,0 +1,92 @@
+
+\documentclass[preprint, 12pt]{elsarticle}
+
+\input{header.tex}
+
+\journal{Journal of Systems and Software}
+
+\begin{document}
+
+\begin{frontmatter}
+
+\title{Madeus}
+
+\author[label1]{Maverick Chardet}
+\ead{maverick.chardet@inria.fr}
+\author[label1]{Hélène Coullon}
+\author[label1]{Dimitri Pertin}
+\author[label1]{Charlène Servantie}
+%\ead{\{maverick.chardet, helene.coullon, christian.perez, \
+%       dimitri.pertin, charlene.servantie\}@inria.fr}
+\address[label1]{IMT Atlantique, Inria, LS2N, UBL, F-44307 Nantes, France}
+
+\author[label2]{Christian Perez}
+\address[label2]{Univ. Lyon, Inria, CNRS, ENS de Lyon, UCBL 1, LIP, Lyon, France}
+
+
+\begin{abstract}
+\end{abstract}
+
+\begin{keyword}
+Science \sep Publication \sep Complicated
+\end{keyword}
+
+\end{frontmatter}
+
+
+%-------------------------------------------------------
+\section{Introduction}
+\label{sec:introduction}
+%-------------------------------------------------------
+\input{introduction.tex}
+
+%-------------------------------------------------------
+\section{Related Work}
+\label{sec:related_work}
+%-------------------------------------------------------
+\input{related_work.tex}
+
+%-------------------------------------------------------
+\section{The \mad model}
+\label{sec:mad_model}
+%-------------------------------------------------------
+\input{mad_model.tex}
+
+%-------------------------------------------------------
+\section{The formal model}
+\label{sec:forma_model}
+%-------------------------------------------------------
+\input{formal_model.tex}
+
+%-------------------------------------------------------
+\section{The performance model}
+\label{sec:perf_model}
+%-------------------------------------------------------
+\input{perf_model.tex}
+
+%-------------------------------------------------------
+\section{Evaluations}
+\label{sec:evaluations}
+%-------------------------------------------------------
+\input{evaluations.tex}
+
+%-------------------------------------------------------
+\section{Conclusion}
+\label{sec:conc}
+%-------------------------------------------------------
+\input{conclusion.tex}
+
+
+%% \section*{Acknowledgment}
+
+%% Experiments presented in this paper were carried out using the
+%% Grid'5000 testbed, supported by a scientific interest group hosted by
+%% Inria and including CNRS, RENATER and several Universities as well as
+%% other organizations (see \url{https://www.grid5000.fr}).
+
+% ---- Bibliography ----
+\bibliographystyle{elsarticle-num-names}
+% \bibliography{sigproc} 
+\bibliography{main}
+
+\end{document}
