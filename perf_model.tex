@@ -74,19 +74,19 @@ V_{transitions}=\bigcup_{\theta^{\prime}\in\Theta_{all}^{\prime}}\left\{ \left(\
 For each data (use or provide) port we associate one vertex representing
 its activation. 
 \[
-V_{use}=\bigcup_{u\in\left(D_{u}\right)_{all}\cup\left(D_{p}\right)_{all}}\left\{ \left(u,\text{start}\right)\right\} 
+V_{data}=\bigcup_{u\in\left(D_{u}\right)_{all}\cup\left(D_{p}\right)_{all}}\left\{ \left(u,\text{start}\right)\right\} 
 \]
 
 For each service (use or provide) port we associate two vertices:
 one representing its activation and one its deactivation. 
 \[
-V_{provide}=\bigcup_{p\in\left(P_{u}\right)_{all}\cup\left(P_{p}\right)_{all}}\left\{ \left(p,\text{start}\right),\left(p,\text{stop}\right)\right\} 
+V_{service}=\bigcup_{p\in\left(P_{u}\right)_{all}\cup\left(P_{p}\right)_{all}}\left\{ \left(p,\text{start}\right),\left(p,\text{stop}\right)\right\} 
 \]
 
 Finally, we define $V$ as the union of all these, plus one source
 and one sink vertices. 
 \[
-V=V_{places}\cup V_{transitions}\cup V_{use}\cup V_{provide}\cup\left\{ \text{source},\text{sink}\right\} 
+V=V_{places}\cup V_{transitions}\cup V_{data}\cup V_{service}\cup\left\{ \text{source},\text{sink}\right\} 
 \]
 
 
