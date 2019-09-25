@@ -1,0 +1,182 @@
+In this section, we present Madeus' performance model. Its goal is,
+given the execution time of all the transitions of all the components
+in an assembly, to predict the total deployment time of this assembly.
+By generating a graph modelling the execution flow of a Madeus assembly,
+capturing both intra-component and inter-component dependencies, we
+reduce this problem to finding the longest path in a DAG.
+
+\subsection{Notations}
+
+For a component, its set of places $\Pi$, its set of transitions
+$\Theta$, its $place$ mapping function and its set of groups $G$
+we consider:
+\begin{itemize}
+\item the \emph{time function} $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$
+associating a running time to each transition (taken as input)
+\item the set of \emph{relaxed transitions $\Theta^{\prime}=\left\{ relax\left(\theta\right)\,\mid\,\theta\in\Theta\right\} $
+}where $relax\left(\left(d_{o},d_{i}\right)\right)$ = $\left(place\left(d_{o}\right),place\left(d_{i}\right)\right)$
+\item the \emph{relaxed time function} $time^{\prime}\,:\,\Theta^{\prime}\rightarrow\mathbb{R}^{+}$
+such that $time\left(\left(d_{o},d_{i}\right)\right)=t\implies time^{\prime}\left(place\left(d_{o}\right),place\left(d_{i}\right)\right)=t$
+\item the set of\emph{ relaxed service use bindings} $B_{P_{u}}^{\prime}=\left\{ \left(p,relax\left(\theta\right)\right)\,\mid\,\left(p,\theta\right)\in B_{P_{u}}\right\} $
+\item the set of \emph{relaxed data use bindings} $B_{D_{u}}^{\prime}=\left\{ \left(d,relax\left(\theta\right)\right)\,\mid\,\left(d,\theta\right)\in B_{D_{u}}\right\} $
+\item the \emph{group entry function} $g_{in}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)\,g\mapsto\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{b}\,:\,\left(\pi_{b}\not\in g\land\left(\pi_{b},\pi\right)\in\Theta^{\prime}\right)\right\} $
+(the result of $g_{in}$ is called the set of \emph{entry places}
+of the group)
+\item the \emph{group exit function} $g_{out}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)g\mapsto\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{a}\,:\,\left(\pi_{a}\not\in g\land\left(\pi,\pi_{a}\right)\in\Theta^{\prime}\right)\right\} $
+(the result of $g_{out}$ is called the set of \emph{exit places}
+of the group)
+\end{itemize}
+For an assembly $\left(C,L_{P},L_{D},ebl\right)$ with $C=\bigcup_{i=1}^{n}\left\{ \left(\Pi_{i},\Delta_{i}\dots,\left(B_{D_{p}}\right)_{i}\right)\right\} $
+we consider:
+\begin{itemize}
+\item $\Pi_{all}=\bigcup_{i=1}^{n}\Pi_{i}$ (set of all \emph{places} in
+the assembly)
+\item $G_{all}=\bigcup_{i=1}^{n}G_{i}$ (set of all \emph{groups})
+\item ... (same for all elements of the $C$ tuple)
+\item $\Theta_{all}^{\prime}=\bigcup_{i=1}^{n}\Theta_{i}^{\prime}$ (set
+of all \emph{relaxed transitions})
+\item $\left(B_{P_{u}}^{\prime}\right)_{all}=\bigcup_{i=1}^{n}\left(B_{P_{u}}^{\prime}\right)_{i}$
+(set of\emph{ relaxed service use bindings)}
+\item $\left(B_{D_{u}}^{\prime}\right)_{all}=\bigcup_{i=1}^{n}\left(B_{D_{u}}^{\prime}\right)_{i}$
+(set of \emph{relaxed data use bindings)}
+\item $\left(time^{\prime}\right)_{all}\,:\,\Theta_{all}^{\prime}\rightarrow\mathbb{R}^{+}$
+(function giving the \emph{running time} of each transition) with:
+$\left(time^{\prime}\right)_{all}\left(x\right)=\left(time^{\prime}\right)_{i}\left(x\right)$
+if $x\in\Theta_{i}^{\prime}$ 
+\item $\left(g_{in}\right)_{all}\,:\,G_{all}\rightarrow\bigcup_{i=1}^{n}\mathcal{P}\left(\Pi_{i}\right)$
+(function giving the \emph{entry places} of any group in the assembly)
+with: $\left(g_{in}\right)_{all}\left(x\right)=\left(g_{in}\right)_{i}\left(x\right)$
+if $x\in G_{i}$ 
+\item $\left(g_{out}\right)_{all}\,:\,G_{all}\rightarrow\bigcup_{i=1}^{n}\mathcal{P}\left(\Pi_{i}\right)$
+(function giving the \emph{exit places }of any group in the assembly)
+with: $\left(g_{out}\right)_{all}\left(x\right)=\left(g_{out}\right)_{i}\left(x\right)$
+if $x\in G_{i}$ 
+\end{itemize}
+The execution flow graph is an oriented weighted graph \emph{$\left(V,A\right)$}
+where $V$ is the set of vertices and $A$ is the multiset of weighted
+arcs with elements in $V\times V\times\mathbb{R}^{+}$. We define
+$V$ an $A$ in the following.
+
+\subsection{Vertices}
+
+For each place, we associate two vertices: one representing the place
+itself and one representing the action of a token leaving the place.
+\[
+V_{places}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(\pi,\text{place}\right),\left(\pi,\text{leaving}\right)\right\} 
+\]
+
+For each transition, we associate two vertices: one representing the
+beginning of the transition and one representing its end. 
+\[
+V_{transitions}=\bigcup_{\theta^{\prime}\in\Theta_{all}^{\prime}}\left\{ \left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right)\right\} 
+\]
+
+For each data (use or provide) port we associate one vertex representing
+its activation. 
+\[
+V_{use}=\bigcup_{u\in\left(D_{u}\right)_{all}\cup\left(D_{p}\right)_{all}}\left\{ \left(u,\text{start}\right)\right\} 
+\]
+
+For each service (use or provide) port we associate two vertices:
+one representing its activation and one its deactivation. 
+\[
+V_{provide}=\bigcup_{p\in\left(P_{u}\right)_{all}\cup\left(P_{p}\right)_{all}}\left\{ \left(p,\text{start}\right),\left(p,\text{stop}\right)\right\} 
+\]
+
+Finally, we define $V$ as the union of all these, plus one source
+and one sink vertices. 
+\[
+V=V_{places}\cup V_{transitions}\cup V_{use}\cup V_{provide}\cup\left\{ \text{source},\text{sink}\right\} 
+\]
+
+
+\subsection{Arcs}
+
+For each transition, we associate three arcs: one representing the
+transition itself, one linking the \emph{leaving} vertex of the source
+place to the beginning of the transition and one linking the \emph{end}
+vertex of the transition to the the \emph{place} vertex of the destination
+place. 
+\begin{align*}
+A_{transitions}=\bigcup_{\theta^{\prime}=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}^{\prime}}\{ & \left(\left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right),time_{all}^{\prime}\left(\theta^{\prime}\right)\right),\\
+ & \left(\left(\pi_{s},\text{leaving}\right),\left(\theta^{\prime},\text{beginning}\right),0\right),\\
+ & \left(\left(\theta^{\prime},\text{end}\right),\left(\pi_{d},\text{place}\right),0\right)\}
+\end{align*}
+
+For each data use binding we associate one arc going from the \emph{start}
+vertex of the port to the \emph{beginning} vertex of the transition.
+\[
+A_{D_{u}}=\bigcup_{\left(p,\theta^{\prime}\right)\in\left(B_{D_{u}}^{\prime}\right)_{all}}\left\{ \left(\left(p,\text{start}\right),\left(\theta^{\prime},\text{beginning}\right),0\right)\right\} 
+\]
+
+For each data provide binding we associate one arc going from the
+\emph{place} vertex of the place to the \emph{start} vertex of the
+port. 
+\[
+A_{D_{p}}=\bigcup_{\left(p,\pi\right)\in\left(B_{D_{p}}\right)_{all}}\left\{ \left(\left(\pi,\text{place}\right),\left(p,\text{start}\right),0\right)\right\} 
+\]
+
+For each service use binding we associate two arcs: one going from
+the \emph{start} vertex of the port to the \emph{beginning} vertex
+of the transition and one going from the \emph{end} vertex of the
+transition to the \emph{stop} vertex of the port. 
+\[
+A_{P_{u}}=\bigcup_{\left(p,\theta^{\prime}\right)\in\left(B_{P_{u}}^{\prime}\right)_{all}}\left\{ \left(\left(p,\text{start}\right),\left(\theta^{\prime},\text{beginning}\right),0\right),\left(\left(\theta^{\prime},\text{end}\right),\left(p,\text{stop}\right),0\right)\right\} 
+\]
+
+For each service provide binding we associate two types of arcs: first,
+one arc going from the \emph{place} vertex of each entry place of
+the group to the \emph{start} vertex of the port; second, for each
+exit place of the group, one arc going from the \emph{stop} vertex
+of the port to the \emph{leaving} vertex of the exit place. 
+\begin{align*}
+A_{P_{p}}=\bigcup_{\left(p,g\right)\in\left(B_{P_{p}}\right)_{all}} & \left( \bigcup_{\pi\in\left(g_{in}\right)_{all}\left(g\right)}\left\{ \left(\left(\pi,\text{place}\right),\left(p,\text{start}\right),0\right)\right\} \cup \right. \\
+ & \left. \bigcup_{\pi\in\left(g_{out}\right)_{all}\left(g\right)}\left\{ \left(\left(p,\text{stop}\right),\left(\pi,\text{leaving}\right),0\right)\right\} \right)
+\end{align*}
+
+For each data connection in the assembly, we associate one arc going
+from the \emph{start} vertex of the data provide port to the \emph{start}
+vertex of the data use port. 
+\[
+A_{L_{D}}=\bigcup_{\left(p,u\right)\in L_{D}}\left\{ \left(\left(p,\text{start}\right),\left(u,\text{start}\right),0\right)\right\} 
+\]
+
+For each service connection in the assembly, we associate two arcs:
+one arc going from the \emph{start} vertex of the service provide
+port to the \emph{start} vertex of the service use port, and one arc
+going from the \emph{stop} vertex of the service use port to the \emph{stop}
+vertex of the service provide port. 
+\[
+A_{L_{P}}=\bigcup_{\left(p,u\right)\in L_{P}}\left\{ \left(\left(p,\text{start}\right),\left(u,\text{start}\right),0\right),\left(\left(u,\text{stop}\right),\left(p,\text{stop}\right),0\right)\right\} 
+\]
+
+For each initial place we associate one arc going from the \emph{source}
+vertex to the \emph{place} vertex of the place. 
+\[
+A_{I}=\bigcup_{\pi\in I_{all}}\left\{ \left(\text{source},\left(\pi,\text{place}\right),0\right)\right\} 
+\]
+
+In addition to the set of all initial places $I_{all}$, we define
+the set of all final places $F_{all}$ as the set of places which
+do not have any outgoing transition. Formally, $F_{all}=\left\{ \pi\,\mid\,\pi\in\Pi_{all}\land\lnot\left(\exists\pi_{a}\in\Pi_{all}\,:\,\left(\pi,\pi_{a}\right)\in\Theta_{all}^{\prime}\right)\right\} $.
+Then, for each final place we associate one arc going from the \emph{place}
+vertex of the place to the \emph{sink} vertex. 
+\[
+A_{F}=\left\{ \left(\pi,\text{place}\right),\text{sink},0\right\} 
+\]
+
+Finally, we define $A$ as the union of all of these. 
+\[
+A=A_{transitions}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\cup A_{L_{D}}\cup A_{L_{P}}\cup A_{I}\cup A_{F}
+\]
+
+
+\subsection{Time prediction}
+
+We define the time prediction of the execution of the Madeus assembly
+to be the length of the longest path between the \emph{source} vertex
+and the \emph{sink} vertex in the graph $\left(V,A\right)$. This
+path exists as long as the internal-nets of all the components are
+individually connected, and is finite because there can be no loop
+in internal-nets and the execution times considered for the transitions
+are finite.
