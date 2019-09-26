@@ -92,6 +92,12 @@ V=V_{places}\cup V_{transitions}\cup V_{data}\cup V_{service}\cup\left\{ \text{s
 
 \subsection{Arcs}
 
+For each place we associate one arc going from the \emph{place} vertex of
+the place to the \emph{leaving} vertex of the place.
+\[
+A_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(\left(\pi,\text{place}\right),\left(\pi,\text{leaving}\right),0\right)\right\} 
+\]
+
 For each transition, we associate three arcs: one representing the
 transition itself, one linking the \emph{leaving} vertex of the source
 place to the beginning of the transition and one linking the \emph{end}
