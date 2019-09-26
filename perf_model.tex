@@ -62,13 +62,13 @@ $V$ an $A$ in the following.
 For each place, we associate two vertices: one representing the place
 itself and one representing the action of a token leaving the place.
 \[
-V_{places}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(\pi,\text{place}\right),\left(\pi,\text{leaving}\right)\right\} 
+V_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(\pi,\text{place}\right),\left(\pi,\text{leaving}\right)\right\} 
 \]
 
 For each transition, we associate two vertices: one representing the
 beginning of the transition and one representing its end. 
 \[
-V_{transitions}=\bigcup_{\theta^{\prime}\in\Theta_{all}^{\prime}}\left\{ \left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right)\right\} 
+V_{\Theta}=\bigcup_{\theta^{\prime}\in\Theta_{all}^{\prime}}\left\{ \left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right)\right\} 
 \]
 
 For each data (use or provide) port we associate one vertex representing
@@ -86,7 +86,7 @@ V_{service}=\bigcup_{p\in\left(P_{u}\right)_{all}\cup\left(P_{p}\right)_{all}}\l
 Finally, we define $V$ as the union of all these, plus one source
 and one sink vertices. 
 \[
-V=V_{places}\cup V_{transitions}\cup V_{data}\cup V_{service}\cup\left\{ \text{source},\text{sink}\right\} 
+V=V_{\Pi}\cup V_{\Theta}\cup V_{data}\cup V_{service}\cup\left\{ \text{source},\text{sink}\right\} 
 \]
 
 
@@ -104,7 +104,7 @@ place to the beginning of the transition and one linking the \emph{end}
 vertex of the transition to the the \emph{place} vertex of the destination
 place. 
 \begin{align*}
-A_{transitions}=\bigcup_{\theta^{\prime}=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}^{\prime}}\{ & \left(\left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right),time_{all}^{\prime}\left(\theta^{\prime}\right)\right),\\
+A_{\Theta}=\bigcup_{\theta^{\prime}=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}^{\prime}}\{ & \left(\left(\theta^{\prime},\text{beginning}\right),\left(\theta^{\prime},\text{end}\right),time_{all}^{\prime}\left(\theta^{\prime}\right)\right),\\
  & \left(\left(\pi_{s},\text{leaving}\right),\left(\theta^{\prime},\text{beginning}\right),0\right),\\
  & \left(\left(\theta^{\prime},\text{end}\right),\left(\pi_{d},\text{place}\right),0\right)\}
 \end{align*}
@@ -173,7 +173,7 @@ A_{F}=\left\{ \left(\pi,\text{place}\right),\text{sink},0\right\}
 
 Finally, we define $A$ as the union of all of these. 
 \[
-A=A_{transitions}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\cup A_{L_{D}}\cup A_{L_{P}}\cup A_{I}\cup A_{F}
+A=A_\Pi\cup A_{\Theta}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\cup A_{L_{D}}\cup A_{L_{P}}\cup A_{I}\cup A_{F}
 \]
 
 
