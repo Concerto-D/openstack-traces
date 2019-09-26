@@ -1,44 +1,187 @@
 
-* TODO Choisir un journal                              :dim:hélène:christian:
-** TODO Vérifier journaux "Distributed Systems" FGCS, TPDS             :dim:
-** TODO Vérifier journaux "Software Engineering" JSS, TSE           :hélène:
+* Rédaction article / Plan
 
+** WIP Introduction                                             :dim:hélène:
+(dim) Plupart des éléments en notes
+(ln) il m'a semblé dans les différents tests que j'ai pu faire (présentation,
+rédaction) que "software commissioning" au lieu de "deployment" était mieux
+compris et interprété, il faudra faire attention au choix des mots
+(ln) j'en ai touché 2 mots à Christian à Lyon et il est 100% d'accord pour un
+argumentaire autour de l'intégration continue et aussi (mais impact moins fort)
+autour des expérimentations
+(ln) reflexion en cours, devrait-on se positionner par rapport à Jenkins ou
+d'autre outils d'automatisation de CI ? ils ne s'intéressent pas à programmer
+des déploiements efficaces
 
-* TODO Créer 2 repo git                                                 :dim:
-** Rédaction journal
-** Expérimentations
-
-
-* Plan
-** TODO Introduction                                            :dim:hélène:
-** TODO Related works                                  :dim:hélène:maverick:
+** WIP Related works                                   :dim:hélène:maverick:
 DEADLINE: <2019-09-13 ven.>
+(dim) En cours - pas encore les idées claires, encore pas mal de boulot
+(ln) je pense t'aider sur cette partie, Maverick pourra aider aussi ça fait
+parti de son état de l'art :)
+(ln) cf l. 11 pour reflexion
+
 ** TODO Overview                                                :dim:hélène:
 DEADLINE: <2019-09-27 ven.>
+Pas beaucoup de travail a faire par rapport à Middleware
+
 ** TODO Formal model                                       :maverick:hélène:
 DEADLINE: <2019-09-20 ven.>
-** TODO Performance model                                  :maverick:hélène:
+(ln) pas encore bien réfléchi à comment présenter les choses, sans doute moins
+formellement que 4pad mais plus formellement que Middleware ;)
+(maverick) il faudrait au moins utiliser le même nom que dans 4pad pour les
+ensembles (je me base dessus pour le modèle de perf), les règles de sémantique
+pas besoin
+
+** WIP Performance model                                   :maverick:hélène:
 DEADLINE: <2019-09-20 ven.>
+DONE (maverick) modèle
+TODO urgent : figures pour illustrer les règles du modèle
+TODO quand possible : running example (basé sur les exemples utilisés dans les
+sections d'avant)
+(hélène) relecture
+
 ** TODO Experiments
-**** TODO Prototype evaluation                         :maverick:charlene:
+**** WIP Prototype evaluation                          :maverick:charlene:
 DEADLINE: <2019-09-20 ven.>
-**** TODO Theoretical performance model evaluation     :maverick:charlene:
+(maverick) TODO urgent : cas SSH à coder, lancer les expés
+
+**** WIP Theoretical performance model evaluation      :maverick:charlene:
 DEADLINE: <2019-09-20 ven.>
+(dim) DONE: donner les schémas d'assemblage à Charlène
+(dim) DONE: donner les temps des transitions en format lisible (par un
+ordinateur) structuré
+(charlène) TODO: 2 assemblages concerto (seq_1t, dag_2t) définition
+(https://gitlab.inria.fr/cservant/lab-openstack-concerto)
+(maverick) TODO : finir l'algo, appliquer l'algo sur l'assemblage
+
 **** TODO Use case 1: OpenStack                             :dim:charlene:
 DEADLINE: <2019-10-18 ven.>
-***** TODO Finir la ré-écriture en Concerto                         :dim:
-DEADLINE: <2019-10-04 ven.>
-****** TODO Relancer les benchs d'antan, avec timer de tâches      
-****** TODO Vérifier conformité théorique                     :maverick:
-- sans SPMD à priori
-***** Concerto                                                 :charlene:
-****** TODO Squelette en Concerto/Madeus
-****** TODO enoslib pour résa vagrant/g5k                 :dim:matthieu:
-****** TODO Lancement des playbooks                                :dim:
-****** TODO Vérifier conformité théorique                     :maverick:
-***** Squelette Aeolus                                         :charlene:
-****** TODO Idem
-****** TODO Vérifier conformité théorique                     :maverick:
-**** TODO Use case 2: (Spark ?)                             :dim:charlene:
-** TODO Conclusion                                              :dim:hélène:
 
+***** TODO Finir la ré-écriture en Concerto
+DEADLINE: <2019-10-04 ven.>
+
+****** Enos kolla-ansible                                          :dim:
+******* DONE Relancer les benchs d'antan, avec timer de tâches
+******* WIP Vérifier conformité théorique                    :maverick:
+Sans SPMD à priori
+    (ln) oui le SPMD est caché dans les composants donc pas intercepté par
+    Concerto/Madeus, il est géré par Ansible directement (trop compliqué de
+    faire autrement)
+    mais je pense que ce n'est pas grave si on le compte pour personne (ni
+    Ansible, ni Aeolus, ni Concerto - 1 seul composant au lieu de N pour N
+    hosts)
+
+****** Concerto                                               :charlene:
+******* DONE Squelette en Concerto/Madeus
+(ln) il me semble que c'est fait pour l'assemblage Concerto (inter+intra
+parallelism - dag-nt4)
+    c'était le squelette que je t'avais donné Charlène oui!
+
+******* DONE enoslib pour résa vagrant/g5k               :dim:matthieu:
+******* WIP Lancement des playbooks                               :dim:
+******* WIP Vérifier conformité théorique                    :maverick:
+
+****** Squelette Aeolus                                       :charlene:
+******* TODO Idem
+(ln) Charlène il s'agit juste d'enlever l'intra-parallelism (au sein d'un
+composant)
+    donc merge de transitions qui deviennent séquentielles
+
+******* TODO Vérifier conformité théorique                   :maverick:
+
+****** Squelette Ansible                                      :charlene:
+******* TODO Idem
+(ln) Charlène il s'agit cette fois d'avoir une seule transition qui lance le
+playbook de départ de Kolla-ansible et de faire des dépendances séquentielles
+entre les composants
+******* TODO Vérifier conformité théorique
+
+**** WIP Use case 2: (Spark ?)                       :dim:charlene:hélène:
+(ln) je suis montée à 30 noeuds pour tester et ça devient intéressant en terme
+de gain car le temps du kadeploy (qu'on ne peut pas améliorer) devient
+négligeable par rapport au temps total de déploiement
+
+    1126s hors kadeploy (kadeploy = 318s)
+
+(ln) il faut que j'écrive une première version concerto pour tester les gains
+
+    le problème qu'on pourrait avoir sur ce use-case par rapport au théorique
+    c'est que c'est principalement du parallélisme sur du transfert scp, si on
+    sature la bdw on atteindra pas le gain théorique
+
+    à voir aussi si on observera pas cette limite sur les Docker pull parallèles
+    de OpenStack
+
+    - approfondir les outils de monitoring ?
+    - oui peut être, il faudrait savoir expliquer la différence si il y en a une
+      en tout cas
+
+    + après sur le cas OpenStack il suffit de montrer que ça n'arrive pas avec
+      la version cached du déploiement pour montrer que c'est bien la limite de
+      bdw qui pose pb sans aller sur des outils de monitoring 
+
+    + on avisera en fonction des premiers résultats
+
+** TODO Conclusion                                              :dim:hélène:
+TBD
+
+
+* Benchmark OpenStack
+DEADLINE: <2019-09-27 ven.>
+
+1. [ ] Our script uses /enoslib/ to reserve and provision machines from a given
+   configuration
+
+   1. [ ] Deploy the following infrastructure on vagrant and g5k      :dim:
+      - enos-0: server to run concerto/madeus
+        - enos-1: openstack-control
+          - enos-2: openstack-compute
+            - enos-3: openstack-network
+
+   2. [ ] Create a mechanism based on a configuration file which contains:
+      1. The reservation parameters (traditionally in reservation.yml):
+         - provider definition
+           - resource definition
+             - path to the based inventory used
+               - registry definition
+                 - enos customizations (e.g. enable_monitoring)
+                   - the kolla parameters
+
+   2. The benchmark parameters (defined in mad benchmark in bench_params.yaml):
+      - execo parameters:
+        - which set of test in the bench (e.g. seq_1t, dag_2t and dag_nt4)
+          - which set of registry locations
+            - number of iterations
+              - etc
+
+2. [X] Our script generates the required files for /kolla-ansible/   :dim:
+   - globals.yaml, passwords.yaml, etc
+
+2.5 [ ] Make our deploy tool execo-compliant                         :dim:
+   - [ ] Make the deployment tool CLI
+   - [ ] Get an execo-based benchmark script
+   - [ ] Plug it with concerto
+
+3. [-] Our script installs dependencies
+   - [ ] enos-0: madeus/concerto (done) + execo + our benchmark tool :charlène:
+        - (optional) Il serait intéressant de pouvoir spécifier si l'on veut
+          enos-0 distant ou local
+           - [X] enos-[1-3]: python/docker                           :dim:
+
+   authorized_key module ansible
+      check delegate_to for ansible
+         current/multinode pour inventaire
+
+
+4. [ ] Our script copies the required files to /enos-0/          :charlène:
+   - [ ] Le fichier de configuration de notre outil de benchmark
+      - [ ] Les composants concerto
+         - [ ] Les fichiers nécessaires aux playbooks
+
+5. [ ] Our script runs the benchmark from /enos-0/
+
+6. [ ] Our script packages and download the results of the experiment locally
+
+7. [ ] Our script destroys the experimentation environment.
+
+DONE (dim) réserver des noeuds pour expérimenter ce week end
