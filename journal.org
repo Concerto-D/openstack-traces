@@ -41,14 +41,14 @@ sections d'avant)
 (hélène) relecture
 
 ** TODO Experiments
-**** TODO Prototype evaluation                         :maverick:charlene:
+**** WIP Prototype evaluation                          :maverick:charlene:
 DEADLINE: <2019-09-20 ven.>
 (maverick) TODO urgent : cas SSH à coder, lancer les expés
 
-**** TODO Theoretical performance model evaluation     :maverick:charlene:
+**** WIP Theoretical performance model evaluation      :maverick:charlene:
 DEADLINE: <2019-09-20 ven.>
-(dim) TODO: donner les schémas d'assemblage à Charlène
-(dim) TODO: donner les temps des transitions en format lisible (par un
+(dim) DONE: donner les schémas d'assemblage à Charlène
+(dim) DONE: donner les temps des transitions en format lisible (par un
 ordinateur) structuré
 (charlène) TODO: 2 assemblages concerto (seq_1t, dag_2t) définition
 (https://gitlab.inria.fr/cservant/lab-openstack-concerto)
@@ -158,10 +158,14 @@ DEADLINE: <2019-09-27 ven.>
    - globals.yaml, passwords.yaml, etc
 
 2.5 [ ] Make our deploy tool execo-compliant                         :dim:
+   - [ ] Make the deployment tool CLI
+   - [ ] Get an execo-based benchmark script
+   - [ ] Plug it with concerto
 
 3. [-] Our script installs dependencies
    - [ ] enos-0: madeus/concerto (done) + execo + our benchmark tool :charlène:
-        - (optional) Il serait intéressant de pouvoir spécifier si l'on veut enos-0 distant ou local
+        - (optional) Il serait intéressant de pouvoir spécifier si l'on veut
+          enos-0 distant ou local
            - [X] enos-[1-3]: python/docker                           :dim:
 
    authorized_key module ansible
@@ -180,4 +184,4 @@ DEADLINE: <2019-09-27 ven.>
 
 7. [ ] Our script destroys the experimentation environment.
 
-TODO (dim) réserver des noeuds pour expérimenter ce week end
+DONE (dim) réserver des noeuds pour expérimenter ce week end
