@@ -1,0 +1,39 @@
+\begin{itemize}
+\item description of current software commissioning practices
+  \begin{itemize}
+  \item Script, IaC, Provisioning: ansible, puppet, chef, salt,
+    terraform, Docker etc.
+  \item Orchestration out of the scope (K8s, Swarm, TOSCA etc.)
+  \end{itemize}
+\item interesting properties regarding soft. commissioning
+  \begin{itemize}
+  \item good software engineering properties in soft. commissioning
+    (composition, reuse, maintainability, separation of concerns etc.)
+    \begin{itemize}
+    \item Ansible, Puppet, Chef ok but limited
+    \item component-based approach ok but less flexible
+    \end{itemize}
+  \item programmable / flexibility
+    \begin{itemize}
+    \item customized commissioning tasks or operations
+    \item Ansible, Puppet, Chef ok
+    \item component-based approach not ok and ok (?)
+    \end{itemize}
+  \item parallelism / efficiency which is directly related to
+    dependencies than can be defined between elements and tasks and
+    which is also related to the previous flexibility property
+    \begin{itemize}
+    \item SPMD (find another name) STMH (same tasks on multiple
+      hosts): puppet, ansible, deployware (?) etc.
+    \item dependencies between different components (MariaDB then
+      Apache): Puppet, ansible, deployware etc.
+    \item dependencies between tasks of components: aeolus, puppet (?)
+    \item dependencies between tasks of a single component: hand
+      written except for Madeus and Puppet (?) but not used by Puppet
+      for parallelism
+    \end{itemize}
+  \end{itemize}
+\end{itemize}
+
+Ansible, Aeolus chosen as references
+  

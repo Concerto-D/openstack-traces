@@ -1,1 +1,53 @@
+\HC[Dim]{Attention copier/coller iFM, a retravailler}
 
+This paper focuses on one specific challenge related to distributed
+software deployment: \emph{distributed software commissioning}. By
+software commissioning we mean the complete installation,
+configuration and testing process when deploying distributed software
+on physical distributed resources, with or without a virtualization
+layer in between. This process is complex and error-prone because of
+the specificity of the installation process according to the operating
+system, the different kinds of virtualization layers used between the
+physical machines and the pieces of software, the amount of possible
+configuration options~\cite{Xu:2015:SAT:2775083.2791577}. Recently,
+commissioning (or configuration) management tools such as
+Ansible\footnote{\url{https://www.ansible.com/}}, or
+Puppet\footnote{\url{https://puppet.com}}, have been widely adopted by
+system operators. These tools commonly include good
+software-engineering practices such as code reuse and composition in
+management and configuration scripts. It is nowadays possible to build
+a new installation by assembling different pieces of existing
+installations\footnote{\url{https://galaxy.ansible.com/}}\footnote{\url{https://forge.puppet.com/}}
+which improves the productivity of system operators and prevents many
+errors. Many distributed software commissioning are nowadays written
+with one the three above tools and by using containers between the
+host operating system and the pieces of software, such that
+portability of installations is improved. For instance, OpenStack,
+which is the de-facto open source operating system of Cloud
+infrastructures, can be automatically installed on clusters by using
+the
+\href{https://docs.openstack.org/kolla-ansible/latest/}{\emph{kolla-ansible}
+  project}, which uses both Docker containers and Ansible.
+
+Yet, even for such well-established software, there is still much room
+for improving the efficiency of the commissioning process (\ie
+reducing deployment times, minimizing services interruptions etc.).
+
+\HC[Dim]{Bien travailler discours sur l'interet de l'efficacite
+  notamment pour continous integration et experimentations}
+
+As manually coding parallelism into commissioning procedures is
+technically difficult and error prone, automated parallelism
+techniques should be introduced.
+
+...
+
+Inprevious work Madeus 4PAD
+
+...
+
+Contributions of the paper are ...
+
+...
+
+Outline
