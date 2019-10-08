@@ -29,7 +29,7 @@ software in a modular fashion while having guarantees on their
 compositions, thus improving separation of concerns between
 developers, easing the way to reuse existing pieces of code and
 enhancing flexibility and maintainability of codes. However, writing
-functional code is different from coordinating commissioning
+functional code is quite different from coordinating commissioning
 procedures, thus they need to be modeled differently. To adapt
 components for the modeling of commissioning procedures coordination,
 a Madeus component is a type containing a set of places that represent
@@ -65,14 +65,14 @@ distributed software systems.}
 
 \begin{figure}[tbp]
   \begin{center}
-    \includegraphics[width=0.35\linewidth]{./images/apachebdd.pdf}
+    \includegraphics[width=0.7\linewidth]{./images/apachebdd.pdf}
   \end{center}
   \caption{Example of a commissioning assembly with two components
     Apache and MariaDB. Places are represented by circles, transitions
-    by arrows between places, ports by either small black circles,
-    semi-circles, outgoing or incoming arrows from components. Two
-    initial red tokens are placed in each initial place of
-    components.}
+    by arrows between places, service ports by small black circles and
+    semi-circles, data ports by outgoing or incoming arrows from
+    components. Two initial red tokens are placed in each initial
+    place of components in this example.}
   \label{fig:example}
 \end{figure}
 
@@ -105,37 +105,241 @@ distributed software system to deploy on its infrastructure. One
 important difference bewteen Madeus and other approaches is its clear
 separation of concerns between the commissioning of a single component
 and the composition of an assembly, without taking care of the
-commissioning of each component. Even if Ansible, Puppet and Chef, for
-instance, offer properties close to composition (\eg roles, playbooks,
-recipes etc.), the system operator still have to handle the correct
-order of composition. Conversely, the correct coordination, thus the
-correct order of execution, is automatically guaranteed by Madeus by
-the composition of the component instances. Such property has also
-been offered by Aeolus~\cite{} but without parallelism within
-components.
+detailed commissioning of each component. Even if Ansible, Puppet and
+Chef, for instance, offer properties close to composition (\eg roles,
+playbooks, recipes etc.), the system operator still have to handle the
+correct order of composition. Conversely, the correct coordination,
+thus the correct order of execution, is automatically guaranteed by
+Madeus by the composition of the component instances. The composition
+view point is illustrated in Figure~\ref{fig:simple} where
+\emph{dev-ass} does not need to know the details of each component to
+compose them. Such property has also been offered by Aeolus~\cite{}
+but without parallelism within components.
+
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=0.6\linewidth]{./images/simpleass.pdf}
+  \end{center}
+  \caption{Madeus assembly of an Apache component and a MariaDB
+    component without knowing the details of each component.}
+  \label{fig:simple}
+\end{figure}
+
+Madeus is a language to model distributed software commissionings,
+thus Madeus is a \emph{meta-model}. Second, Madeus is a
+\emph{graphical language}, as illustrated in Figure~\ref{fig:example},
+that can be used to observe and understand how a distributed software
+commissioning is modeled, but also to be able to monitor the state of
+this procedure. Third, Madeus also comes with a \emph{concrete
+  language}, which is for now prototyped in Python. Finally, Madeus is
+able to execute one assembly by following a formal \emph{operational
+  semantics}. In this sub-section we give an overview of the
+meta-model, the concrete language and the execution semantics of
+Madeus by using the example of Figure~\ref{fig:example}. Later
+Sections~\ref{sec:forma_model} and~\ref{sec:perf_model} will present
+the formalization of Madeus and its operational semantics, as well as
+its theoretical performance model.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Language}
+\subsection{Meta-model}
 
-\HC[Dim]{en cours}
+\HC[Maverick]{figures a refaire avec nos discussions}
 
-First, Madeus is a language to model distributed software
-commissionings, thus Madeus is a \emph{meta-model}. Second, Madeus is
-a \emph{graphical language}, as illustrated in
-Figure~\ref{fig:example}, that can be used to observe and understand
-how a distributed software commissioning is modeled, but also to be
-able to monitor the state of this procedure. Third, Madeus also comes
-with a \emph{concrete language}, which is for now prototyped in
-Python. Finally, Madeus is able to execute one assembly by following a
-formal \emph{operational semantics}. In this sub-section we give an
-overview of the meta-model, the concrete language and the execution
-semantics of Madeus. Later Sections~\ref{} and~\ref{} will present the
-formalization of Madeus, of its operational semantics, as well as its
-theoretical performance model.
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{./images/ass_uml.pdf}
+  \end{center}
+  \caption{Madeus meta-model of an assembly, \ie an overall
+    commissioning procedure of a distributed software.}
+  \label{fig:mmass}
+\end{figure}
 
-% meta-model
+Figures~\ref{fig:mmass} and~\ref{fig:mmcomp} respectively depict the
+UML diagram representing the Madeus meta-model of an assembly, and the
+meta-model of a component. A Madeus assembly is not different from a
+usual assembly in any component model of the literature. An assembly
+basically contains component instances, connected between each other
+through their compatible ports. One specificity is that Madeus handles
+four types of ports instead of usually two, by dissociating service
+ports from data ports which have different semantics. Intuitively,
+unlike service ports, data ports act as data registries thus, once
+activated, they will never be disabled.
 
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=0.9\linewidth]{./images/component_uml.pdf}
+  \end{center}
+  \caption{Madeus meta-model of a component, \ie the commissioning
+    procedure of a single component (\ie module or service).}
+  \label{fig:mmcomp}
+\end{figure}
 
-% concrete language
+However, as already explained a Madeus component is very different
+from usual components in the literature. A component type contains a
+set of places, a set of transitions, and a set of service-provide,
+service-use, data-rpovide and data-user ports.
+%Each place contains
+%input and output docks. A transition is composed of a source and a
+%destination dock (from one place to another). Docks are used in the
+%formal model to properly handle parallelism and
+%synchronizations.
+Service-provide ports (service or data) are bound to groups of
+places. Those groups of places represent the sub-part of the
+commissioning procedures where a given service is provided. A
+data-provide port is simply bound to one place from which the data is
+provided. Use ports (data or service) are bound to transitions where
+the corresponding data or services modeled by ports are actually used
+by the transition function.
 
-% operational semantics
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Concrete language}
+
+\HC[Maverick]{syntaxe a discuter en fonction de la petite surcouhe
+  faite a concerto}
+
+The concrete syntax of Madeus has been implemented in Python. Madeus
+is a simple declarative language that follows the meta-model
+previously detailed to define, first, component types, and second,
+assemblies of components. Listing~\ref{codemdb} shows the declaration
+of the MariaDB component type of Figure~\ref{fig:example}. Lines 3 to
+8 consist in the declaration of the places of the component type. A
+place is identified by a unique \texttt{string}. Lines 9 to 15 consist
+in the declaration of the transitions of the component type. A
+transition is identified by a unique key (a \texttt{string}), and is
+associated through a dictionnary to a source and a destination
+place. Moreover, each transition is associated to a function to call
+to perform associated actions. For instance, the function
+\texttt{f\_pull} of transition \texttt{pull} is declared line 20 and
+will contain the code to execute during this transition. Finally lines
+16 to 19 declare the ports of the component type. A port is identified
+by a unique key (a \texttt{string}), and is associated to a type and
+the elements to which it is bound. As already described,
+service-provide ports are bound to a set of places, data-provide ports
+to a single place, and both service-use and data-use ports to a set of
+transitions. In the case of MariaDB one service-provide port, namely
+\texttt{serv}, is provided both at \texttt{std} and \texttt{chd}
+places, and one data-rpovide port, namely \texttt{ip} is provided from
+the first place \texttt{wtg}.
+
+\input{./code/mariadb.tex}
+
+Similarly, the Listing~\ref{codeapache} shows the decalaration of the
+Apache component type of Figure~\ref{fig:example} which has one place
+and one transition more than MariaDB. Furthermore, the Apache
+component type contains one service-use port and one data-use port
+(lines 18 to 21).
+
+\input{./code/apache.tex}
+
+Finally, the Listing~\ref{codeass} shows the decalaration of the
+assembly of components of Figure~\ref{fig:example}. First, lines 6 and
+7 respectively instanciate component types MariaDB and Apache
+previously declared. Second, line 9 to 13 are as follows: the creation
+of an assembly, the addition of component instances to the assembly,
+the connections of the components. Finally, lines 15 and 16 run the
+assembly to perform the commissioning of MariaDB/Apache. An overview
+of this execution is given in the next section.
+
+\input{./code/assembly.tex}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Execution}
+
+In \mad, executing a commissioning procedure requires to execute an
+assembly. \HC[Helene, Maverick]{TODO introduire la notion de token}
+The \mad execution model is governed by operational semantics rules to
+move tokens from places to transitions within components. Those rules
+are inspired from Petri nets rules but Madeus places and transitions
+are different from Petri nets places and transitions, and additional
+elements such as groups or ports also makes Madeus different from
+Petri nets. Details of the transformation from a Madeus assembly to a
+Petri net has been given in~\cite{}. \mad is executed by seven
+operational semantics rules. In this section we only sketch the role
+of each of these rules that will be formally given in
+Section~\ref{sec:forma_model}. Before giving the role of each rule,
+one can note in Figure~\ref{fig:example} the small rectangles that
+have not been explained yet. These rectangles are \emph{docks}. Each
+place has input and output transitions, and each transition has a
+source dock and a destination dock. Docks have not been detailed
+previously because they are automatically infered from the concrete
+syntax of Madeus. Though, this concept is needed to explain the
+execution of a Madeus assembly as it is used to handle parallelism and
+synchronization of transitions.
+%
+\begin{enumerate}
+\item \emph{Firing a transition}: when the source dock of a transition
+  contains a token and when all use ports of a transition have their
+  associated connections activated, the token is moved from the source
+  dock to the transition, which is not considered atomic as it is
+  associated to an action function.
+\item \emph{Ending a transition}: when a transition holds a token and
+  when the action associated to the transition is terminated, the
+  token is moved from the transition to its destination dock.
+\item \emph{Joining a place}: when all input docks associated to a
+  place hold a token, tokens can be merged to a single one placed
+  within the place.
+\item \emph{Leaving a place}: when a place holds a token, and if all
+  provide ports hold by this place are not used by other components,
+  the token can be duplicated and placed in each output dock of the
+  place.
+\item \emph{Enabling use-provide connection}: a use-provide connection
+  which is disabled can be enabled when the place associated to the
+  provide port holds a token.
+\item \emph{Disabling use-provide connection}: a use-provide
+  connection which is enabled becomes disabled when a token leaves the
+  place associated to the provide port.
+\item \emph{Enabling data connection}: a data-use-provide connection
+  which is disabled can be enabled when the place associated to the
+  provide port holds a token. In this case the value is taken from one
+  of the previous transition actions.
+\end{enumerate}
+
+One can note that a data connection cannot be disabled. It
+indefinitely holds the last data value.
+%\CP[HC]{Correct?}
+%\HC{je n'ai pas parlé des groupes pour simplifier le discours. je ne pense pas en parler car ce n'est pas utile dans les exemples.}
+%\CP{ok}
+
+\begin{figure}[tbp]
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{./images/scenari.pdf}
+  \end{center}
+  \caption{Three deployment scenarios of the deployment, represented by three colors.}
+  \label{fig:scenari}
+\end{figure}
+
+\subsubsection*{Apache/MariaDB Example: \mad Execution}
+
+We discuss now the deployment execution for the Apache/MariaDB
+example.  The initial assembly, given in Figure~\ref{fig:example}, has
+already been described. Figure~\ref{fig:scenari} depicts three example
+scenarios that may happen at different steps of the deployment, the
+first one with red tokens, the second one with blue tokens, and the
+third one with green tokens.
+
+First, one can note that as MariaDB provides its IP address in its
+first place, the associated connection between MariaDB and Apache is
+immediately enabled. In the first scenario, the red token of MariaDB
+has been able to move from its initial place to its three output
+docks. Then, each transition in each branch is able to start as they
+are not bound to any port. Simultaneously, the Apache component has
+been able to start its \emph{provision} transition and reaches its
+parallel branches: \emph{pull} and \emph{conf} can directly start. The
+\emph{conf} transition, however, has to wait its associated connection
+to be enabled. As the connection has been enabled in the first place
+of MariaDB, the red token of the source dock of \emph{conf} can move
+to \emph{conf}.
+
+In the second scenario (blue tokens), the MariaDB component has reached
+its second place. Both \emph{bootstrap} and \emph{conf} transitions of Apache
+have finished but the \emph{pull} transition is still running. For this
+reasons the three docks responsible for the join will not release the
+tokens until \emph{pull} is terminated. As soon as \emph{pull}
+finishes, the three tokens are merged into one token and set to the
+next place.%, as MariaDB has already publishes an IP on the data port.
+
+The third scenario illustrates an example where MariaDB reaches
+its last place. As soon as this place holds a token, its associated
+provide connection is enabled. Reversely, the \emph{check}
+transition of Apache that is using services of MariaDB is able to
+start, once the connection is enabled.

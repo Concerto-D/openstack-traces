@@ -46,3 +46,29 @@
 \usepackage{amssymb}
 \usepackage{booktabs} % For formal tables
 
+% lstlisting python + colors
+\usepackage{color}
+\usepackage[procnames]{listings}
+\definecolor{keywords}{RGB}{255,0,90}
+\definecolor{comments}{RGB}{0,0,113}
+\definecolor{red}{RGB}{160,0,0}
+\definecolor{green}{RGB}{0,150,0}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\linewidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\lstset{language=Python,
+        numbers=left,
+        backgroundcolor=\color{backcolour},
+        numbersep=5pt,
+        keywordstyle=\color{keywords},
+        commentstyle=\color{comments},
+        stringstyle=\color{red},
+        showstringspaces=false,
+        identifierstyle=\color{green},
+        procnamekeys={def,class},
+        basicstyle=\scriptsize\ttfamily,
+        numberstyle=\tiny\color{gray},
+%       frame=single
+}
+

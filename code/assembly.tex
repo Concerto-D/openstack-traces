@@ -1,0 +1,19 @@
+\begin{lstlisting}[label=codeass,caption=Madeus code of the assembly
+  of Figure~\ref{fig:example}.]
+import mariadb
+import apache
+
+if __name__ == '__main__':
+
+  mdb = MariaDB() # Component B
+  apache = Apache() # Component C
+
+  ass = Assembly()
+  ass.add('MDB', mdb)
+  ass.add('Apache', apache)
+  ass.connect(apache, 'ipMDB', mdb, 'ip')
+  ass.connect(apache, 'servMDB', mdb, 'serv')
+
+  mad = Mad(ass)
+  mad.run()
+\end{lstlisting}
