@@ -1,23 +1,24 @@
 In this section, we present Madeus' performance model. Its goal is,
-given the execution time of all the transitions of all the components
-in an assembly, to predict the total execution time of the deployment.
+given a Madeus assembly to be deployed and the execution time of all the
+transitions of all the components in an assembly, to predict the total
+execution time of the deployment.
+%
 Intuitively, we automatically model the execution flow of a Madeus
-assembly based on its formal semantics. This is done by generating graph
-representations of the execution flow of each Madeus component in the
-assembly and then connecting them together according to their dependencies.
-Each component's graph is a directed acyclic graph (DAG) because there can
-be no cycles in a Madeus component's internal-net. Once connected, and
-under some minor restrictions essentially preventing non-determinism, the
-graph is still a DAG. By looking for the longest path between a source
-vertex representing the beginning of the deployment process and a sink
-vertex representing its end, we can predict the total deployment time.
-This can be done in $\mathcal{O}(|V|+|E|)$ where $V$ is the set of
-vertices of the graph and $E$ is the set of edges of the graph. Note that
-$|V| = \mathcal{O}(pl+tr+po)$ and $|E| = \mathcal{O}(tr+po+dp)$ where $pl$
-is the number of places in the whole assembly, $tr$ is the number of
-transitions, $po$ is the number of ports and $dp$ is the number of
-dependencies. Therefore, the complexity of estimating the running time of
-a Madeus deployment is $\mathcal{O}(pl+tr+po+dp)$.
+assembly based on Madeus' formal semantics. This is done by generating a
+dependency graph representations of the execution flow of each Madeus
+component in the assembly and connecting them together according to their
+dependencies (the connections between their ports). We then add a
+\emph{source} vertex connected to the vertices representing the beginning of
+the execution of each component, as well as a \emph{sink} vertex to which
+are connected the vertices representing the end of the execution of each
+component.
+%
+We obtain a dependency graph representing the execution of the whole
+assembly. By weighting the arcs corresponding to the transitions with
+these transitions' individual execution time (and the other ones with 0),
+we can find the total execution time of the assembly by finding the longest
+path from the \emph{source} vertex to the \emph{sink} vertex.
+
 % By generating a graph modelling the execution flow of a Madeus assembly,
 % capturing both intra-component and inter-component dependencies, we
 % reduce this problem to finding the longest path in a DAG.
@@ -212,17 +213,74 @@ A=A_\Pi\cup A_{\Theta}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\c
 \]
 
 
-\subsection{Time prediction}
+\subsection{Time estimation}
 
-We define the time prediction of the execution of the Madeus assembly
-to be the length of the longest path between the \emph{source} vertex
-and the \emph{sink} vertex in the graph $\left(V,A\right)$. This
-path exists as long as the internal-nets of all the components are
-individually connected, and is finite because there can be no loop
-in internal-nets and the execution times considered for the transitions
-are finite.
+We define the time estimation of the execution of the Madeus assembly
+to be the length of the longest path between $v^\text{source}$ and
+$v^\text{sink}$ in $G$. This path exists and is finite if $v^\text{sink}$ 
+is reachable from $v^\text{source}$ and $G$ has no cycle.
+
+Because the end of the execution of a Madeus component is defined as
+when all its tokens are in final places, \ie there are no more transitions
+to perform, the final places are necessarily connected to the initial place
+in the \net. Because the dependency graph of the component keeps the same
+shape as the \net, $v_{\pi_i}^\text{place}$ (where $\pi_i$ is the initial
+place) is connected to all $v_{\pi_f}^\text{place}$ (where $\pi_f$ is a
+final place). Because we connect $v^\text{source}$ to all
+$v_{\pi_i}^\text{place}$ (where $v_{\pi_i}$ is the initial place of a
+component) and all $v_{\pi_f}^\text{place}$ (where $\pi_f$ is a final place
+of a component) to $v^\text{sink}$, there exists at least one path between
+$v^\text{source}$ and $v^\text{sink}$ for each component. Therefore
+$v^\text{sink}$ is reachable from $v^\text{source}$.
+
+The dependency graph of each component has no cycle because it has the same
+shape as the \net, in which there can be no cycle. Under some restriction
+essentially preventing non-determinism, the arcs between the vertices
+corresponding to port do not create cycles either. This restriction limits
+the number of activation and deactivation of each port to one during the
+deployment process. If there is no deadlock in the Madeus assembly, then
+there can be no ``crossing dependencies'' (see Figure~\ref{fig:deadlock}). This means that
+the activation and deactivation of two distinct sets of use and provide
+ports cannot create a cycle. This reasoning also applies to the activation
+and deactivation of a service use port and a service provide port. If they
+were to happen in a different order in the two components, the dependency
+graph would have a cycle, but because each port can be activated only once,
+there would be a deadlock in the assembly.
+
+\begin{figure}[h]
+  \begin{center}
+    \includegraphics[width=0.7\linewidth]{./images/deadlock.pdf}
+  \end{center}
+  \caption{Example of an invalid assembly: crossing dependencies cause a deadlock.}
+  \label{fig:deadlock}
+\end{figure}
+
+Because $G$ is a DAG, finding the longest path between $v^\text{source}$
+and $v^\text{sink}$ can be done in $\mathcal{O}(|V|+|A|)$ by sorting the
+vertices topologically and iterating through them, computing their maximum
+distance from the source using the one of their parents. Note that
+$|V| = \mathcal{O}(pl+tr+po)$ and $|A| = \mathcal{O}(tr+po+dp)$ where $pl$
+is the number of places in the whole assembly, $tr$ is the number of
+transitions, $po$ is the number of ports and $dp$ is the number of
+dependencies. Therefore, the complexity of estimating the running time of
+a Madeus deployment is $\mathcal{O}(pl+tr+po+dp)$.
 
 
-\subsection{Restrictions}
+\subsection{Requirements on the assembly}
+
+In order to avoid non-determinism, which a dependency graph would not be
+able to capture, we impose some requirements on a Madeus assembly
+for it to be compatible with the performance model. However, these
+requirements are quite reasonable in the sense that none of the use
+cases we have thought of do not meet these requirements.
+%
+First, each port may only be activated once and deactivated once, and
+may only be connected to one group. Second, all groups must have a
+single entry point, \ie only one transition going from a place outside
+of the group to a place inside of the group. Likewise, they must have a
+single exit point (if any), \ie at most one transition going from a
+place inside of the group to a place outside of the group.
+
+\subsection{Example}
 
 TODO
