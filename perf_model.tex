@@ -139,7 +139,7 @@ A_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(v_\pi^\text{place},v_\pi^\text{le
       \begin{tikzpicture}[node distance=2cm]
         \node (leaving) [leaving] {$v_\text{running}^\text{leaving}$};
         \node (place) [place, below of=leaving] {$v_\text{running}^\text{place}$};
-        \draw [arrow] (place) -- (leaving);
+        \draw [arrow] (place) -- (leaving) node[midway, right] {$0$};
       \end{tikzpicture}
     \end{minipage}
   }
@@ -165,13 +165,14 @@ A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}} & \left\
 
 \begin{figure*}[h]
   \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.5\columnwidth}%
+    \begin{minipage}[c]{0.8\columnwidth}%
       \centering
       \includegraphics[scale=0.2]{images/perf_transition.pdf}
     \end{minipage}
   }
+  \hfill
   \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{0.5\columnwidth}%
+    \begin{minipage}[c]{1.2\columnwidth}%
       \centering
       \begin{tikzpicture}[node distance=2cm]
         \node (p3l) [leaving] {$v_\text{p3}^\text{leaving}$};
@@ -180,24 +181,24 @@ A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}} & \left\
         \node (t1) [beginning, below of=t1e] {$v_\text{t1}^\text{beginning}$};
         \node (p1l) [leaving, below of=t1] {$v_\text{p1}^\text{leaving}$};
         \node (p1) [place, below of=p1l] {$v_\text{p1}^\text{place}$};
-        \node (t2) [beginning, right of=p1l, xshift=1cm] {$v_\text{t2}^\text{beginning}$};
-        \node (t2e) [end, right of=t2, xshift=1cm] {$v_\text{t2}^\text{end}$};
+        \node (t2) [beginning, right of=p1l, xshift=1.5cm] {$v_\text{t2}^\text{beginning}$};
+        \node (t2e) [end, right of=t2, xshift=1.5cm] {$v_\text{t2}^\text{end}$};
         \node (p2) [place, above of=t2e] {$v_\text{p2}^\text{place}$};
         \node (p2l) [leaving, above of=p2] {$v_\text{p2}^\text{leaving}$};
         \node (t3) [beginning, above of=p2l] {$v_\text{t3}^\text{beginning}$};
-        \node (t3e) [end, right of=p3, xshift=1cm] {$v_\text{t3}^\text{end}$};
-        \draw [arrow] (p3) -- (p3l);
-        \draw [arrow] (p2) -- (p2l);
-        \draw [arrow] (p1) -- (p1l);
-        \draw [arrow] (t3) -- (t3e);
-        \draw [arrow] (t2) -- (t2e);
-        \draw [arrow] (t1) -- (t1e);
-        \draw [arrow] (p1l) -- (t1);
-        \draw [arrow] (p1l) -- (t2);
-        \draw [arrow] (p2l) -- (t3);
-        \draw [arrow] (t1e) -- (p3);
-        \draw [arrow] (t2e) -- (p2);
-        \draw [arrow] (t3e) -- (p3);
+        \node (t3e) [end, right of=p3, xshift=1.5cm] {$v_\text{t3}^\text{end}$};
+        \draw [arrow] (p3) -- (p3l) node[midway, right] {$0$};
+        \draw [arrow] (p2) -- (p2l) node[midway, right] {$0$};
+        \draw [arrow] (p1) -- (p1l) node[midway, right] {$0$};
+        \draw [arrow] (t3) -- (t3e) node[midway, above] {$time(\text{t3})$};
+        \draw [arrow] (t2) -- (t2e) node[midway, below] {$time(\text{t2})$};
+        \draw [arrow] (t1) -- (t1e) node[midway, right] {$time(\text{t1})$};
+        \draw [arrow] (p1l) -- (t1) node[midway, right] {$0$};
+        \draw [arrow] (p1l) -- (t2) node[midway, below] {$0$};
+        \draw [arrow] (p2l) -- (t3) node[midway, right] {$0$};
+        \draw [arrow] (t1e) -- (p3) node[midway, right] {$0$};
+        \draw [arrow] (t2e) -- (p2) node[midway, right] {$0$};
+        \draw [arrow] (t3e) -- (p3) node[midway, above] {$0$};
       \end{tikzpicture}
     \end{minipage}
   }
