@@ -1,0 +1,101 @@
+{
+	"common": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 3.5527830679993713,
+				"end": 47.60065283299991
+			}
+		]
+	},
+	"facts": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 0.000498890000017127,
+				"end": 3.55208331599988
+			}
+		]
+	},
+	"glance": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 237.67082748699977,
+				"end": 296.5301217309998
+			}
+		]
+	},
+	"haproxy": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 47.60114187699946,
+				"end": 71.39848349400017
+			}
+		]
+	},
+	"keystone": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 167.67932389899943,
+				"end": 237.67045383299956
+			}
+		]
+	},
+	"mariadb": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 78.19676612199964,
+				"end": 155.32656451499952
+			}
+		]
+	},
+	"memcached": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 71.39891730399995,
+				"end": 78.19646308499978
+			}
+		]
+	},
+	"neutron": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 594.5636918149994,
+				"end": 753.4295829089997
+			}
+		]
+	},
+	"nova": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 296.5303846930001,
+				"end": 579.2188504039996
+			}
+		]
+	},
+	"openvswitch": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 579.2192340209995,
+				"end": 594.5633939809995
+			}
+		]
+	},
+	"rabbitmq": {
+		"deploy": [
+			{
+				"name": "deploy",
+				"start": 155.327071746,
+				"end": 167.67903046899937
+			}
+		]
+	}
+}
