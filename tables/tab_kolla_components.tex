@@ -1,0 +1,43 @@
+
+\begin{tabular}{|c|c|c|c|c|}
+   \hline
+   & Roles & Places & Transitions & Ports \\
+   \hline
+   Nova & Manages compute instances (\eg Virtual machines) & 5 & 8 & 8\\
+   Glance & Compute image store & 3 & 4 & 7\\
+   Neutron & In charge of network resources & 3 & 4 & 7\\
+   MariaDB & An SQL server used by most projects to store persistent
+    information & 4 & 5 & 4\\
+   Keystone & Manage user authentication, authorization and service
+    discovery & 3 & 2 & 4\\
+   RabbitMQ & The message bus for inter-service communication & 2 & 1 & 3\\
+   HAProxy & Load-balances the requests to OpenStack controllers & 2 & 1 & 7\\
+   OpenVSwitch & Virtualizes network functions & 3 & 1 & 2\\
+   MemCached & Caches ephemeral data for most OpenStack projects & 2 & 1 & 2\\
+   Facts & Collects informations about every nodes & 2 & 1 & 1\\
+   Common & Common utilities (\eg cron, fluentd: a metric collector for logging)
+    & 3 & 2 & 2\\
+%   \hline
+%   Total & 32 & 30 & 47 & \\
+%   \hline
+%   & Places & Transitions & Ports & Roles\\
+%   \hline
+%   Nova & 5 & 8 & 8 & Manage compute instances (\eg Virtual machines)\\
+%   Glance & 3 & 4 & 7 & Compute image store\\
+%   Neutron & 3 & 4 & 7 & In charge of network resources\\
+%   Keystone & 3 & 2 & 4 & Manage user authentication, authorization and service
+%    discovery\\
+%   MariaDB & 4 & 5 & 4 & An SQL server used by most projects to store persistant
+%    information\\
+%   RabbitMQ & 2 & 1 & 3 & The message bus for inter-service communication\\
+%   HAProxy & 2 & 1 & 7 & Load-balances the requests to OpenStack API services\\
+%   OpenVSwitch & 3 & 1 & 2 & Virtualizes network functions\\
+%   MemCached & 2 & 1 & 2 & Caches ephemeral data for most OpenStack projects\\
+%   Facts & 2 & 1 & 1 & Collects inforamtions about every nodes\\
+%   Common & 3 & 2 & 2 & Common utilities (\eg cron, fluentd: a
+%   metric collector for logging) \\
+   \hline
+   Total & & 32 & 30 & 47\\
+   \hline
+\end{tabular}
+
