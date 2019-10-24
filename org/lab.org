@@ -217,7 +217,12 @@ A typical experiment using Mad is the sequence of several phases:
 - destroy :: Mad will release the resources.
 
 The =README.md= file contains more information about the various commands available. This document focuses on offering an easier way to reproduce the experiments presented in the paper and will not go in details over the various options. The =python mad.py= command has a =--help= flag that gives out information over the commands available.
-
+** Deploying Openstack on the Grid5000 nodes using kolla-ansible
+#+BEGIN_SRC sh
+python mad.py deploy --provider g5k --registry
+python mad.py install-os
+python mad.py destroy--hard
+#+END_SRC
 * Benchmarks
 ** Request the resources for the benchmarks
 #+BEGIN_SRC sh
@@ -225,9 +230,13 @@ python mad.py deploy -c reservation.yaml -p g5k --bootstrap
 #+END_SRC 
 where the =-c= option indicates our reservation file, =-p= indicates the requested provier, and the =--bootstrap= flag indicates that it will populate the inventory with the proper information about the machines reserved and transfer all necessary environment values and files to the different nodes.
 
-This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the **current** directory. These configuration files are necessary for the OpenStack deployment.
-
+This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the **current** directory. These configuration files are necessary for the OpenStack deployment. 
 ** Launch the benchmarks
+Once the nodes have been reserved, to reproduce the benchmarks, you can specify which test to run by inputing it in the command as for example:
+#+BEGIN_SRC sh
+python mad.py bench -c reservation.yaml --provider g5k --test all
+#+END_SRC
+launches the scenario defined in the =reservation.yaml= file as =all=.
 
 #+NAME: Experiment Scenarios in the reservation file
 #+BEGIN_SRC yaml
@@ -263,21 +272,31 @@ single:
     iterations: 1
 #+END_SRC 
 Each benchmark scenario is defined by a name such as *all*, *test*, or *single* in our file. 
-Our parameers are the numbers of iterations for each test that we want to go through and the list of the different assemblies we want to try (such as *seq_1t*, *dag_2t*, *dag_nt4*).
-
-To launch the benchmarks, we use the following command:
-#+BEGIN_SRC sh
-python mad.py bench -c reservation.yaml --p g5k --test all -e results/
-#+END_SRC
+Our parameters are the numbers of iterations for each test that we want to go through and the list of the different assemblies we want to try (such as *seq_1t*, *dag_2t*, *dag_nt4*).
 The =-p= and =-c= options are similar to the launch of the reservation. The =--test= option defines which tests will be launched from the different scenarios described in the **reservation.yaml** file.
+It is posible to define other scenarios following the examples already present in the **reservation.yaml** file.
 
+*** Behind the scenes
+The call to =python mad.py bench= will run a tmux session named mad on the remote node with the **concerto-node** role that can be accessed through 
+``` ssh [concerto-node-adress]```
+and 
+#+BEGIN_SRC sh
+tmux attach -t mad
+#+END_SRC 
+to observe the bench processes.
 * Results
 ** Recover the benchmark results
+To recover the results from the previously launched benchmarks, just run the following command:
 #+BEGIN_SRC sh
-python mad.py backup
+python mad.py backup 
 #+END_SRC
-The backup command allows to recover the environment configuration from the experiment and the results that are on the reserved nodes, such as the kolla logs and the madeus directory.
+The backup command allows to recover the environment configuration from the experiment and the resulting files that are on the concerto node, such as the kolla logs and the madeus directory.
+The resulting files are in the =backups= directory, under the timestamp of the experiment start.
 
 ** Plot the data from our given results
-Follow these instructions to process our results and produce the graphs we have used in the paper:
+Once the resulting files have been recovered through the **backup** command, the use of **analyze** will allow for the creation of time charts, by replacing =Timestamp= by the timestamp of the experiment that is the name of the backup directory just created.
+#+BEGIN_SRC sh
+python mad.py analyze -b backups/Timestamp
+#+END_SRC
+This will go through the results and plot the charts of the experiment times.
  
