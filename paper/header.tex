@@ -1,4 +1,5 @@
 
+\usepackage[table]{xcolor}
 \usepackage{lmodern}
 
 \usepackage[utf8]{inputenc}
@@ -14,15 +15,29 @@
 \newcommand{\aka}[0]{{\em a.k.a.}\xspace}
 \newcommand{\via}[0]{{\em via}\xspace}
 
-\newcommand{\mad}[0]{Madeus\xspace}
-\newcommand{\kolla}[0]{Kolla\xspace}
-
-\newcommand{\nova}[0]{\emph{lyon-nova}\xspace}
 \newcommand{\ecotype}[0]{\emph{nantes-ecotype}\xspace}
+\newcommand{\nova}[0]{\emph{lyon-nova}\xspace}
 
 \newcommand{\ansass}[0]{\emph{spmd-$1$t}\xspace}
 \newcommand{\aeoass}[0]{\emph{dag-$2$t}\xspace}
 \newcommand{\madass}[0]{\emph{dag-nt}\xspace}
+
+\newcommand{\shell}[0]{\textsc{Shell}\xspace}
+\newcommand{\bash}[0]{\emph{bash}\xspace}
+\newcommand{\ansible}[0]{\textsc{Ansible}\xspace}
+\newcommand{\chef}[0]{\textsc{Chef}\xspace}
+\newcommand{\puppet}[0]{\textsc{Puppet}\xspace}
+\newcommand{\cfengine}[0]{\textsc{CFEngine}\xspace}
+\newcommand{\deployware}[0]{\textsc{DeployWare}\xspace}
+\newcommand{\juju}[0]{\textsc{Juju}\xspace}
+\newcommand{\kubernetes}[0]{\textsc{Kubernetes}\xspace}
+\newcommand{\aeolus}[0]{\textsc{Aeolus}\xspace}
+\newcommand{\mad}[0]{\textsc{Madeus}\xspace}
+
+\newcommand{\kolla}[0]{Kolla\xspace}
+
+\newcommand{\apache}[0]{\textsc{Apache}\xspace}
+\newcommand{\mysql}[0]{\textsc{MySQL}\xspace}
 
 \newcommand{\implem}[0]{PoC\xspace}
 \newcommand{\llc}{L\textsuperscript{2}C\xspace}
@@ -53,7 +68,12 @@
 \usepackage{subfig}
 \usepackage{pifont}
 \usepackage{wasysym}
+
 \usepackage{booktabs} % For formal tables
+\usepackage{array,multirow}
+\newcommand{\STAB}[1]{\begin{tabular}{@{}c@{}}#1\end{tabular}}
+
+\usepackage{siunitx}
 \usepackage{cleveref}
 
 \usepackage{tikz}
@@ -68,6 +88,8 @@
 \tikzstyle{beginning} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=gray!40]
 \tikzstyle{control} = [rectangle, rounded corners, minimum width=2cm, minimum height=1cm,text centered, draw=black, fill=orange!30]
 \tikzstyle{arrow} = [thick,->,>=stealth]
+
+\def\cmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;}
 
 % lstlisting python + colors
 \usepackage{color}

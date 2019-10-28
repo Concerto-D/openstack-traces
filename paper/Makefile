@@ -20,16 +20,17 @@ open: $(MAIN).pdf
 
 clean:
 	@rm -f *.aux
-	@rm -f *.idx
-	@rm -f *.log
-	@rm -f *.toc
 	@rm -f *.bbl
-	@rm -f *.fls
-	@rm -f *.ldb
-	@rm -f *.tdo
 	@rm -f *.blg
+	@rm -f *.fls
 	@rm -f *.fdb_latexmk
+	@rm -f *.idx
+	@rm -f *.ldb
+	@rm -f *.log
 	@rm -f *.out
+	@rm -f *.spl
+	@rm -f *.tdo
+	@rm -f *.toc
 
 mr_clean: clean
 	@rm -f $(MAIN).pdf
