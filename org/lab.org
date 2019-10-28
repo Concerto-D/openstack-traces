@@ -27,17 +27,19 @@
 # #+PROPERTY: header-args :eval never-export
 
 * Introduction
-This lab aims to offer an easy way to reproduce the experiments presented in the journal [].
+This page aims to offer a practical way of reproducing the experiments presented in the paper [].
 Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]].
+In this we go through the various steps required to obtain the 
 
 * Experimental setup
 ** Requirements
 - python 3.7+
-- git 
-To launch the experiments on a local machine:
+- git
+To launch experiments on a local machine:
 - [[https://www.vagrantup.com/][Vagrant]] installed with the [[https://github.com/vagrant-libvirt/vagrant-libvirt][libvirt]] plugin
 To launch the experiments on Grid 5000:
 - a Grid5000 account and to setting up your ssh config appropriately (see [[#g5k][Grid5000 setup]])
+
 
 The requirements are all contained in the =requirements.txt= file at the root directory of the lab.
 The lab code can be found on [[http://duckduckgo.com][Gitlab]].
@@ -97,13 +99,14 @@ eval "$(ssh-agent -s)" && ssh-add
 before starting the experiments to add the key to your ssh agent and not have to input the passphrase several times over the deployment.
 
 ** Install the requirements in the virtual environment
-In the lab code repository, you can use pip to install the python requirements for the lab.
+The makefile allows for the installation of the requirements, you can use:
 #+BEGIN_SRC sh
-pip3 install -r requirements.txt
+make install_deps
 #+END_SRC
+to launch the installation of the various libraries we use for these experiments.
 We use  [[https://discovery.gitlabpages.inria.fr/enoslib/][EnOSlib]], that allows to organize our experiment workflow and configure our Grid5000 setup.
-We also use [[http://execo.gforge.inria.fr/doc/latest-stable/][Execo]] for the benchmark launches.
- 
+We also use [[http://execo.gforge.inria.fr/doc/latest-stable/][Execo]] for the benchmark launches with the various experiment scenarios.
+We use [[https://github.com/plotly/orca][Orca]] for the curve plotting. 
 ** Machine Topology used in our experiments
 To makes these experiments we have used two different topologies depending on the use of a local registry for the openstack images or a shared / remote registry.
 ***** Topology with a local registry node
@@ -293,10 +296,21 @@ python mad.py backup
 The backup command allows to recover the environment configuration from the experiment and the resulting files that are on the concerto node, such as the kolla logs and the madeus directory.
 The resulting files are in the =backups= directory, under the timestamp of the experiment start.
 
-** Plot the data from our given results
+** Plot the data from the benchmarks results
 Once the resulting files have been recovered through the **backup** command, the use of **analyze** will allow for the creation of time charts, by replacing =Timestamp= by the timestamp of the experiment that is the name of the backup directory just created.
 #+BEGIN_SRC sh
 python mad.py analyze -b backups/Timestamp
 #+END_SRC
 This will go through the results and plot the charts of the experiment times.
- 
+** Reproduce data plots from our results
+Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used:
+#+BEGIN_SRC sh
+python mad.py analyze -b result_directory
+#+END_SRC
+This command will produce several files:
+- a svg file with the histogram of deployment times such as this example
+#+NAME:   Deployment times
+[[./results_deployment_times.svg]]
+- for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:
+#+NAME: Gantt chart for an experiment
+[[./gantt.png]]
