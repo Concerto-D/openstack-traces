@@ -1,0 +1,33 @@
+
+\begin{tabular}{cl|cccccc}
+    \toprule
+    & & Shell & Ansible & DW & K8S & Juju & Aeolus \\
+    \midrule
+    %\rowcolor{gray!15}
+    \multirow{3}{*}{\STAB{\rotatebox[origin=c]{90}{Parallel}}}
+    & node    & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+    & inter   & \cmark &   &   &   & \cmark & \cmark \\
+    %\rowcolor{gray!15}
+    & intra   & \cmark &   &   &   &   &   \\
+    \midrule
+    \multirow{2}{*}{\STAB{\rotatebox[origin=c]{90}{SE}}}
+    & module  &   & \cmark & \cmark & \cmark & \cmark & \cmark \\
+    %\rowcolor{gray!15}
+    & ports   &   &   &   &   & \cmark & \cmark \\
+    \bottomrule
+\end{tabular}
+
+% with mad:
+%\begin{tabular}{lccccccc}
+%    \toprule
+%    & Shell & Ansible & DW & K8S & Juju & Aeolus & Mad \\
+%    \midrule
+%    spmd    & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+%    inter   & \cmark &   &   &   & \cmark & \cmark & \cmark \\
+%    intra   & \cmark &   &   &   &   &   & \cmark \\
+%    \midrule
+%    module  &   & \cmark & \cmark & \cmark & \cmark & \cmark & \cmark \\
+%    ports   &   &   &   &   & \cmark & \cmark & \cmark \\
+%    \bottomrule
+%\end{tabular}
+

@@ -1,39 +1,218 @@
-\begin{itemize}
-\item description of current software commissioning practices
-  \begin{itemize}
-  \item Script, IaC, Provisioning: ansible, puppet, chef, salt,
-    terraform, Docker etc.
-  \item Orchestration out of the scope (K8s, Swarm, TOSCA etc.)
-  \end{itemize}
-\item interesting properties regarding soft. commissioning
-  \begin{itemize}
-  \item good software engineering properties in soft. commissioning
-    (composition, reuse, maintainability, separation of concerns etc.)
-    \begin{itemize}
-    \item Ansible, Puppet, Chef ok but limited
-    \item component-based approach ok but less flexible
-    \end{itemize}
-  \item programmable / flexibility
-    \begin{itemize}
-    \item customized commissioning tasks or operations
-    \item Ansible, Puppet, Chef ok
-    \item component-based approach not ok and ok (?)
-    \end{itemize}
-  \item parallelism / efficiency which is directly related to
-    dependencies than can be defined between elements and tasks and
-    which is also related to the previous flexibility property
-    \begin{itemize}
-    \item SPMD (find another name) STMH (same tasks on multiple
-      hosts): puppet, ansible, deployware (?) etc.
-    \item dependencies between different components (MariaDB then
-      Apache): Puppet, ansible, deployware etc.
-    \item dependencies between tasks of components: aeolus, puppet (?)
-    \item dependencies between tasks of a single component: hand
-      written except for Madeus and Puppet (?) but not used by Puppet
-      for parallelism
-    \end{itemize}
-  \end{itemize}
-\end{itemize}
 
-Ansible, Aeolus chosen as references
-  
+In this section, we first present a selection of the distributed software
+commissioning solutions introduced previously. We then use the study of their
+different features for formulating a framework to compare them.  Finally we
+discuss different aspects regarding these solutions that guide us to design our
+contribution.
+
+
+\subsection{Distributed software commissioning solutions}
+
+% Shell-scripts
+\paragraph{Shell scripts}
+The traditional way operators automate software commissioning is by transcribing
+the actions and configurations from READMEs and tutorials into a sequence of
+commands in \shell scripts.
+On the one hand, those scripts are written with low-level imperative languages,
+and good programming skills, it is possible to express complex workflows (\eg
+idempotency, parallelism, remote actions using \textsc{SSH}).
+For instance, parallelism can be managed by combining command execution in the
+background (\eg using the control operator \& in \bash) and synchronisation
+commands like \emph{wait}.
+On the other hand, as the system grows, any custom script becomes error-prone,
+unpredictable, hard to understand and to maintain.
+\shell scripts lack of software engineering aspects and there is no framework to
+express modules nor ports. As a consequence, \shell scripts are not adapted for
+distributed software commissioning.
+% devstack is a set of shell script to deploy OpenStack on a single machine
+
+The following tools bring features from software engineering to tackle these
+issues. Rather than manually writing imperative instructions describing the
+whole process, an operator composes her distributed software by providing a
+description of the software architecture (\ie the modules with their
+connexions). Then, the configuration management tool is in charge to bring the
+systems to the desired state.
+
+% Ansible
+\paragraph{Ansible}
+For the DevOps that are used to shell-scripts, \ansible has become a popular
+configuration management tool since it relies on a simple syntax written in YAML
+and does not require agents on administrated servers. Tasks are indeed managed
+using only \textsc{SSH} and \textsc{Python} which are commonly installed on
+every Linux distributions.
+In comparison, similar tools like \chef, \puppet or \cfengine not only require
+at least a slight understanding of Ruby or a custom language to get started, but
+they are built on an agent-based architecture and requires prior agent
+commissioning on remote hosts.
+
+\ansible features software engineering aspects like separation of concerns by
+defining the notion of \emph{roles} which can be seen as software components.
+Each role contains a set of files that describe a sequences of tasks. To define
+a composition, a specific file called an \ansible \emph{playbook} is used for
+mapping the desired roles to the groups of nodes they will be applied to. Those
+groups of nodes are defined in a separate file called the \emph{inventory}. When
+\ansible is triggered, roles and their related tasks are sequentially executed
+to the associated groups of nodes.  While tasks declarations are indeed manages
+sequentially, each task is executed in parallel when mapped to multiple remote
+hosts.
+
+Typically, an operator who wants to commission an \apache web server and a
+\mysql database would download two roles from Ansible Galaxy and register them
+in an playbook. Since \ansible triggers roles in a sequential manner, if the
+operator is not aware that the database must be commissioned before the web
+server, she could make a mistake in the order of the roles she declared. This
+aspect breaks the separation of concerns since the operator has to understand
+role's internals to determine their order.
+
+% Tasks are declared in an imperative way, however, Ansible relies heavily on
+% declarative modules, most of which ensure task idempotency (operations are run
+% once even if called multiple times).
+
+% Deployware
+\paragraph{Deployware}
+\citeauthor{flissi2008ccgrid} proposed \deployware (DW) as a research effort to
+deploy distributed software in the context of Grid
+computing~\cite{flissi2008ccgrid}. Its implementation is based on the Fractal
+component model. A component is called a \emph{Personality} and is associated to
+a fixed set of commissioning actions (\ie install, configure, start, manage,
+stop, unconfigure and uninstall).  Each action describes a sequence of tasks,
+written with a specific high-level language that uses pre-defined instructions
+(\eg execute command, copy a file).
+
+While there is no notion of component ports, it is possible to express
+dependencies between components to initiate automatic coordination. For
+instance, when the operator triggers the action "install" on a component, the
+same action is triggered recursively to its dependencies.
+
+% Kubernetes
+\paragraph{Kubernetes}
+Initiated by Google, \kubernetes (K8S) is a popular
+framework to commission distributed software in the form of micro-services that
+are packaged as Docker containers.
+
+A software component in \kubernetes is thus defined as Docker container. Such
+components have no port to manage coordination, and its internals is fixed since
+containers can only be started and stopped. As a consequence, the commissioning
+process is error-prone. For instance, a web server can be started before the
+required database and thus fails.
+% depend_on exists but limited to "container is started"
+% synchronization is possible but must be managed by internal script and not managed by k8s
+% good soc, download containers and run k8s deploy but without synchonization,
+    % commissioning is error-prone
+
+% Juju
+\paragraph{Juju}
+Canonical has developed their own software commissioning solution: \juju
+(\url{https://jujucharms.com/}) which aims at commissioning any kind of
+application on top of different cloud providers (\eg AWS, OpenStack), and on
+multiple types of resources (container, VM or bare-metal).
+
+Its concepts are close to component models. Software modules are packaged as
+\juju \emph{charms} which describe the software commissioning steps through a
+set of scripts called \emph{hooks}. Operators define their composition in a
+specific file called \emph{bundle} in which they declare the desired charms with
+their \emph{relations}. A relation is an element declared between two charms and
+used for component synchronization (by triggering hooks) and data sharing at
+runtime, similarly to component ports.
+% good soc, download charms and run juju deploy
+
+% Aeolus
+\paragraph{Aeolus}
+\citeauthor{dicosmo2014ic} proposed \aeolus: a formal component model for the
+cloud~\cite{dicosmo2014ic}. Their component model captures the internal states
+of a component commissioning process thanks to a finite state machine. Each
+state can be connected to use, provide, or conflict ports to declare
+dependencies between the commissioning steps of different components. Hence,
+such ports enable the coordination of the global deployment process.
+
+
+\subsection{Comparison}
+
+\begin{table}[tp]
+  \centering
+  \small
+  \input{tables/tab_related_work.tex}
+  \caption{Comparison of commissioning solutions based on aspects
+  regarding parallelism (performance) and software engineering (SE).}
+  \label{tab:comparison}
+\end{table}
+
+Based on the above commissioning tools, a closer study of their different
+features can be used as a guide in formulating a framework to compare them. In
+the following, we discuss the several aspects regarding performance and software
+engineering that are desirable. These aspects are summarized in
+\cref{tab:comparison}.
+
+\paragraph{Performance}
+From our study of distributed software commissioning tools, we define three
+levels regarding \emph{performance} which reflect the different degrees in
+the expressiveness of parallelism observed in the previous tools.
+The first level corresponds to the ability to map a set of tasks to multiple
+machines. In such case, at runtime, the same tasks are executed in parallel on
+different nodes. We call this level: \emph{node parallelism}. For instance, this
+is typically the way parallelism is managed in \ansible (also applied in
+\deployware and \kubernetes).
+\emph{Inter-component parallelism} corresponds to the ability to express
+dependencies between tasks of different components. At runtime, both components
+are commissioned in parallel as long as no dependency is reached between them.
+\aeolus and \juju are such examples of tools providing this level of
+parallelism. Finally, \emph{intra-component parallelism} reflects the ability to
+express task parallelism in the component internals, which can be run in
+parallel when the component is instantiated. This level is hard to achieve with
+\shell scrips, and is missing from the other tools.
+The more levels a tool has, the more efficient it is.
+
+\paragraph{Software engineering}
+The building blocks to improve separation of concerns, code re-use and
+maintainability are software modules or components, and ports.
+There is no framework in \shell scripts to define modules and ports. \ansible,
+\deployware and \kubernetes feature modules but no ports so either the
+commissioning is error-prone (\ie \ansible and \kubernetes) or the tool has to
+rely on the notion of dependency to offer limited coordination between modules.
+To tackle this issue, \juju and \aeolus define ports. Ports enable developer to
+provide enough information from a component to avoid inspecting its internals
+and being able to manage coordination between them. As depicted
+in~\cref{tab:comparison}, the solutions that provide ports are enable to manage
+inter-module parallelism.
+
+
+\subsection{Discussions}
+
+One further aspect of the level of programmability provided by commissioning
+tools. When the tool is highly programmable, developers have the ability to
+manage their own code organization. This is an important aspect to finely
+express what can be executed in parallel (thus it impacts performance). For
+instance \deployware and \juju limit the internals of their modules to a
+predefined set of actions (eg config, install) while such actions might contain
+instructions that can be declared parallelable.
+%
+Our solution differs by letting developers abstract a set of instructions in the
+form of transitions. Transitions can be expressed in parallel, and their
+synchronisation is declared using states.
+%high programmable can also  improve maintainability by isolating specfic code
+%in a transition.
+
+Finally, a desired feature for distributed software commissioning is automation.
+Typically an operator should download the desired modules to compose a
+distributed software, instantiate and connect them through their ports, then run
+the commissioning process. This aspect requires an operational semantic to
+express how the commissioning process automatically progresses with respect to
+inter and intra-component dependencies. For instance, \aeolus, which supports
+only inter-component parallelism, is a component-based model that relies on
+states and transitions to manage inter-component dependencies. However, since
+the model lacks an operational semantic, each operation is planned and executed
+by an external scheduler. In this work, one of our contribution is to provide a
+operational semantic which drives the execution of the distributed software
+commissioning, and will be explained in \cref{subsec:operational_semantics}.
+
+As depicted in~\cref{tab:comparison}, we can conclude from this analysis that
+individually, none of the above attempts adequately provide a commissioning tool
+which can express both a high-degree of parallelism and feature software
+engineering aspects like separation of concerns.
+In the rest of this paper, we define \mad, our contribution which is inspired by
+\aeolus as a component-based model and relies on modules and ports to express all
+the parallelism levels described above. In the rest of the paper, we will
+focus the comparison of our solution with \ansible and \aeolus, since the former
+is widely used in production, while the second is a research effort that
+provides most of the above features.
+
