@@ -31,8 +31,9 @@ This page aims to offer a practical way of reproducing the experiments presented
 Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]].
 In this we go through the various steps required to obtain the 
 
-* Experimental setup
+* Open Stack Use Case
 ** Requirements
+Here are the requirements for the Open Stack Use case to run:
 - python 3.7+
 - git
 To launch experiments on a local machine:
@@ -41,19 +42,19 @@ To launch the experiments on Grid 5000:
 - a Grid5000 account and to setting up your ssh config appropriately (see [[#g5k][Grid5000 setup]])
 
 
-The requirements are all contained in the =requirements.txt= file at the root directory of the lab.
-The lab code can be found on [[http://duckduckgo.com][Gitlab]].
+All other required librairies will be installed in a virtual environment and are contained in the =requirements.txt= file at the root directory of the lab.
+The lab code can be found on [[https://gitlab.inria.fr/][Gitlab]].
 
 *** Grid5000 setup
 :PROPERTIES:
 :CUSTOM_ID: g5k
 :END:
-- You need to set the `~/.python-grid5000.yaml` file as explaine [[https://discovery.gitlabpages.inria.fr/enoslib/tutorials/grid5000.html#configuration][here]].
+- You need to set the `~/.python-grid5000.yaml` file as explained [[https://discovery.gitlabpages.inria.fr/enoslib/tutorials/grid5000.html#configuration][here]].
 - An appropriate SSH configuration is required to access automatically
   the distant nodes on G5K as `root` for the sake of the deployment process. By
   default, the public key sent to the distant nodes is `~/.ssh/id_rsa.pub`. Be
   sure this key exists.
-  (it is otherwise recommended to create a set of key specifically for
+  (It is otherwise recommended to create a set of key specifically for
   grid5000).
  
 Next, be sure the file `~/.ssh/config` contains the following parts, adapted with your own Grid 5000 username:
@@ -78,8 +79,8 @@ Host *.grid5000.fr
 #+END_SRC
 
 ** Getting the code
-First step is recovering all our code from the public repository. The code also includes the results we have obtained and used in the paper.
-It is possible to reproduce the graphs and gant charts from the results, please see the related section on Reproducing the graphs.
+First step is recovering all the code from the public repository. It also includes the results we have obtained and used in the paper.
+It is possible to reproduce the graphs and gant charts from the results, please see the related section on [[#repro][Repoducing data plots]].
 #+NAME: Getting the lab code
 #+BEGIN_SRC sh 
 git clone https://gitlab.inria.fr/dpertin/lab-openstack-concerto.git && cd lab-openstack-concerto
@@ -221,20 +222,21 @@ A typical experiment using Mad is the sequence of several phases:
 
 The =README.md= file contains more information about the various commands available. This document focuses on offering an easier way to reproduce the experiments presented in the paper and will not go in details over the various options. The =python mad.py= command has a =--help= flag that gives out information over the commands available.
 ** Deploying Openstack on the Grid5000 nodes using kolla-ansible
+The mad tool features commands to launch a deployment of openstack on g5k nodes with the use of the =deploy=, and =install-os= commands.
 #+BEGIN_SRC sh
 python mad.py deploy --provider g5k --registry
 python mad.py install-os
 python mad.py destroy--hard
 #+END_SRC
-* Benchmarks
+The =destroy--hard= command is there to clean up the nodes once the deployment has been done.
 ** Request the resources for the benchmarks
 #+BEGIN_SRC sh
 python mad.py deploy -c reservation.yaml -p g5k --bootstrap
 #+END_SRC 
 where the =-c= option indicates our reservation file, =-p= indicates the requested provier, and the =--bootstrap= flag indicates that it will populate the inventory with the proper information about the machines reserved and transfer all necessary environment values and files to the different nodes.
-
 This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the **current** directory. These configuration files are necessary for the OpenStack deployment. 
-** Launch the benchmarks
+
+** Launch the OpenStack benchmarks
 Once the nodes have been reserved, to reproduce the benchmarks, you can specify which test to run by inputing it in the command as for example:
 #+BEGIN_SRC sh
 python mad.py bench -c reservation.yaml --provider g5k --test all
@@ -286,8 +288,8 @@ and
 #+BEGIN_SRC sh
 tmux attach -t mad
 #+END_SRC 
-to observe the bench processes.
-* Results
+to observe the deployment process from the nodes.
+
 ** Recover the benchmark results
 To recover the results from the previously launched benchmarks, just run the following command:
 #+BEGIN_SRC sh
@@ -303,7 +305,10 @@ python mad.py analyze -b backups/Timestamp
 #+END_SRC
 This will go through the results and plot the charts of the experiment times.
 ** Reproduce data plots from our results
-Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used:
+:PROPERTIES:
+:CUSTOM_ID: repro
+:END:
+Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used by replacing =result_directory= with the directory containing all the resulting files:
 #+BEGIN_SRC sh
 python mad.py analyze -b result_directory
 #+END_SRC
@@ -314,3 +319,63 @@ This command will produce several files:
 - for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:
 #+NAME: Gantt chart for an experiment
 [[./gantt.png]]
+
+* SSH Benchmarks
+** Requirements
+Here are the requirements for the SSH benchmarks:
+- a Grid5000 account and a proper set up as described in [[#g5k][Grid5000 Setup]]
+** Accessing a Grid5000 frontend
+These benchmarks will be launched from a Grid5000 frontend:
+#+BEGIN_SRC sh
+ssh access.grid5000.fr
+#+END_SRC
+In our configuration we make reservations on the nantes site, so we will access the nantes frontend:
+#+BEGIN_SRC 
+ssh nantes
+#+END_SRC
+If your Grid5000 configuration is properly setup, you should now have a shell starting with =[your_g5k_login@fnantes]=.
+** Getting the code
+The SSH benchmarks code is contained in the concerto repository. 
+#+BEGIN_SRC sh
+git clone https://gitlab.inria.fr/mchardet/madpp.git
+#+END_SRC
+** Installing the requirements
+We use  [[https://discovery.gitlabpages.inria.fr/enoslib/][EnOSlib]] to set up the machine reservations on grid5000 and launch the experiments
+#+BEGIN_SRC sh
+pip3 install enoslib
+#+END_SRC
+The python path needs to be updated with the madpp directory
+#+BEGIN_SRC sh
+cd ~/madpp && source source_dir.sh
+#+END_SRC
+** Launching the benchmarks
+*** Sequential tests
+The sequential tests are defined in the =reserve_and_test.py= file in the =tests/sequential_test/= directory. 
+The configuration is in the file conf.yaml of the directory. 
+#+BEGIN_SRC yaml
+g5k:
+  # reservation: "2018-03-12 19:00:01"                                                                                                                                                                                                 
+  walltime: "01:00:00"
+  dhcp: true
+  job_name: concerto_ssh_scalability
+  env_name: debian10-x64-base
+  resources:
+    machines:
+      - roles:
+          - concerto
+        cluster: ecotype
+        nodes: 1
+        primary_network: n1
+        secondary_networks: []
+    networks:
+      - id: n1
+        roles:
+          - control_network
+          - database_network
+        type: prod
+        site: nantes
+#+END_SRC
+If your want to test on other sites or with other clusters you can change the values in this file to that purpose.
+#+BEGIN_SRC sh
+python3 tests/sequential_test/reserve_and_test.py
+#+END_SRC
