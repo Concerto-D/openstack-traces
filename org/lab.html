@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-10-28 lun. 11:08 -->
+<!-- 2019-10-29 mar. 16:40 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Reproducibility guide for the openstack-lab</title>
@@ -240,47 +240,47 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgc8a5804">Introduction</a></li>
-<li><a href="#org9a155d3">Experimental setup</a>
+<li><a href="#org04c446b">Introduction</a></li>
+<li><a href="#org2e74fcf">Open Stack Use Case</a>
 <ul>
-<li><a href="#orgcb32113">Requirements</a>
+<li><a href="#org7e0de2a">Requirements</a>
 <ul>
 <li><a href="#g5k">Grid5000 setup</a></li>
 </ul>
 </li>
-<li><a href="#orgb768f46">Getting the code</a></li>
-<li><a href="#orge720685">Starting a virtual environment</a></li>
-<li><a href="#org1c08e54">Install the requirements in the virtual environment</a></li>
-<li><a href="#orgecb86ce">Machine Topology used in our experiments</a></li>
-<li><a href="#org22c92b6">Node setup</a></li>
-<li><a href="#org1b2dbe3">Mad Workflow</a></li>
-<li><a href="#org6f50ad3">Deploying Openstack on the Grid5000 nodes using kolla-ansible</a></li>
+<li><a href="#orgc8f6c63">Getting the code</a></li>
+<li><a href="#org2d19464">Starting a virtual environment</a></li>
+<li><a href="#org0fc9ac2">Install the requirements in the virtual environment</a></li>
+<li><a href="#org261eb63">Machine Topology used in our experiments</a></li>
+<li><a href="#orgbcee043">Node setup</a></li>
+<li><a href="#org655af70">Mad Workflow</a></li>
+<li><a href="#org9f56b16">Deploying Openstack on the Grid5000 nodes using kolla-ansible</a></li>
+<li><a href="#org3323b00">Request the resources for the benchmarks</a></li>
+<li><a href="#orgdf95ba9">Launch the OpenStack benchmarks</a>
+<ul>
+<li><a href="#org38ccec6">Behind the scenes</a></li>
 </ul>
 </li>
-<li><a href="#org9dec353">Benchmarks</a>
-<ul>
-<li><a href="#org6ef72b7">Request the resources for the benchmarks</a></li>
-<li><a href="#orgffcd9ef">Launch the benchmarks</a>
-<ul>
-<li><a href="#org437986f">Behind the scenes</a></li>
+<li><a href="#org140ed3a">Recover the benchmark results</a></li>
+<li><a href="#org9ff9de5">Plot the data from the benchmarks results</a></li>
+<li><a href="#repro">Reproduce data plots from our results</a></li>
 </ul>
 </li>
-</ul>
-</li>
-<li><a href="#orgca92d8d">Results</a>
+<li><a href="#orgfd5aaaa">SSH Benchmarks</a>
 <ul>
-<li><a href="#org59b4ab7">Recover the benchmark results</a></li>
-<li><a href="#org053ca93">Plot the data from the benchmarks results</a></li>
-<li><a href="#org9b9fe44">Reproduce data plots from our results</a></li>
+<li><a href="#org0deec37">Requirements</a></li>
+<li><a href="#orgd9cfd6a">Accessing a Grid5000 frontend</a></li>
+<li><a href="#org8d8d993">Getting the code</a></li>
+<li><a href="#orgd5225c5">Installing the requirements</a></li>
 </ul>
 </li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-orgc8a5804" class="outline-2">
-<h2 id="orgc8a5804">Introduction</h2>
-<div class="outline-text-2" id="text-orgc8a5804">
+<div id="outline-container-org04c446b" class="outline-2">
+<h2 id="org04c446b">Introduction</h2>
+<div class="outline-text-2" id="text-org04c446b">
 <p>
 This page aims to offer a practical way of reproducing the experiments presented in the paper [].
 Our experiments are based on the deployment of <a href="https://www.openstack.org/">OpenStack</a>.
@@ -289,13 +289,16 @@ In this we go through the various steps required to obtain the
 </div>
 </div>
 
-<div id="outline-container-org9a155d3" class="outline-2">
-<h2 id="org9a155d3">Experimental setup</h2>
-<div class="outline-text-2" id="text-org9a155d3">
+<div id="outline-container-org2e74fcf" class="outline-2">
+<h2 id="org2e74fcf">Open Stack Use Case</h2>
+<div class="outline-text-2" id="text-org2e74fcf">
 </div>
-<div id="outline-container-orgcb32113" class="outline-3">
-<h3 id="orgcb32113">Requirements</h3>
-<div class="outline-text-3" id="text-orgcb32113">
+<div id="outline-container-org7e0de2a" class="outline-3">
+<h3 id="org7e0de2a">Requirements</h3>
+<div class="outline-text-3" id="text-org7e0de2a">
+<p>
+Here are the requirements for the Open Stack Use case to run:
+</p>
 <ul class="org-ul">
 <li>python 3.7+</li>
 <li>git</li>
@@ -315,21 +318,21 @@ To launch the experiments on Grid 5000:
 
 
 <p>
-The requirements are all contained in the <code>requirements.txt</code> file at the root directory of the lab.
-The lab code can be found on <a href="http://duckduckgo.com">Gitlab</a>.
+All other required librairies will be installed in a virtual environment and are contained in the <code>requirements.txt</code> file at the root directory of the lab.
+The lab code can be found on <a href="https://gitlab.inria.fr/">Gitlab</a>.
 </p>
 </div>
 
-<div id="outline-container-orgd54111a" class="outline-4">
-<h4 id="g5k"><a id="orgd54111a"></a>Grid5000 setup</h4>
+<div id="outline-container-org711da0b" class="outline-4">
+<h4 id="g5k"><a id="org711da0b"></a>Grid5000 setup</h4>
 <div class="outline-text-4" id="text-g5k">
 <ul class="org-ul">
-<li>You need to set the `~/.python-grid5000.yaml` file as explaine <a href="https://discovery.gitlabpages.inria.fr/enoslib/tutorials/grid5000.html#configuration">here</a>.</li>
+<li>You need to set the `~/.python-grid5000.yaml` file as explained <a href="https://discovery.gitlabpages.inria.fr/enoslib/tutorials/grid5000.html#configuration">here</a>.</li>
 <li>An appropriate SSH configuration is required to access automatically
 the distant nodes on G5K as `root` for the sake of the deployment process. By
 default, the public key sent to the distant nodes is `~/.ssh/id_rsa.pub`. Be
 sure this key exists.
-(it is otherwise recommended to create a set of key specifically for
+(It is otherwise recommended to create a set of key specifically for
 grid5000).</li>
 </ul>
 
@@ -359,29 +362,29 @@ Host *.grid5000.fr
 </div>
 </div>
 
-<div id="outline-container-orgb768f46" class="outline-3">
-<h3 id="orgb768f46">Getting the code</h3>
-<div class="outline-text-3" id="text-orgb768f46">
+<div id="outline-container-orgc8f6c63" class="outline-3">
+<h3 id="orgc8f6c63">Getting the code</h3>
+<div class="outline-text-3" id="text-orgc8f6c63">
 <p>
-First step is recovering all our code from the public repository. The code also includes the results we have obtained and used in the paper.
-It is possible to reproduce the graphs and gant charts from the results, please see the related section on Reproducing the graphs.
+First step is recovering all the code from the public repository. It also includes the results we have obtained and used in the paper.
+It is possible to reproduce the graphs and gant charts from the results, please see the related section on <a href="#repro">Repoducing data plots</a>.
 </p>
 <div class="org-src-container">
-<pre class="src src-sh" id="orga80fa8e">git clone https://gitlab.inria.fr/dpertin/lab-openstack-concerto.git &amp;&amp; <span style="color: #483d8b;">cd</span> lab-openstack-concerto
+<pre class="src src-sh" id="orgd184a8d">git clone https://gitlab.inria.fr/dpertin/lab-openstack-concerto.git &amp;&amp; <span style="color: #f08080;">cd</span> lab-openstack-concerto
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orge720685" class="outline-3">
-<h3 id="orge720685">Starting a virtual environment</h3>
-<div class="outline-text-3" id="text-orge720685">
+<div id="outline-container-org2d19464" class="outline-3">
+<h3 id="org2d19464">Starting a virtual environment</h3>
+<div class="outline-text-3" id="text-org2d19464">
 <p>
 It is recommended to run experiments in a virtual environment to keep your python installation clean.
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">virtualenv -p python3 venv
-<span style="color: #483d8b;">source</span> venv/bin/activate
+<span style="color: #f08080;">source</span> venv/bin/activate
 </pre>
 </div>
 
@@ -389,7 +392,7 @@ It is recommended to run experiments in a virtual environment to keep your pytho
 If your Grid5000 ssh key has a passphrase, you can use 
 </p>
 <div class="org-src-container">
-<pre class="src src-sh"><span style="color: #483d8b;">eval</span> <span style="color: #8b2252;">"$(ssh-agent -s)"</span> &amp;&amp; ssh-add
+<pre class="src src-sh"><span style="color: #f08080;">eval</span> <span style="color: #deb887;">"$(ssh-agent -s)"</span> &amp;&amp; ssh-add
 </pre>
 </div>
 <p>
@@ -398,9 +401,9 @@ before starting the experiments to add the key to your ssh agent and not have to
 </div>
 </div>
 
-<div id="outline-container-org1c08e54" class="outline-3">
-<h3 id="org1c08e54">Install the requirements in the virtual environment</h3>
-<div class="outline-text-3" id="text-org1c08e54">
+<div id="outline-container-org0fc9ac2" class="outline-3">
+<h3 id="org0fc9ac2">Install the requirements in the virtual environment</h3>
+<div class="outline-text-3" id="text-org0fc9ac2">
 <p>
 The makefile allows for the installation of the requirements, you can use:
 </p>
@@ -416,16 +419,16 @@ We use <a href="https://github.com/plotly/orca">Orca</a> for the curve plotting.
 </p>
 </div>
 </div>
-<div id="outline-container-orgecb86ce" class="outline-3">
-<h3 id="orgecb86ce">Machine Topology used in our experiments</h3>
-<div class="outline-text-3" id="text-orgecb86ce">
+<div id="outline-container-org261eb63" class="outline-3">
+<h3 id="org261eb63">Machine Topology used in our experiments</h3>
+<div class="outline-text-3" id="text-org261eb63">
 <p>
 To makes these experiments we have used two different topologies depending on the use of a local registry for the openstack images or a shared / remote registry.
 </p>
 </div>
 <ul class="org-ul">
-<li><a id="org62ddb90"></a>Topology with a local registry node<br />
-<div class="outline-text-6" id="text-org62ddb90">
+<li><a id="org3e77ed8"></a>Topology with a local registry node<br />
+<div class="outline-text-6" id="text-org3e77ed8">
 
 <div class="figure">
 <p><img src="topology_local_registry.png" alt="topology_local_registry.png" />
@@ -434,8 +437,8 @@ To makes these experiments we have used two different topologies depending on th
 </div>
 </li>
 
-<li><a id="org2160eb3"></a>Topology for remote or shared registry<br />
-<div class="outline-text-6" id="text-org2160eb3">
+<li><a id="org568c3fc"></a>Topology for remote or shared registry<br />
+<div class="outline-text-6" id="text-org568c3fc">
 
 <div class="figure">
 <p><img src="topology_remote_registry.png" alt="topology_remote_registry.png" />
@@ -446,60 +449,60 @@ To makes these experiments we have used two different topologies depending on th
 </ul>
 </div>
 
-<div id="outline-container-org22c92b6" class="outline-3">
-<h3 id="org22c92b6">Node setup</h3>
-<div class="outline-text-3" id="text-org22c92b6">
+<div id="outline-container-orgbcee043" class="outline-3">
+<h3 id="orgbcee043">Node setup</h3>
+<div class="outline-text-3" id="text-orgbcee043">
 <p>
 The details of the machine reservation on grid5000 are set in the <code>reservation.yaml</code> file where they can be updated to fit specific needs.
 </p>
 <div class="org-src-container">
-<pre class="src src-yaml" id="org02dc506"><span style="color: #b22222;">---</span>
-<span style="color: #b22222;"># </span><span style="color: #b22222;">############################################### #</span>
-<span style="color: #b22222;"># </span><span style="color: #b22222;">Grid'5000 reservation parameters                #</span>
-<span style="color: #b22222;"># </span><span style="color: #b22222;">############################################### #</span>
+<pre class="src src-yaml" id="org69627bb"><span style="color: #7f7f7f;">---</span>
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">############################################### #</span>
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Grid'5000 reservation parameters                #</span>
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">############################################### #</span>
 
-<span style="color: #a0522d;">g5k</span>:
-  <span style="color: #b22222;"># </span><span style="color: #b22222;">reservation: "2018-03-12 19:00:01"</span>
-  <span style="color: #a0522d;">walltime</span>: <span style="color: #8b2252;">"04:00:00"</span>
-  <span style="color: #a0522d;">job_name</span>: mad-openstack
-  <span style="color: #a0522d;">env_name</span>: debian10-x64-nfs
-  <span style="color: #b22222;">#</span><span style="color: #b22222;">key: "~/.ssh/id_grid5k.pub"</span>
-  <span style="color: #a0522d;">resources</span>:
-    <span style="color: #a0522d;">machines</span>:
-      - <span style="color: #a0522d;">roles</span>:
+<span style="color: #4eee94;">g5k</span>:
+  <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">reservation: "2018-03-12 19:00:01"</span>
+  <span style="color: #4eee94;">walltime</span>: <span style="color: #deb887;">"04:00:00"</span>
+  <span style="color: #4eee94;">job_name</span>: mad-openstack
+  <span style="color: #4eee94;">env_name</span>: debian10-x64-nfs
+  <span style="color: #7f7f7f;">#</span><span style="color: #7f7f7f;">key: "~/.ssh/id_grid5k.pub"</span>
+  <span style="color: #4eee94;">resources</span>:
+    <span style="color: #4eee94;">machines</span>:
+      - <span style="color: #4eee94;">roles</span>:
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- mad-node
-      <span style="color: #a0522d;">cluster</span>: paravance
-      <span style="color: #a0522d;">node</span>: 1
-      <span style="color: #a0522d;">primary_network</span>: int-net
-      - <span style="color: #a0522d;">roles</span>:
+      <span style="color: #4eee94;">cluster</span>: paravance
+      <span style="color: #4eee94;">node</span>: 1
+      <span style="color: #4eee94;">primary_network</span>: int-net
+      - <span style="color: #4eee94;">roles</span>:
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- disco/registry
-      <span style="color: #a0522d;">cluster</span>: paravance
-      <span style="color: #a0522d;">node</span>: 1
-      <span style="color: #a0522d;">primary_network</span>: int-net
-      - <span style="color: #a0522d;">roles</span>:
+      <span style="color: #4eee94;">cluster</span>: paravance
+      <span style="color: #4eee94;">node</span>: 1
+      <span style="color: #4eee94;">primary_network</span>: int-net
+      - <span style="color: #4eee94;">roles</span>:
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- openstack
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- control
-      <span style="color: #a0522d;">cluster</span>: paravance
-      <span style="color: #a0522d;">node</span>: 1
-      <span style="color: #a0522d;">primary_network</span>: int-net
-      - <span style="color: #a0522d;">roles</span>:
+      <span style="color: #4eee94;">cluster</span>: paravance
+      <span style="color: #4eee94;">node</span>: 1
+      <span style="color: #4eee94;">primary_network</span>: int-net
+      - <span style="color: #4eee94;">roles</span>:
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- openstack
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- compute
-      <span style="color: #a0522d;">cluster</span>: paravance
-      <span style="color: #a0522d;">node</span>: 1
-      <span style="color: #a0522d;">primary_network</span>: int-net
-      - <span style="color: #a0522d;">roles</span>:
+      <span style="color: #4eee94;">cluster</span>: paravance
+      <span style="color: #4eee94;">node</span>: 1
+      <span style="color: #4eee94;">primary_network</span>: int-net
+      - <span style="color: #4eee94;">roles</span>:
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- openstack
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>  - network
-      <span style="color: #a0522d;">node</span>: 1
-      <span style="color: #a0522d;">cluster</span>: paravance
-      <span style="color: #a0522d;">primary_network</span>: int-net
-    <span style="color: #a0522d;">networks</span>:
-      - <span style="color: #a0522d;">id</span>: int-net
-      <span style="color: #a0522d;">roles</span>: 
+      <span style="color: #4eee94;">node</span>: 1
+      <span style="color: #4eee94;">cluster</span>: paravance
+      <span style="color: #4eee94;">primary_network</span>: int-net
+    <span style="color: #4eee94;">networks</span>:
+      - <span style="color: #4eee94;">id</span>: int-net
+      <span style="color: #4eee94;">roles</span>: 
 <span style="color: #ff0000; background-color: #ff0000; font-weight: bold;">        </span>- network_interface
-      <span style="color: #a0522d;">type</span>: kavlan
-      <span style="color: #a0522d;">site</span>: rennes
+      <span style="color: #4eee94;">type</span>: kavlan
+      <span style="color: #4eee94;">site</span>: rennes
 </pre>
 </div>
 <p>
@@ -514,9 +517,9 @@ We defined specific roles for our machines:
 </div>
 </div>
 
-<div id="outline-container-org1b2dbe3" class="outline-3">
-<h3 id="org1b2dbe3">Mad Workflow</h3>
-<div class="outline-text-3" id="text-org1b2dbe3">
+<div id="outline-container-org655af70" class="outline-3">
+<h3 id="org655af70">Mad Workflow</h3>
+<div class="outline-text-3" id="text-org655af70">
 <p>
 A typical experiment using Mad is the sequence of several phases:
 </p>
@@ -533,41 +536,40 @@ The <code>README.md</code> file contains more information about the various comm
 </p>
 </div>
 </div>
-<div id="outline-container-org6f50ad3" class="outline-3">
-<h3 id="org6f50ad3">Deploying Openstack on the Grid5000 nodes using kolla-ansible</h3>
-<div class="outline-text-3" id="text-org6f50ad3">
+<div id="outline-container-org9f56b16" class="outline-3">
+<h3 id="org9f56b16">Deploying Openstack on the Grid5000 nodes using kolla-ansible</h3>
+<div class="outline-text-3" id="text-org9f56b16">
+<p>
+The mad tool features commands to launch a deployment of openstack on g5k nodes with the use of the <code>deploy</code>, and <code>install-os</code> commands.
+</p>
 <div class="org-src-container">
 <pre class="src src-sh">python mad.py deploy --provider g5k --registry
 python mad.py install-os
 python mad.py destroy--hard
 </pre>
 </div>
+<p>
+The <code>destroy--hard</code> command is there to clean up the nodes once the deployment has been done.
+</p>
 </div>
 </div>
-</div>
-<div id="outline-container-org9dec353" class="outline-2">
-<h2 id="org9dec353">Benchmarks</h2>
-<div class="outline-text-2" id="text-org9dec353">
-</div>
-<div id="outline-container-org6ef72b7" class="outline-3">
-<h3 id="org6ef72b7">Request the resources for the benchmarks</h3>
-<div class="outline-text-3" id="text-org6ef72b7">
+<div id="outline-container-org3323b00" class="outline-3">
+<h3 id="org3323b00">Request the resources for the benchmarks</h3>
+<div class="outline-text-3" id="text-org3323b00">
 <div class="org-src-container">
 <pre class="src src-sh">python mad.py deploy -c reservation.yaml -p g5k --bootstrap
 </pre>
 </div>
 <p>
 where the <code>-c</code> option indicates our reservation file, <code>-p</code> indicates the requested provier, and the <code>--bootstrap</code> flag indicates that it will populate the inventory with the proper information about the machines reserved and transfer all necessary environment values and files to the different nodes.
-</p>
-
-<p>
 This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the <b><b>current</b></b> directory. These configuration files are necessary for the OpenStack deployment. 
 </p>
 </div>
 </div>
-<div id="outline-container-orgffcd9ef" class="outline-3">
-<h3 id="orgffcd9ef">Launch the benchmarks</h3>
-<div class="outline-text-3" id="text-orgffcd9ef">
+
+<div id="outline-container-orgdf95ba9" class="outline-3">
+<h3 id="orgdf95ba9">Launch the OpenStack benchmarks</h3>
+<div class="outline-text-3" id="text-orgdf95ba9">
 <p>
 Once the nodes have been reserved, to reproduce the benchmarks, you can specify which test to run by inputing it in the command as for example:
 </p>
@@ -580,36 +582,36 @@ launches the scenario defined in the <code>reservation.yaml</code> file as <code
 </p>
 
 <div class="org-src-container">
-<pre class="src src-yaml" id="orgcbccebb"><span style="color: #b22222;"># </span><span style="color: #b22222;">############################################### #</span>
-<span style="color: #b22222;"># </span><span style="color: #b22222;">Experiment Scenarios                            #</span>
-<span style="color: #b22222;"># </span><span style="color: #b22222;">############################################### #</span>
+<pre class="src src-yaml" id="org15b704f"><span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">############################################### #</span>
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Experiment Scenarios                            #</span>
+<span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">############################################### #</span>
 
-<span style="color: #a0522d;">all</span>:
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined the parameters related to the Execo bench engine:</span>
-    <span style="color: #a0522d;">params</span>:
-      <span style="color: #a0522d;">test_type</span>: [<span style="color: #8b2252;">"seq_1t"</span>, <span style="color: #8b2252;">"dag_2t"</span>, <span style="color: #8b2252;">"dag_nt4"</span>]
-      <span style="color: #a0522d;">registry</span>: [<span style="color: #8b2252;">"cached"</span>, <span style="color: #8b2252;">"local"</span>, <span style="color: #8b2252;">"remote"</span>]
+<span style="color: #4eee94;">all</span>:
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined the parameters related to the Execo bench engine:</span>
+    <span style="color: #4eee94;">params</span>:
+      <span style="color: #4eee94;">test_type</span>: [<span style="color: #deb887;">"seq_1t"</span>, <span style="color: #deb887;">"dag_2t"</span>, <span style="color: #deb887;">"dag_nt4"</span>]
+      <span style="color: #4eee94;">registry</span>: [<span style="color: #deb887;">"cached"</span>, <span style="color: #deb887;">"local"</span>, <span style="color: #deb887;">"remote"</span>]
 
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined global parameters for our benchmarks:</span>
-    <span style="color: #a0522d;">iterations</span>: 10
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined global parameters for our benchmarks:</span>
+    <span style="color: #4eee94;">iterations</span>: 10
 
-<span style="color: #a0522d;">test</span>:
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined the parameters related to the Execo bench engine:</span>
-    <span style="color: #a0522d;">params</span>:
-      <span style="color: #a0522d;">test_type</span>: [<span style="color: #8b2252;">"seq_1t"</span>, <span style="color: #8b2252;">"dag_2t"</span>, <span style="color: #8b2252;">"dag_nt4"</span>]
-      <span style="color: #a0522d;">registry</span>: [<span style="color: #8b2252;">"cached"</span>, <span style="color: #8b2252;">"local"</span>, <span style="color: #8b2252;">"remote"</span>]
+<span style="color: #4eee94;">test</span>:
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined the parameters related to the Execo bench engine:</span>
+    <span style="color: #4eee94;">params</span>:
+      <span style="color: #4eee94;">test_type</span>: [<span style="color: #deb887;">"seq_1t"</span>, <span style="color: #deb887;">"dag_2t"</span>, <span style="color: #deb887;">"dag_nt4"</span>]
+      <span style="color: #4eee94;">registry</span>: [<span style="color: #deb887;">"cached"</span>, <span style="color: #deb887;">"local"</span>, <span style="color: #deb887;">"remote"</span>]
 
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined global parameters for our benchmarks:</span>
-    <span style="color: #a0522d;">iterations</span>: 1  
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined global parameters for our benchmarks:</span>
+    <span style="color: #4eee94;">iterations</span>: 1  
 
-<span style="color: #a0522d;">single</span>:
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined the parameters related to the Execo bench engine:</span>
-    <span style="color: #a0522d;">params</span>:
-      <span style="color: #a0522d;">test_type</span>: [<span style="color: #8b2252;">"dag_nt4"</span>]
-      <span style="color: #a0522d;">registry</span>: [<span style="color: #8b2252;">"local"</span>]
+<span style="color: #4eee94;">single</span>:
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined the parameters related to the Execo bench engine:</span>
+    <span style="color: #4eee94;">params</span>:
+      <span style="color: #4eee94;">test_type</span>: [<span style="color: #deb887;">"dag_nt4"</span>]
+      <span style="color: #4eee94;">registry</span>: [<span style="color: #deb887;">"local"</span>]
 
-    <span style="color: #b22222;"># </span><span style="color: #b22222;">Here are defined global parameters for our benchmarks:</span>
-    <span style="color: #a0522d;">iterations</span>: 1
+    <span style="color: #7f7f7f;"># </span><span style="color: #7f7f7f;">Here are defined global parameters for our benchmarks:</span>
+    <span style="color: #4eee94;">iterations</span>: 1
 </pre>
 </div>
 <p>
@@ -620,9 +622,9 @@ It is posible to define other scenarios following the examples already present i
 </p>
 </div>
 
-<div id="outline-container-org437986f" class="outline-4">
-<h4 id="org437986f">Behind the scenes</h4>
-<div class="outline-text-4" id="text-org437986f">
+<div id="outline-container-org38ccec6" class="outline-4">
+<h4 id="org38ccec6">Behind the scenes</h4>
+<div class="outline-text-4" id="text-org38ccec6">
 <p>
 The call to <code>python mad.py bench</code> will run a tmux session named mad on the remote node with the <b><b>concerto-node</b></b> role that can be accessed through 
 ``` ssh [concerto-node-adress]```
@@ -633,19 +635,15 @@ and
 </pre>
 </div>
 <p>
-to observe the bench processes.
+to observe the deployment process from the nodes.
 </p>
 </div>
 </div>
 </div>
-</div>
-<div id="outline-container-orgca92d8d" class="outline-2">
-<h2 id="orgca92d8d">Results</h2>
-<div class="outline-text-2" id="text-orgca92d8d">
-</div>
-<div id="outline-container-org59b4ab7" class="outline-3">
-<h3 id="org59b4ab7">Recover the benchmark results</h3>
-<div class="outline-text-3" id="text-org59b4ab7">
+
+<div id="outline-container-org140ed3a" class="outline-3">
+<h3 id="org140ed3a">Recover the benchmark results</h3>
+<div class="outline-text-3" id="text-org140ed3a">
 <p>
 To recover the results from the previously launched benchmarks, just run the following command:
 </p>
@@ -660,9 +658,9 @@ The resulting files are in the <code>backups</code> directory, under the timesta
 </div>
 </div>
 
-<div id="outline-container-org053ca93" class="outline-3">
-<h3 id="org053ca93">Plot the data from the benchmarks results</h3>
-<div class="outline-text-3" id="text-org053ca93">
+<div id="outline-container-org9ff9de5" class="outline-3">
+<h3 id="org9ff9de5">Plot the data from the benchmarks results</h3>
+<div class="outline-text-3" id="text-org9ff9de5">
 <p>
 Once the resulting files have been recovered through the <b><b>backup</b></b> command, the use of <b><b>analyze</b></b> will allow for the creation of time charts, by replacing <code>Timestamp</code> by the timestamp of the experiment that is the name of the backup directory just created.
 </p>
@@ -675,11 +673,11 @@ This will go through the results and plot the charts of the experiment times.
 </p>
 </div>
 </div>
-<div id="outline-container-org9b9fe44" class="outline-3">
-<h3 id="org9b9fe44">Reproduce data plots from our results</h3>
-<div class="outline-text-3" id="text-org9b9fe44">
+<div id="outline-container-orgb862bc3" class="outline-3">
+<h3 id="repro"><a id="orgb862bc3"></a>Reproduce data plots from our results</h3>
+<div class="outline-text-3" id="text-repro">
 <p>
-Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used:
+Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used by replacing <code>result_directory</code> with the directory containing all the resulting files:
 </p>
 <div class="org-src-container">
 <pre class="src src-sh">python mad.py analyze -b result_directory
@@ -692,7 +690,7 @@ This command will produce several files:
 <li>a svg file with the histogram of deployment times such as this example</li>
 </ul>
 
-<div id="org757b8d7" class="figure">
+<div id="orgb1716b1" class="figure">
 <p><object type="image/svg+xml" data="./results_deployment_times.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -701,17 +699,82 @@ Sorry, your browser does not support SVG.</object>
 <li>for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:</li>
 </ul>
 
-<div id="org5804b0e" class="figure">
+<div id="org4bb01d9" class="figure">
 <p><img src="./gantt.png" alt="gantt.png" />
 </p>
 </div>
 </div>
 </div>
 </div>
+
+<div id="outline-container-orgfd5aaaa" class="outline-2">
+<h2 id="orgfd5aaaa">SSH Benchmarks</h2>
+<div class="outline-text-2" id="text-orgfd5aaaa">
+</div>
+<div id="outline-container-org0deec37" class="outline-3">
+<h3 id="org0deec37">Requirements</h3>
+<div class="outline-text-3" id="text-org0deec37">
+<p>
+Here are the requirements for the SSH benchmarks:
+</p>
+<ul class="org-ul">
+<li>a Grid5000 account and a proper set up as described in <a href="#g5k">Grid5000 Setup</a></li>
+</ul>
+</div>
+</div>
+<div id="outline-container-orgd9cfd6a" class="outline-3">
+<h3 id="orgd9cfd6a">Accessing a Grid5000 frontend</h3>
+<div class="outline-text-3" id="text-orgd9cfd6a">
+<p>
+These benchmarks will be launched from a Grid5000 frontend:
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">ssh access.grid5000.fr
+</pre>
+</div>
+<p>
+In our configuration we make reservations on the nantes site, so we will access the nantes frontend:
+</p>
+<pre class="example">
+ssh nantes
+</pre>
+<p>
+If your Grid5000 configuration is properly setup, you should now have a shell starting with <code>[your_g5k_login@fnantes]</code>.
+</p>
+</div>
+</div>
+<div id="outline-container-org8d8d993" class="outline-3">
+<h3 id="org8d8d993">Getting the code</h3>
+<div class="outline-text-3" id="text-org8d8d993">
+<p>
+The SSH benchmarks code is contained in the concerto repository. 
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">git clone https://gitlab.inria.fr/mchardet/madpp.git
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-orgd5225c5" class="outline-3">
+<h3 id="orgd5225c5">Installing the requirements</h3>
+<div class="outline-text-3" id="text-orgd5225c5">
+<p>
+We use  <a href="https://discovery.gitlabpages.inria.fr/enoslib/">EnOSlib</a> to set up the machine reservations on grid5000 and launch the experiments
+</p>
+<div class="org-src-container">
+<pre class="src src-sh">pip3 install enoslib
+</pre>
+</div>
+<p>
+To add the needed
+</p>
+</div>
+</div>
+</div>
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Charlene</p>
-<p class="date">Created: 2019-10-28 lun. 11:08</p>
+<p class="date">Created: 2019-10-29 mar. 16:40</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>
