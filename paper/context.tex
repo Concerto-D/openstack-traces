@@ -3,6 +3,9 @@
 % - efficiency of dist. soft. commisioning
 % - selected subset of RW and why
 
+%--------
+\subsection{Distributed software commissioning}
+
 A distributed software is a software designed in a modular fashion
 where each component (or module or service) is responsible for a
 specific part of the overall objective, and will collaborate at
@@ -54,6 +57,7 @@ component with the MariaDB component is needed\footnote{red
   hat}. Another example could be the commissioning of Spark on top of
 Yarn\footnote{spark on Yarn}.
 
+\HC[Dim]{ce listing ne va sans doute pas ici (trop tôt ou top détaillé) mais je le laisse}
 Many interesting challenges arise from the DevOps community and from
 distributed software commissioning. The challenges studied in this
 paper are the following:
@@ -70,7 +74,7 @@ paper are the following:
 \end{itemize}
 
 %--------
-\subsection{Automation and software engineering}
+\subsection{Automation of distributed software commissioning}
 % 1. scripting
 % 2. infrastructure as code
 % 3. provisioning tools
@@ -85,27 +89,27 @@ enhance software engineering properties of commissioning procedures.
 
 \paragraph{Scripting languages}
 First, one usual way of automating commissioning procedures is to use
-\emph{scripting languages} such as \texttt{bash} or \texttt{ruby} for
-instance. Such languages are very flexible and well known by system
-administrators and operators but suffer from many limitations,
-particularly from a software engineering viewpoint. In particular,
-they are not well suited to deal with separation of concerns,
-composition and complex coordination mechanisms.
+\emph{scripting languages} such as \shell or \ruby for instance. Such
+languages are very flexible and well known by system administrators
+and operators but suffer from many limitations, particularly from a
+software engineering viewpoint. In particular, they are not well
+suited to deal with separation of concerns, composition and complex
+coordination mechanisms.
 
 \paragraph{Software configuration tools}
 A second class of languages and tools is called \emph{software
   configuration tools}. This class contains the set of quite recent
-DevOps tools such as Ansible, Deployware~\cite{}, Puppet, Chef, Salt,
-Aeolus~\cite{} etc. The goal of these tools is to enhance the
-productivity when defining components or services commissionings on
-machines and the coordination of their tasks. Most of the time these
-tools add an abstraction on top of scripting languages to hide some of
-their technical details (\eg SSH connections). These tools use
-different methods to acheive productivity. For instance, Ansible
-adopts an imperative style in \texttt{yaml} as a series of tasks to
-launch, while Puppet adopts a declarative approach in \texttt{Python}
-by combining different instances of resources (\ie service, packages
-etc.).
+DevOps tools such as \ansible~\cite{}, \deployware~\cite{},
+\puppet~\cite{}, \chef~\cite{}, \salt~\cite{}, \aeolus~\cite{} etc. The
+goal of these tools is to enhance the productivity when defining
+components or services commissionings on machines and the coordination
+of their tasks. Most of the time these tools add an abstraction on top
+of scripting languages to hide some of their technical details (\eg
+SSH connections). These tools use different methods to acheive
+productivity. For instance, Ansible adopts an imperative style in
+\texttt{yaml} as a series of tasks to launch, while Puppet adopts a
+declarative approach in \texttt{Python} by combining different
+instances of resources (\ie service, packages etc.).
 
 \paragraph{Infrastructure definition tools}
 Some tools, that are sometimes called \emph{infrastructure definition
@@ -117,15 +121,15 @@ as each application and each user may possibly need different
 requirements, different operating systems etc. Virtualization has
 partly been introduced to enhance infrastructure management (in
 addition to enhancing portability of applications, isolation between
-users etc.). This kind of tools, that counts Terraform, Juju,
-CloudFormation or Heat for instance, use virtualization mechanisms
-(\eg virtual machines, containers) to reduce the commissioning process
-to a set of commands to ask for resources to deploy an image on a
-machine, thus eventually reducing the complexity of the commissioning
-procedures. Some of these tools are specific to a given virtualization
-technique (\eg CloudFormation and Heat), while others offer
-\emph{providers} for different kinds of Cloud infrastructures (\eg
-Terraform, Juju).
+users etc.). This kind of tools, that counts \terraform~\cite{},
+\juju~\cite{}, \cloudformation~\cite{} or \heat~\cite{} for instance, use
+virtualization mechanisms (\eg virtual machines, containers) to reduce
+the commissioning process to a set of commands to ask for resources to
+deploy an image on a machine, thus eventually reducing the complexity
+of the commissioning procedures. Some of these tools are specific to a
+given virtualization technique (\eg CloudFormation and Heat), while
+others offer \emph{providers} for different kinds of Cloud
+infrastructures (\eg Terraform, Juju).
 
 \paragraph{Orchestration tools}
 Finally, some recent tools go further by offering an
@@ -133,20 +137,20 @@ Finally, some recent tools go further by offering an
 running many services simultaneously. In such case being able to
 deploy or install distributed software is only a part of the problem
 as services also need to be restarted in case of fault, or to be
-scaled in case of overload etc. The famous Kubernetes enter in this
-class as well as Docker Swarm or some implementation of Tosca~\cite{}
-for instance. If these tools are above the scope of this paper, a
-subpart of them handle distributed software commissionings. For
-instance Kubernetes relies on Docker for commissionings while TOSCA
-realies on \emph{artifacts} concepts.
+scaled in case of overload etc. The famous \kubernetes~\cite{} enter in
+this class as well as \dockerswarm~\cite{} or some implementation of
+\tosca~\cite{} for instance. If these tools are above the scope of this
+paper, a subpart of them handle distributed software
+commissionings. For instance Kubernetes relies on Docker for
+commissionings while TOSCA relies on \emph{artifacts} concepts.
 
 In pratice, these tools are often combined by system administrators
 and operators to acheive both distributed software commissioning and
-infrastructure management. This paper specifically focuses on
+infrastructure management. \emph{This paper specifically focuses on
 enhancing \emph{software configuration tools} by improving separation
-of concerns and composition as well as efficiency. In
-Section~\ref{sec:related_work} section, though, tools from the four
-classes will be compared: Bash, Ansible, Deployware, Aeolus, Juju and
+of concerns, composition and efficiency.} In
+Section~\ref{sec:related_work}, though, will compare in details tools
+from the four classes: Bash, Ansible, Deployware, Aeolus, Juju and
 Kubernetes.
 
 %--------
@@ -159,3 +163,47 @@ Kubernetes.
 % 4. increase the level of parallelism of commissionings
 % 5. scope of the paper = parallelism
 
+Improving the efficiency of distributed software commissioning may
+seem useless as such procedure is executed once and forall. This claim
+though does not consider the problem as a whole.
+%
+First, the commissioning procedure of complex distributed software
+such as OpenStack (Section~\ref{sec:use-cases}) can take from 15
+minutes to more than one hour to finish, thus gaining in speed is
+significant. Second, a system administrator do not perform the
+commissioning process only once. When new machines or new clusters are
+installed in her infrastructure commissioning procedures need to be
+executed again. Third, when designing software commissioning errors
+may often occur leading to re-execution of the procedures multiple
+times.
+% reconfiguration
+In addition to this, having an efficient commissioning procedure is a
+first step toward efficient reconfigurations of dynamic software
+systems (\eg self-adaptive systems) and dynamic infrastructures (\eg
+Edge Computing) where disruption time of services must be minimized.
+% experiments and continuous integration
+Furthermore, and as explained in the introduction, there are two
+different contexts where distributed software commissionings are a lot
+executed: research or industry experiments and continuous integration
+of distributed software systems. For instance, by exploring the traces
+of the OpenStack CI platform we have observed that the OpenStack
+commissioning is called around 6,000 times in 24 hours.
+
+Many different techniques could be studied to improve the efficiency
+of distributed software commissionings. A few of them are given below:
+\begin{itemize}
+\item by using optimized and adapted system commands in commissioning
+  scripts and program (\eg \texttt{rsync} instead of many
+  \texttt{scp});
+\item by working on the optimization of a given system command (\eg
+  \nist package manager instead of \texttt{apt-get});
+\item if using virtual images or container images, by improving the
+  boot time of hypervisors~\cite{yolo};
+\item if using \docker images, by optimizing the placement of image
+  layers on the network~\cite{Nitro};
+\item by exposing more parallelism in commissioning
+  languages~\cite{madeus, aeolus}.
+\end{itemize}
+
+\emph{The scope of this paper is to study how to enhance the last point of
+the above items.}
