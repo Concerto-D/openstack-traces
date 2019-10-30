@@ -1,21 +1,22 @@
 \begin{lstlisting}[label=codemdb,caption=Madeus code of the MariaDB
   component type.]
-class MariaDB (Component):
+class MariaDB (MadeusComponent):
   def create(self):
-    places = [
+    self.places = [
         'wtg',
         'cfd',
         'std',
         'chd'
     ]
-    transitions = {
+    self.initial_place = 'wtg'
+    self.transitions = {
         'pull': ('wtg', 'cfd', self.f_pull),
         'conf': ('wtg', 'cfd', self.f_conf),
         'bootstrap': ('wtg', 'cfd', self.f_boots),
         'start': ('cfd', 'std', self.f_start),
         'check': ('std', 'chd', self.f_check)
     }
-    dependencies = {
+    self.dependencies = {
         'ip': (DepType.DATA_PROVIDE, 'wtg'),
         'serv': (DepType.PROVIDE, ['std','chd'])
     }

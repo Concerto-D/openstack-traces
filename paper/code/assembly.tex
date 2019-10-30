@@ -1,19 +1,20 @@
 \begin{lstlisting}[label=codeass,caption=Madeus code of the assembly
   of Figure~\ref{fig:example}.]
-import mariadb
-import apache
+from components.mariadb import MariaDB
+from components.apache import Apache
+
+class ApacheWithDB (MadeusAssembly):
+  def create():
+    self.components = {
+      'apache': Apache(),
+      'mariadb': MariaDB()
+    }
+    self.dependencies = [
+      ('apache', 'ipMDB', 'mariadb', 'ip'),
+      ('apache', 'servMDB', 'mariadb', 'serv')
+    ]
 
 if __name__ == '__main__':
-
-  mdb = MariaDB() # Component B
-  apache = Apache() # Component C
-
-  ass = Assembly()
-  ass.add('MDB', mdb)
-  ass.add('Apache', apache)
-  ass.connect(apache, 'ipMDB', mdb, 'ip')
-  ass.connect(apache, 'servMDB', mdb, 'serv')
-
-  mad = Mad(ass)
-  mad.run()
+  assembly = ApacheWithDB()
+  assembly.run()
 \end{lstlisting}

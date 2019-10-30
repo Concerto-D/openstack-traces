@@ -1,15 +1,16 @@
 \begin{lstlisting}[label=codeapache,caption=Madeus code of the Apache
   component type.]
-class Apache (Component):
+class Apache (MadeusComponent):
   def create(self):
-    places = [
+    self.places = [
         'wtg',
         'prd',
         'cfd',
         'std',
         'chd'
     ]
-    transitions = {
+    self.initial_place = 'wtg'
+    self.transitions = {
         'provision': ('wtg','prd', self.f_prov),
         'pull': ('pr', 'cfd', self.f_pull),
         'conf': ('pr', 'cfd', self.f_conf),
@@ -17,7 +18,7 @@ class Apache (Component):
         'start': ('cfd', 'std', self.f_start),
         'check': ('std', 'chd', self.f_check)
     }
-    dependencies = {
+    self.dependencies = {
         'ipMDB': (DepType.DATA_USE, ['conf']),
         'serviceMDB': (DepType.USE, ['check'])
     }
