@@ -1,0 +1,161 @@
+% 1. introduce a bit the context (maybe in the introduction)
+% - languages for dist. soft. commissioning
+% - efficiency of dist. soft. commisioning
+% - selected subset of RW and why
+
+A distributed software is a software designed in a modular fashion
+where each component (or module or service) is responsible for a
+specific part of the overall objective, and will collaborate at
+runtime with other components that are potentially hosted on distant
+nodes (\ie machines) in the network.
+%
+The commissioning procedure of a distributed software is the procedure
+responsible for leading the set of components in a valid running state
+while guaranteeing their correct configurations. Thus, distributed
+software commissioning is somewhere in between the components
+(functional part) and the running distributed software on the
+infrastructure (management part). As a result the particularity of
+distributed software commissioning is to need information both from
+the components behaviors and from the underlying infrastructure on
+which each components will be executed.
+% who are the actors of commissionings?
+For this reason multiple human actors are often involved in the
+commissioning procedure: developers and system administrators or
+operators. This frontier is often called the DevOps domain where the
+commissioning fits in.
+
+First, each component is written by a given \emph{developer}, and this
+developer often also codes a set of \emph{control interfaces} to act
+on the component. Examples of control interfaces could be
+\texttt{start}, \texttt{stop} or \texttt{update} etc. Such control
+interfaces will take part in the component commissioning. However,
+they are not sufficient as they only serve the component level, not
+the infrastructure level. Thus, in addition \emph{configuration files}
+are often used as \emph{infrastructure interfaces} to get information
+from sysadmins, operators or other automatic tools. Third, component
+often have a set of packages or libraries requirements to work
+properly. Those requirements are directly related to the
+\emph{infrastructure management} as some of them may already be
+installed on machines. In the end, the overall commissioning procedure
+of a single software component is complex as it juggles with the
+control interfaces, configuration files and infrastructure
+management. More precisely the commissioning procedure of a single
+component is a \emph{coordination program} between different DevOps
+interfaces. Most of the time such procedure are explained in a
+\texttt{README} file, in a documentation or on an online
+webpage\footnote{apache red hat}.
+
+When considering a complete distributed software composed of a set of
+components, the picture becomes even darker as it is needed to
+coordinate the commissioning procedure of all the components together
+with their associated interactions. For instance, when installing the
+very basic Apache/MariaDB an additional page to combine the Apache
+component with the MariaDB component is needed\footnote{red
+  hat}. Another example could be the commissioning of Spark on top of
+Yarn\footnote{spark on Yarn}.
+
+Many interesting challenges arise from the DevOps community and from
+distributed software commissioning. The challenges studied in this
+paper are the following:
+\begin{itemize}
+\item enhancing the automation of distributed software commissionings;
+\item enhancing the separation of concerns (software engineering)
+  between developers and operators in distributed software
+  commissionings;
+\item enhancing and adapting composition mechanisms of software
+  engineering for distributed software commissionings;
+\item enhancing the efficiency of distributed software commissionings;
+\item promoting formal models and formal methods to have guarantees on
+  distributed software commissionings.
+\end{itemize}
+
+%--------
+\subsection{Automation and software engineering}
+% 1. scripting
+% 2. infrastructure as code
+% 3. provisioning tools
+% 4. orchestration tools
+% 5. scope of the paper
+% - software commissioning of a single distributed software
+% - generic solution that could use or not provisioning tools
+% - scripting/IaC but keep Kubernetes and Juju
+
+Four classes of tools and languages can be considered to automate and
+enhance software engineering properties of commissioning procedures.
+
+\paragraph{Scripting languages}
+First, one usual way of automating commissioning procedures is to use
+\emph{scripting languages} such as \texttt{bash} or \texttt{ruby} for
+instance. Such languages are very flexible and well known by system
+administrators and operators but suffer from many limitations,
+particularly from a software engineering viewpoint. In particular,
+they are not well suited to deal with separation of concerns,
+composition and complex coordination mechanisms.
+
+\paragraph{Software configuration tools}
+A second class of languages and tools is called \emph{software
+  configuration tools}. This class contains the set of quite recent
+DevOps tools such as Ansible, Deployware~\cite{}, Puppet, Chef, Salt,
+Aeolus~\cite{} etc. The goal of these tools is to enhance the
+productivity when defining components or services commissionings on
+machines and the coordination of their tasks. Most of the time these
+tools add an abstraction on top of scripting languages to hide some of
+their technical details (\eg SSH connections). These tools use
+different methods to acheive productivity. For instance, Ansible
+adopts an imperative style in \texttt{yaml} as a series of tasks to
+launch, while Puppet adopts a declarative approach in \texttt{Python}
+by combining different instances of resources (\ie service, packages
+etc.).
+
+\paragraph{Infrastructure definition tools}
+Some tools, that are sometimes called \emph{infrastructure definition
+  tools}~\cite{}, or \emph{provisioning tools}, have been specifically
+designed to be able to handle complex distributed infrastructures
+composed of multiple clusters and multiple machines shared between
+users. Managing such infrastructure is very difficult and error prone
+as each application and each user may possibly need different
+requirements, different operating systems etc. Virtualization has
+partly been introduced to enhance infrastructure management (in
+addition to enhancing portability of applications, isolation between
+users etc.). This kind of tools, that counts Terraform, Juju,
+CloudFormation or Heat for instance, use virtualization mechanisms
+(\eg virtual machines, containers) to reduce the commissioning process
+to a set of commands to ask for resources to deploy an image on a
+machine, thus eventually reducing the complexity of the commissioning
+procedures. Some of these tools are specific to a given virtualization
+technique (\eg CloudFormation and Heat), while others offer
+\emph{providers} for different kinds of Cloud infrastructures (\eg
+Terraform, Juju).
+
+\paragraph{Orchestration tools}
+Finally, some recent tools go further by offering an
+\emph{orchestration} level to handle complex shared set of machines
+running many services simultaneously. In such case being able to
+deploy or install distributed software is only a part of the problem
+as services also need to be restarted in case of fault, or to be
+scaled in case of overload etc. The famous Kubernetes enter in this
+class as well as Docker Swarm or some implementation of Tosca~\cite{}
+for instance. If these tools are above the scope of this paper, a
+subpart of them handle distributed software commissionings. For
+instance Kubernetes relies on Docker for commissionings while TOSCA
+realies on \emph{artifacts} concepts.
+
+In pratice, these tools are often combined by system administrators
+and operators to acheive both distributed software commissioning and
+infrastructure management. This paper specifically focuses on
+enhancing \emph{software configuration tools} by improving separation
+of concerns and composition as well as efficiency. In
+Section~\ref{sec:related_work} section, though, tools from the four
+classes will be compared: Bash, Ansible, Deployware, Aeolus, Juju and
+Kubernetes.
+
+%--------
+\subsection{Efficiency of distributed software commissioning}
+% 1. Optimize the commissioning by choosing adequate commands and
+% tools
+% 2. if using VM or Docker images: improve the boot time (Yolo)
+% 3. if using Docker images: optimize placement of chunks to reduce
+% the download time (Nitro)
+% 4. increase the level of parallelism of commissionings
+% 5. scope of the paper = parallelism
+

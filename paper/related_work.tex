@@ -1,12 +1,29 @@
+% 1. introduce metrics of RW
+% - soft. eng., composition, code reuse, sep of concerns
+% - parallelism levels
+% 2. RW analyze
+% - each tool
+% - discussion and table
 
-In this section, we first present a selection of the distributed software
-commissioning solutions introduced previously. We then use the study of their
-different features for formulating a framework to compare them.  Finally we
-discuss different aspects regarding these solutions that guide us to design our
-contribution.
+%----------------------------
+\subsection{Related work metrics}
+%----------------------------
 
+% 1. software engineering
+% - modules/components
+% - tasks
+% - ports
+% 2. parallelism
+% - node
+% - component
+% - task
+% 3. formalism
+% - formal model
+% - performance model
 
-\subsection{Distributed software commissioning solutions}
+%----------------------------
+\subsection{Related work}
+%----------------------------
 
 % Shell-scripts
 \paragraph{Shell scripts}
@@ -125,8 +142,11 @@ state can be connected to use, provide, or conflict ports to declare
 dependencies between the commissioning steps of different components. Hence,
 such ports enable the coordination of the global deployment process.
 
-
-\subsection{Comparison}
+Based on the above commissioning tools, a closer study of their different
+features can be used as a guide in formulating a framework to compare them. In
+the following, we discuss the several aspects regarding performance and software
+engineering that are desirable. These aspects are summarized in
+\cref{tab:comparison}.
 
 \begin{table}[tp]
   \centering
@@ -136,12 +156,6 @@ such ports enable the coordination of the global deployment process.
   regarding parallelism (performance) and software engineering (SE).}
   \label{tab:comparison}
 \end{table}
-
-Based on the above commissioning tools, a closer study of their different
-features can be used as a guide in formulating a framework to compare them. In
-the following, we discuss the several aspects regarding performance and software
-engineering that are desirable. These aspects are summarized in
-\cref{tab:comparison}.
 
 \paragraph{Performance}
 From our study of distributed software commissioning tools, we define three
@@ -175,8 +189,9 @@ and being able to manage coordination between them. As depicted
 in~\cref{tab:comparison}, the solutions that provide ports are enable to manage
 inter-module parallelism.
 
-
+%----------------------------
 \subsection{Discussions}
+%----------------------------
 
 One further aspect of the level of programmability provided by commissioning
 tools. When the tool is highly programmable, developers have the ability to
