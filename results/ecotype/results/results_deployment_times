@@ -3,71 +3,92 @@
     dictitems:
       registry: local
       repeat: 0
-      test_type: seq_nt4
-  time: 480.15926456451416
+      test_type: seq_1t
+  time: 483.71166962999996
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 0
+      test_type: dag_nt4
+  time: 157.8727708350002
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 0
       test_type: dag_nt4
-  time: 158.85118794441223
+  time: 146.62400986800003
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 0
-      test_type: seq_1t
-  time: 484.1766335964203
+      test_type: seq_nt4
+  time: 480.6159555170002
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 0
       test_type: dag_2t
-  time: 257.4866282939911
+  time: 257.72264751500006
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 1
+      test_type: seq_nt4
+  time: 478.2477942249998
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 1
+      test_type: dag_2t
+  time: 253.6410743230008
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 1
       test_type: dag_2t
-  time: 253.74028611183167
+  time: 256.75880189500003
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 1
+      test_type: seq_1t
+  time: 480.30985181099913
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 1
       test_type: dag_nt4
-  time: 157.51743841171265
+  time: 144.62427712099998
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
-      repeat: 1
-      test_type: seq_nt4
-  time: 480.8006603717804
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: local
-      repeat: 1
-      test_type: seq_1t
-  time: 485.750825881958
+      repeat: 2
+      test_type: dag_2t
+  time: 258.1511240030013
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 2
       test_type: seq_nt4
-  time: 482.84459590911865
+  time: 480.1953176700008
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 2
       test_type: seq_1t
-  time: 481.1427299976349
+  time: 480.6830223459983
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
@@ -79,342 +100,811 @@
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
-      repeat: 2
-      test_type: dag_2t
-  time: 254.02350640296936
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: local
       repeat: 3
       test_type: dag_2t
-  time: 257.02036333084106
+  time: 257.3860390709997
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 3
       test_type: seq_nt4
-  time: 482.0481243133545
+  time: 482.2669357349987
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 3
       test_type: seq_1t
-  time: 491.2787375450134
+  time: 483.53890412799956
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 3
       test_type: dag_nt4
-  time: 157.52909684181213
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: local
-      repeat: 4
-      test_type: dag_nt4
-  time: 148.28899550437927
+  time: 156.52111690699894
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 4
       test_type: dag_2t
-  time: 240.71199679374695
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: local
-      repeat: 4
-      test_type: seq_nt4
-  time: 480.38504576683044
+  time: 258.91443947099833
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: local
       repeat: 4
       test_type: seq_1t
-  time: 485.35042119026184
+  time: 483.4945979309996
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 4
+      test_type: seq_nt4
+  time: 489.595592468002
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 4
+      test_type: dag_nt4
+  time: 149.11351536800066
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 0
+      test_type: dag_nt4
+  time: 137.5825083939999
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 0
+      test_type: seq_nt4
+  time: 375.37313074100166
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 0
       test_type: dag_2t
-  time: 233.39446330070496
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 0
-      test_type: seq_nt4
-  time: 372.1752600669861
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 0
-      test_type: dag_nt4
-  time: 125.70485210418701
+  time: 228.76905339100267
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 0
       test_type: seq_1t
-  time: 332.11507511138916
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 1
-      test_type: seq_nt4
-  time: 375.12639594078064
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 1
-      test_type: seq_1t
-  time: 332.4408941268921
+  time: 335.1616110499999
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 1
       test_type: dag_nt4
-  time: 136.171226978302
+  time: 136.11410133800018
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 1
+      test_type: seq_1t
+  time: 332.9385747720007
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 1
       test_type: dag_2t
-  time: 227.14671659469604
+  time: 230.81092683700263
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
-      repeat: 2
-      test_type: dag_2t
-  time: 230.69120979309082
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 2
-      test_type: dag_nt4
-  time: 125.18799877166748
+      repeat: 1
+      test_type: seq_nt4
+  time: 379.3807504590004
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 2
       test_type: seq_nt4
-  time: 374.6103763580322
+  time: 373.5457074670012
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 2
+      test_type: dag_nt4
+  time: 136.31403614399824
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 2
       test_type: seq_1t
-  time: 340.79727244377136
+  time: 332.6592739629996
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
-      repeat: 3
-      test_type: dag_nt4
-  time: 128.0737178325653
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 3
+      repeat: 2
       test_type: dag_2t
-  time: 231.03291249275208
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 3
-      test_type: seq_nt4
-  time: 375.5321145057678
+  time: 231.4552328280006
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 3
       test_type: seq_1t
-  time: 331.89958691596985
+  time: 332.3180055990015
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 3
+      test_type: dag_2t
+  time: 228.20208806799928
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 3
+      test_type: dag_nt4
+  time: 135.72266842099998
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 3
+      test_type: seq_nt4
+  time: 373.97831543699795
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 4
       test_type: seq_nt4
-  time: 373.7980568408966
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 4
-      test_type: seq_1t
-  time: 331.9217472076416
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: cached
-      repeat: 4
-      test_type: dag_2t
-  time: 230.06062531471252
+  time: 372.8231459380004
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: cached
       repeat: 4
       test_type: dag_nt4
-  time: 136.4966380596161
+  time: 131.84552368000004
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 4
+      test_type: seq_1t
+  time: 331.56903895100186
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 4
+      test_type: dag_2t
+  time: 227.79340872800094
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 4
+      test_type: dag_2t
+  time: 228.3076802229989
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 4
+      test_type: dag_2t
+  time: 231.80933542599814
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 0
+      test_type: seq_nt4
+  time: 514.7729859140018
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 0
+      test_type: dag_nt4
+  time: 148.8129705340034
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 0
+      test_type: seq_1t
+  time: 530.0147035859991
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 0
       test_type: dag_2t
-  time: 265.6331241130829
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 0
-      test_type: seq_nt4
-  time: 514.4359619617462
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 0
-      test_type: dag_nt4
-  time: 144.03362607955933
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 0
-      test_type: seq_1t
-  time: 529.2363193035126
-- failure: 0
+  time: 266.11942501900194
+- failure: 1
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 1
-      test_type: dag_nt4
-  time: 148.40222549438477
+      test_type: dag_2t
+  time: 261.99573797300036
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 1
       test_type: dag_2t
-  time: 262.5025191307068
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 1
-      test_type: seq_nt4
-  time: 515.5570166110992
+  time: 262.84025856000153
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 1
       test_type: seq_1t
-  time: 529.0403249263763
+  time: 525.7101613140003
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
-      repeat: 2
+      repeat: 1
+      test_type: dag_nt4
+  time: 144.85726110900214
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 1
       test_type: seq_nt4
-  time: 522.3900182247162
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 2
-      test_type: seq_1t
-  time: 537.8453478813171
+  time: 515.4184233909982
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 2
       test_type: dag_nt4
-  time: 146.65473628044128
+  time: 154.5439328249995
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 2
+      test_type: seq_nt4
+  time: 515.7257606860003
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 2
       test_type: dag_2t
-  time: 265.9898018836975
+  time: 261.48496012599935
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
-      repeat: 3
-      test_type: seq_nt4
-  time: 516.2474822998047
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 3
+      repeat: 2
       test_type: seq_1t
-  time: 531.6484980583191
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 3
-      test_type: dag_nt4
-  time: 155.73790860176086
+  time: 529.5945027769958
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 3
       test_type: dag_2t
-  time: 267.8932931423187
+  time: 262.54866085599497
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
-      repeat: 4
+      repeat: 3
+      test_type: seq_1t
+  time: 527.5302845960032
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 3
       test_type: dag_nt4
-  time: 146.12643027305603
+  time: 153.72076517999812
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 3
+      test_type: seq_nt4
+  time: 513.3379647090042
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 4
       test_type: dag_2t
-  time: 267.5165400505066
-- failure: 0
-  params: !!python/object/new:execo_engine.sweep.HashableDict
-    dictitems:
-      registry: remote
-      repeat: 4
-      test_type: seq_nt4
-  time: 516.4675805568695
+  time: 265.26272022099874
 - failure: 0
   params: !!python/object/new:execo_engine.sweep.HashableDict
     dictitems:
       registry: remote
       repeat: 4
       test_type: seq_1t
-  time: 530.5550804138184
+  time: 528.0173087350049
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 4
+      test_type: dag_nt4
+  time: 146.48095662299602
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 4
+      test_type: seq_nt4
+  time: 513.8315049869998
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 5
+      test_type: seq_nt4
+  time: 483.81936158099995
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 5
+      test_type: dag_2t
+  time: 254.62650722900003
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 5
+      test_type: dag_nt4
+  time: 157.43213061200004
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 5
+      test_type: seq_1t
+  time: 479.4204719940001
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 6
+      test_type: seq_nt4
+  time: 477.7186939569997
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 6
+      test_type: seq_1t
+  time: 478.27804637500003
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 6
+      test_type: dag_2t
+  time: 254.10164464699983
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 6
+      test_type: dag_nt4
+  time: 157.4372966130004
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 7
+      test_type: seq_1t
+  time: 481.06919796400007
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 7
+      test_type: dag_2t
+  time: 275.818807828
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 7
+      test_type: dag_nt4
+  time: 156.83529375699982
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 7
+      test_type: seq_nt4
+  time: 478.4425615850005
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: seq_nt4
+  time: 479.49670523500026
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: seq_1t
+  time: 478.83658167999965
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: dag_2t
+  time: 253.06406647600033
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: dag_2t
+  time: 257.5170274640004
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: dag_nt4
+  time: 156.76735491099953
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 8
+      test_type: dag_nt4
+  time: 145.662510354
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 9
+      test_type: dag_2t
+  time: 254.45251218700014
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 9
+      test_type: seq_1t
+  time: 477.75556867199975
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 9
+      test_type: dag_nt4
+  time: 156.0425641689999
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: local
+      repeat: 9
+      test_type: seq_nt4
+  time: 480.0707780829998
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: dag_nt4
+  time: 126.33439201500005
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: dag_nt4
+  time: 136.50894244099982
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: seq_nt4
+  time: 372.1030746719989
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: dag_2t
+  time: 228.27183652099848
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: dag_2t
+  time: 227.2112671449995
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 5
+      test_type: seq_1t
+  time: 330.8136078050011
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 6
+      test_type: seq_nt4
+  time: 371.7871174949996
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 6
+      test_type: dag_2t
+  time: 229.33654874500098
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 6
+      test_type: seq_1t
+  time: 330.99164003499936
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 6
+      test_type: dag_nt4
+  time: 125.21049498699904
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 7
+      test_type: dag_2t
+  time: 229.52653338600066
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 7
+      test_type: seq_1t
+  time: 331.11583333199997
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 7
+      test_type: dag_nt4
+  time: 136.16439264700057
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 7
+      test_type: seq_nt4
+  time: 371.89130346300044
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 8
+      test_type: seq_1t
+  time: 332.10431900599906
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 8
+      test_type: dag_2t
+  time: 230.46738114400068
+- failure: 1
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 8
+      test_type: dag_nt4
+  time: 1968.9287657719997
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 8
+      test_type: dag_nt4
+  time: 124.58365699000024
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 8
+      test_type: seq_nt4
+  time: 371.40175241699944
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 9
+      test_type: seq_nt4
+  time: 372.51958008199836
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 9
+      test_type: dag_nt4
+  time: 136.5749712370016
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 9
+      test_type: seq_1t
+  time: 332.0959268629995
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: cached
+      repeat: 9
+      test_type: dag_2t
+  time: 227.0675424220026
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 5
+      test_type: seq_nt4
+  time: 513.9026447129982
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 5
+      test_type: dag_nt4
+  time: 145.5046369010015
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 5
+      test_type: dag_2t
+  time: 261.33473806300026
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 5
+      test_type: seq_1t
+  time: 533.0255304570019
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 6
+      test_type: seq_nt4
+  time: 513.3275586210002
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 6
+      test_type: dag_nt4
+  time: 143.8095390769995
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 6
+      test_type: dag_2t
+  time: 265.4664185820002
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 6
+      test_type: seq_1t
+  time: 526.9168112260013
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 7
+      test_type: seq_nt4
+  time: 513.126804593001
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 7
+      test_type: dag_nt4
+  time: 154.18550917200264
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 7
+      test_type: dag_2t
+  time: 262.1679782229985
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 7
+      test_type: seq_1t
+  time: 528.5288080550017
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 8
+      test_type: seq_nt4
+  time: 513.7473850639981
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 8
+      test_type: dag_2t
+  time: 264.2967166069975
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 8
+      test_type: seq_1t
+  time: 531.0388420000018
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 8
+      test_type: dag_nt4
+  time: 155.11097660800078
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 9
+      test_type: dag_nt4
+  time: 154.24030699300056
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 9
+      test_type: seq_1t
+  time: 530.2199347950009
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 9
+      test_type: seq_nt4
+  time: 513.5951759020027
+- failure: 0
+  params: !!python/object/new:execo_engine.sweep.HashableDict
+    dictitems:
+      registry: remote
+      repeat: 9
+      test_type: dag_2t
+  time: 265.16805662800107
