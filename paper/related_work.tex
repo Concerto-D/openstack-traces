@@ -8,7 +8,6 @@
 %----------------------------
 \subsection{Related work metrics}
 %----------------------------
-
 % 1. software engineering
 % - modules/components
 % - tasks
@@ -20,6 +19,40 @@
 % 3. formalism
 % - formal model
 % - performance model
+
+Before introducing the related work of this paper, some analysis
+metrics need to be introduced. These metrics are divided in two sets:
+software engineering (SE) metrics, and metrics related to the
+parallelism level of commissionings.
+
+\paragraph{Software engineering}
+As introduced in the previous section, when automating distributed
+software commissionings one important aspect is to promote software
+engineering properties. Indeed, when different actors are involved in
+a same given goal, software engineering techniques can help improving
+separation of concerns (\ie code reuse, maintainability
+etc.). Separation of concerns means that each actor is responsible for
+her own specialism, \ie her own expertise domain. Such separation of
+concerns is improved as soon as a modular or component-based approach
+is adopted, \ie each actor could be responsible for one
+component. Furthermore, component-based architectures are also equiped
+with composition mechanisms that ease the coordination and
+interactions between the different entities implemented by different
+actors. One additional actor may also enter the picture to design this
+composition. We define three SE metrics to compare the related work:
+\begin{itemize}
+\item \emph{Component}: being able to structure the distributed
+  software commissioning by modules or services or components;
+\item \emph{Port}: being able to declare ports to represent
+  dependencies or connections with other components of the
+  commissioning (thus requirering synchronizations);
+\item \emph{Tasks}: being able to divide a component commissioning in
+  a set of tasks;
+ \item \emph{Task-dependencies}: being able to declare dependencies
+   between tasks of
+\end{itemize}
+
+\paragraph{Parallelism level}
 
 %----------------------------
 \subsection{Related work}
