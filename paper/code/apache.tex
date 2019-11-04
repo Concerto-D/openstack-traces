@@ -4,17 +4,15 @@ class Apache (MadeusComponent):
   def create(self):
     self.places = [
         'wtg',
-        'prd',
         'cfd',
         'std',
         'chd'
     ]
     self.initial_place = 'wtg'
     self.transitions = {
-        'provision': ('wtg','prd', self.f_prov),
-        'pull': ('pr', 'cfd', self.f_pull),
-        'conf': ('pr', 'cfd', self.f_conf),
-        'bootstrap': ('prd', 'cfd', self.f_boots),
+        'pull': ('wtg', 'cfd', self.f_pull),
+        'conf': ('wtg', 'cfd', self.f_conf),
+        'bootstrap': ('wtg', 'cfd', self.f_boots),
         'start': ('cfd', 'std', self.f_start),
         'check': ('std', 'chd', self.f_check)
     }
@@ -23,12 +21,10 @@ class Apache (MadeusComponent):
         'serviceMDB': (DepType.USE, ['check'])
     }
 
-    def f_prov(self):
+    def f_pull(self):
         # execution of bash scripts
         # execution of ansible playbooks
         # etc.
-    def f_pull(self):
-        # ...
     def f_conf(self):
         # ...
     def f_boots(self):
