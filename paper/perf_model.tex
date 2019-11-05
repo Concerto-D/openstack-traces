@@ -1,49 +1,54 @@
-In this section, we present Madeus' performance model. Its goal is,
-given a Madeus assembly to be deployed and the execution time of all the
-transitions of all the components in an assembly, to predict the total
-execution time of the deployment.
+In this section, we present \mad' performance model. Its goal is,
+given a \mad assembly to be executed and the execution time of all the
+transitions of all the components in an assembly, to estimate the total
+execution time of the commissionning.
 %
-Intuitively, we automatically model the execution flow of a Madeus
-assembly based on Madeus' formal semantics. This is done by generating a
-dependency graph representations of the execution flow of each Madeus
+Intuitively, we automatically model the execution flow of a \mad
+assembly based on \mad' formal semantics. This is done by generating a
+dependency graph representing the execution flow of each \mad
 component in the assembly and connecting them together according to their
-dependencies (the connections between their ports). We then add a
-\emph{source} vertex connected to the vertices representing the beginning of
-the execution of each component, as well as a \emph{sink} vertex to which
+dependencies (the connections between their ports). Then, a
+\emph{source} vertex is connected to the vertices representing the beginning of
+the execution of each component, and a \emph{sink} vertex is created to which
 are connected the vertices representing the end of the execution of each
 component.
 %
-We obtain a dependency graph representing the execution of the whole
-assembly. By weighting the arcs corresponding to the transitions with
+Thus, a dependency graph representing the execution of the whole
+assembly is obtained. By weighting the arcs corresponding to the transitions with
 these transitions' individual execution time (and the other ones with 0),
 we can find the total execution time of the assembly by finding the longest
 path from the \emph{source} vertex to the \emph{sink} vertex.
 
-% By generating a graph modelling the execution flow of a Madeus assembly,
+% By generating a graph modelling the execution flow of a \mad assembly,
 % capturing both intra-component and inter-component dependencies, we
 % reduce this problem to finding the longest path in a DAG.
 
 \subsection{Notations}
 
 Recall that given a component, we denote its set of places $\Pi$ and its
-set of transitions $\Theta$. In the following, we will consider for the
-sake of simplicity that the transitions go directly from a place to
+set of transitions $\Theta$. In the following, we consider that the
+transitions go directly from a place to
 another place instead of from an output dock to an input dock.
-Hence, $\Theta$ is a multiset which elements are couples of places. We
+Hence, $\Theta$ is a multiset which elements are pairs of places. We
 can obtain the place corresponding to each dock by using the $place$
 function of the component.
 
-In order to predict the total deployment time, we need to know the
+In order to estimate the total commissionning time, we need to know the
 execution time of each individual transition. In the following, we
-consider the \emph{time function} $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$
-associating a running time to each transition (taken as input).
+consider the function $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$
+associating an execution time to each transition (taken as input).
 
 We also consider the following two functions:
+\MC[Maverick]{Change group entrance and exit functions to return only one element?
+State that we consider only the assemblies in which these functions always return
+one element?}
 \begin{itemize}
-\item the \emph{group entrance function} $g_{in}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)\,g\mapsto\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{b}\,:\,\left(\pi_{b}\not\in g\land\left(\pi_{b},\pi\right)\in\Theta\right)\right\} $
+\item the \emph{group entrance function} $g_{in}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)$ with\\
+$g_{in}(g)=\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{b}\,:\,\left(\pi_{b}\not\in g\land\left(\pi_{b},\pi\right)\in\Theta\right)\right\} $
 (the result of $g_{in}$ is called the set of \emph{entrance places}
 of the group)
-\item the \emph{group exit function} $g_{out}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)g\mapsto\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{a}\,:\,\left(\pi_{a}\not\in g\land\left(\pi,\pi_{a}\right)\in\Theta\right)\right\} $
+\item the \emph{group exit function} $g_{out}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)$ with\\
+$g_{out}(g)=\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{a}\,:\,\left(\pi_{a}\not\in g\land\left(\pi,\pi_{a}\right)\in\Theta\right)\right\} $
 (the result of $g_{out}$ is called the set of \emph{exit places}
 of the group)
 \end{itemize}
@@ -58,19 +63,19 @@ a function) for all components. For instance:
 \item $\Pi_{all}=\bigcup_{i=1}^{n}\Pi_{i}$ (set of all \emph{places} in
 the assembly)
 \item $\left(time\right)_{all}\,:\,\Theta_{all}\rightarrow\mathbb{R}^{+}$
-(function giving the \emph{running time} of each transition) with:
+(function giving the \emph{execution time} of each transition) with:
 $\left(time\right)_{all}\left(x\right)=\left(time\right)_{i}\left(x\right)$
 if $x\in\Theta_{i}$ 
 \end{itemize}
 The execution flow graph is an oriented weighted graph \emph{$\left(V,A\right)$}
 where $V$ is the set of vertices and $A$ is the multiset of weighted
 arcs with elements in $V\times V\times\mathbb{R}^{+}$. We define
-$V$ an $A$ in the following.
+$V$ and $A$ in the following.
 
 \subsection{Vertices}
 
 For each place, we associate two vertices: one representing the place
-itself and one representing the action of a token leaving the place.
+itself and one representing the event of a token leaving the place.
 Figure~\ref{fig:place_graph} depicts the transformation of one place
 \emph{running} to a dependency graph.
 \[
@@ -110,7 +115,7 @@ V=V_{\Pi}\cup V_{\Theta}\cup V_{data}\cup V_{service}\cup\left\{ v^\text{source}
 
 \subsection{Arcs}
 
-In the performance graph, arcs represent time constraints: the event represented
+In the dependency graph, arcs represent time constraints: the event represented
 by the destination vertex must happen after the one represented by the source
 vertex, at least $w$ seconds apart where $w$ is the weight of the arc. In
 practice, the weight of all of the arcs except those corresponding to the
@@ -374,7 +379,7 @@ do not have any outgoing transition. Formally,
 $F_{all}=\left\{ \pi\,\mid\,\pi\in\Pi_{all}\land\lnot\left(\exists\pi_{a}\in\Pi_{all}\,:\,\left(\pi,\pi_{a}\right)\in\Theta_{all}\right)\right\} $.
 Then, for each final place $\pi$ we associate one arc going from
 $v_\pi^\text{place}$ to $v^\text{sink}$, representing the fact that the
-deployment is over only after all components have reached their final places
+commissionning is over only after all components have reached their final places
 (\ie when no more transition can be executed).
 Figure~\ref{fig:source_sink_graph} depicts the transformation of three final
 places \emph{c1p2}, \emph{c2p2} and \emph{c2p3}.
@@ -450,37 +455,83 @@ A=A_\Pi\cup A_{\Theta}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\c
 
 \subsection{Time estimation}
 
-We define the time estimation of the execution of the Madeus assembly
-to be the length of the longest path between $v^\text{source}$ and
-$v^\text{sink}$ in $G$. This path exists and is finite if $v^\text{sink}$ 
-is reachable from $v^\text{source}$ and $G$ has no cycle.
+We define the time estimation of the execution of the \mad assembly
+to be the length of a longest path between $v^\text{source}$ and
+$v^\text{sink}$ in $G$.
 
-Because the end of the execution of a Madeus component is defined as
-when all its tokens are in final places, \ie there are no more transitions
-to perform, the final places are necessarily connected to the initial place
-in the \net. Because the dependency graph of the component keeps the same
-shape as the \net, $v_{\pi_i}^\text{place}$ (where $\pi_i$ is the initial
-place) is connected to all $v_{\pi_f}^\text{place}$ (where $\pi_f$ is a
-final place). Because we connect $v^\text{source}$ to all
-$v_{\pi_i}^\text{place}$ (where $v_{\pi_i}$ is the initial place of a
-component) and all $v_{\pi_f}^\text{place}$ (where $\pi_f$ is a final place
-of a component) to $v^\text{sink}$, there exists at least one path between
-$v^\text{source}$ and $v^\text{sink}$ for each component. Therefore
-$v^\text{sink}$ is reachable from $v^\text{source}$.
+\property{If $v^\text{sink}$ is reachable from $v^\text{source}$ and $G$ has no
+cycle then the time estimation is well-defined.}
+\begin{proof}
+ If $v^\text{sink}$ is reachable from $v^\text{source}$, there exists at least
+ one path from $v^\text{source}$ to  $v^\text{sink}$. Because there are no
+ cycles, the number of paths between $v^\text{source}$ and $v^\text{sink}$ is
+ finite. Because all the paths have a weight, the set of longest paths is
+ well-defined (and not empty). Therefore the length of a longest path is
+ well-defined.
+\end{proof}
 
-The dependency graph of each component has no cycle because it has the same
-shape as the \net, in which there can be no cycle. Under some restriction
-essentially preventing non-determinism, the arcs between the vertices
-corresponding to port do not create cycles either. This restriction limits
-the number of activation and deactivation of each port to one during the
-deployment process. If there is no deadlock in the Madeus assembly, then
-there can be no ``crossing dependencies'' (see Figure~\ref{fig:deadlock}). This means that
-the activation and deactivation of two distinct sets of use and provide
-ports cannot create a cycle. This reasoning also applies to the activation
-and deactivation of a service use port and a service provide port. If they
-were to happen in a different order in the two components, the dependency
-graph would have a cycle, but because each port can be activated only once,
-there would be a deadlock in the assembly.
+\property{If a place \emph{pTarget} is reachable from place \emph{pStart} (distinct
+from \emph{pTarget}) in the \net of a component then $v_{pTarget}^{place}$ is reachable
+from $v_{pStart}^{place}$ in a dependency graph obtained from an assembly
+containing this component.
+\label{propertyReachable}}
+
+\begin{proof}
+ Consider a path $P$ in the \net of the component going from \emph{pStart} to
+ \emph{pTarget} (this path exists because \emph{pTarget} is reachable from
+ \emph{pStart}). This path is made of a sequence of places connected by
+ transitions: $P=(pStart,t1,p2,t2,\dots,t_n,pTarget)$. By construction,
+ there exists a path $(v_{pStart}^{place},v_{pStart}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,\\v_{pTarget}^{place})$ in the dependency graph.
+\end{proof}
+
+
+\property{In a \mad dependency graph, if there is at least one component in the
+assembly then $v^\text{sink}$ is always reachable from $v^\text{source}$.}
+\begin{proof}
+  Let us consider one component, its initial place \emph{pi} and one of its
+  final places \emph{pf}. By construction, $v_{pi}^\text{place}$ is reachable
+  from $v^\text{source}$ and $v^\text{sink}$ is reachable from
+  $v_{pf}^\text{place}$. The last thing to prove is that $v_{pf}^\text{place}$
+  is reachable from $v_{pi}^\text{place}$.
+  The end of the execution of a \mad component is defined as
+  when all its tokens are in final places, \ie when there are no more
+  transitions to perform. Therefore, by definition \emph{pf} is
+  necessarily reachable from \emph{pi} in the \net of the component.
+  We conclude by applying Property~\ref{propertyReachable}.
+\end{proof}
+
+\property{If a component is well-formed then its corresponding dependency graph has
+no cycle.}
+
+\begin{proof}
+ By construction, in the dependency graph corresponding to a component the
+ vertices and arcs corresponding to places do not form cycles and are disjoint,
+ so they cannot produce a cycle by themselves. Likewise, the arcs corresponding
+ to port bindings have either their source vertex or their destination vertex of
+ degree 1, so they cannot produce a cycle. Only the arcs corresponding to
+ transitions can produce cycles. Moreover, the arcs in the dependency graph
+ connect only the vertices corresponding to the places which are connected in
+ the \net. This means that if there is a cycle in the dependency graph, there is
+ a cycle in the \net. However, the \net of a well-formed \mad component
+ has no cycle. Therefore there are no cycles in the dependency graph.
+\end{proof}
+
+\property{In an assembly with no deadlocks, if each port is bound to at most one
+element (place, transition or group) and if the entry and exit sets of each group
+always contain at most one place then the dependency graph corresponding to the
+assembly has no cycles.}
+
+\begin{proof}
+ If there is no deadlock in the \mad assembly, then there can be no ``crossing
+ dependencies'' (see Figure~\ref{fig:deadlock}). This means that
+ the activation and deactivation of two distinct sets of use and provide
+ ports cannot create a cycle. This reasoning also applies to the activation
+ and deactivation of a service use port and a service provide port (if they
+ were to happen in a different order in the two components, the dependency
+ graph would have a cycle, but because each port can be activated only once,
+ there would be a deadlock in the assembly).
+ \MC{À améliorer}
+\end{proof}
 
 \begin{figure}[h]
   \begin{center}
@@ -498,13 +549,13 @@ $|V| = \mathcal{O}(pl+tr+po)$ and $|A| = \mathcal{O}(tr+po+dp)$ where $pl$
 is the number of places in the whole assembly, $tr$ is the number of
 transitions, $po$ is the number of ports and $dp$ is the number of
 dependencies. Therefore, the complexity of estimating the running time of
-a Madeus deployment is $\mathcal{O}(pl+tr+po+dp)$.
+a \mad commissionning is $\mathcal{O}(pl+tr+po+dp)$.
 
 
 \subsection{Requirements on the assembly}
 
 In order to avoid non-determinism, which a dependency graph would not be
-able to capture, we impose some requirements on a Madeus assembly
+able to capture, we impose some requirements on a \mad assembly
 for it to be compatible with the performance model. However, these
 requirements are quite reasonable in the sense that none of the use
 cases we have thought of do not meet these requirements.
