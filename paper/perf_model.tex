@@ -459,8 +459,11 @@ We define the time estimation of the execution of the \mad assembly
 to be the length of a longest path between $v^\text{source}$ and
 $v^\text{sink}$ in $G$.
 
-\property{If $v^\text{sink}$ is reachable from $v^\text{source}$ and $G$ has no
-cycle then the time estimation is well-defined.}
+\begin{property}
+If $v^\text{sink}$ is reachable from $v^\text{source}$ and $G$ has no
+cycle then the time estimation is well-defined.
+\end{property}
+
 \begin{proof}
  If $v^\text{sink}$ is reachable from $v^\text{source}$, there exists at least
  one path from $v^\text{source}$ to  $v^\text{sink}$. Because there are no
@@ -470,11 +473,13 @@ cycle then the time estimation is well-defined.}
  well-defined.
 \end{proof}
 
-\property{If a place \emph{pTarget} is reachable from place \emph{pStart} (distinct
-from \emph{pTarget}) in the \net of a component then $v_{pTarget}^{place}$ is reachable
-from $v_{pStart}^{place}$ in a dependency graph obtained from an assembly
-containing this component.
-\label{propertyReachable}}
+\begin{property}
+  If a place \emph{pTarget} is reachable from place \emph{pStart} (distinct
+  from \emph{pTarget}) in the \net of a component then $v_{pTarget}^{place}$ is reachable
+  from $v_{pStart}^{place}$ in a dependency graph obtained from an assembly
+  containing this component.
+  \label{propertyReachable}
+\end{property}
 
 \begin{proof}
  Consider a path $P$ in the \net of the component going from \emph{pStart} to
@@ -485,8 +490,11 @@ containing this component.
 \end{proof}
 
 
-\property{In a \mad dependency graph, if there is at least one component in the
-assembly then $v^\text{sink}$ is always reachable from $v^\text{source}$.}
+\begin{property}
+In a \mad dependency graph, if there is at least one component in the
+assembly then $v^\text{sink}$ is always reachable from $v^\text{source}$.
+\end{property}
+
 \begin{proof}
   Let us consider one component, its initial place \emph{pi} and one of its
   final places \emph{pf}. By construction, $v_{pi}^\text{place}$ is reachable
@@ -500,8 +508,10 @@ assembly then $v^\text{sink}$ is always reachable from $v^\text{source}$.}
   We conclude by applying Property~\ref{propertyReachable}.
 \end{proof}
 
-\property{If a component is well-formed then its corresponding dependency graph has
-no cycle.}
+\begin{property}
+If a component is well-formed then its corresponding dependency graph has
+no cycle.
+\end{property}
 
 \begin{proof}
  By construction, in the dependency graph corresponding to a component the
@@ -516,10 +526,12 @@ no cycle.}
  has no cycle. Therefore there are no cycles in the dependency graph.
 \end{proof}
 
-\property{In an assembly with no deadlocks, if each port is bound to at most one
+\begin{property}
+In an assembly with no deadlocks, if each port is bound to at most one
 element (place, transition or group) and if the entry and exit sets of each group
 always contain at most one place then the dependency graph corresponding to the
-assembly has no cycles.}
+assembly has no cycles.
+\end{property}
 
 \begin{proof}
  If there is no deadlock in the \mad assembly, then there can be no ``crossing
