@@ -53,7 +53,7 @@ $g_{out}(g)=\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{a}\,:\,\left(\pi_{a}\not
 of the group)
 \end{itemize}
 
-Recall that an assembly is a tuple $\left(C,L_{P},L_{D},ebl\right)$. In
+Recall that an assembly is a tuple $\left(C,L_S,L_D\right)$. In
 the following, we consider that
 $C=\bigcup_{i=1}^{n}\left\{ \left(\Pi_{i}\dots,\left(B_{D_{p}}\right)_{i}\right)\right\} $.
 For each notation $X$ specific to a component, we denote $X_{all}$ the
@@ -76,40 +76,31 @@ $V$ and $A$ in the following.
 
 For each place, we associate two vertices: one representing the place
 itself and one representing the event of a token leaving the place.
-Figure~\ref{fig:place_graph} depicts the transformation of one place
-\emph{running} to a dependency graph.
 \[
 V_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ v_\pi^\text{place},v_\pi^\text{leaving}\right\} 
 \]
 
 For each transition, we associate two vertices: one representing the
 beginning of the transition and one representing its end.
-Figure~\ref{fig:transition_graph} depicts the transformation of three
-transitions \emph{t1}, \emph{t2} and \emph{t3} to a dependency graph.
 \[
 V_{\Theta}=\bigcup_{\theta\in\Theta_{all}}\left\{ v_\theta^\text{beginning},v_\theta^\text{end}\right\} 
 \]
 
-For each data (use or provide) port we associate one vertex representing
-its activation.
-Figure~\ref{fig:data_ports_graph} depicts the transformation of one
-data provide port \emph{dp} and one data use port \emph{du}.
+For each data-provide port we associate one vertex representing its activation.
 \[
-V_{data}=\bigcup_{u\in\left(D_{u}\right)_{all}\cup\left(D_{p}\right)_{all}}\left\{ v_u^\text{start}\right\} 
+V_{D_p}=\bigcup_{p\in\left(D_p\right)_{all}}\left\{ v_p^\text{start}\right\} 
 \]
 
-For each service (use or provide) port we associate two vertices:
-one representing its activation and one its deactivation.
-Figure~\ref{fig:service_ports_graph} depicts the transformation of one
-service provide port \emph{dp} and one service use port \emph{du}.
+For each service-provide port we associate two vertices: one representing
+its activation and one its deactivation.
 \[
-V_{service}=\bigcup_{p\in\left(P_{u}\right)_{all}\cup\left(P_{p}\right)_{all}}\left\{v_p^\text{start},v_p^\text{stop}\right\} 
+V_{S_p}=\bigcup_{p\in\left(S_p\right)_{all}}\left\{ v_p^\text{start},v_p^\text{stop}\right\} 
 \]
 
 Finally, we define $V$ as the union of all these, plus one source
 and one sink vertices. 
 \[
-V=V_{\Pi}\cup V_{\Theta}\cup V_{data}\cup V_{service}\cup\left\{ v^\text{source},v^\text{sink}\right\} 
+V=V_{\Pi}\cup V_{\Theta}\cup V_{D_p}\cup V_{S_p}\cup\left\{ v^\text{source},v^\text{sink}\right\} 
 \]
 
 
@@ -211,65 +202,23 @@ A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}} & \left\
   \label{fig:transition_graph}
 \end{figure*}
 
-For each binding between a data use port $p$ and a transition $\theta$ we
-associate one arc going from $v_p^\text{start}$ to $v_\theta^\text{beginning}$.
-This represents the fact that the transition may only begin after the port has
-received data.
+For each data-provide port $p$, we associate (a) for each binding between
+$p$ and a place $\pi$ one arc going from $v_\pi^\text{place}$ to
+$v_p^\text{start}$, and (b) for each connection connecting $p$
+to a data-use port $u$, for each binding between $u$ and a transition
+$\theta$ one arc going from $v_p^\text{start}$ to $v_\theta^\text{beginning}$.
+The (a) arcs represent the fact that the data becomes
+available when a place bound to it is reached. The (b) arcs represent the
+fact that the transitions bound to a data-use port may only execute once
+the port is provided.
 Figure~\ref{fig:data_ports_graph} depicts the transformation of a
-data use port \emph{du} bound to transition \emph{c2t}.
-\[
-A_{D_{u}}=\bigcup_{\left(p,\theta\right)\in\left(B_{D_{u}}\right)_{all}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right)\right\} 
-\]
-
-For each binding between a data provide port $p$ and a place $\pi$ we associate
-one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$. This represents
-the fact that the data may only be provided after the place $\pi$ has been
-reached by a token.
-Figure~\ref{fig:data_ports_graph} depicts the transformation of a
-data provide port \emph{dp} bound to place \emph{c1p}.
-\[
-A_{D_{p}}=\bigcup_{\left(p,\pi\right)\in\left(B_{D_{p}}\right)_{all}}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\} 
-\]
-
-For each binding between a service use port $p$ and a transition $\theta$ we
-associate two arcs. The first from $v_p^\text{start}$ to
-$v_\theta^\text{beginning}$ represents the fact that $\theta$ can only start
-once the service is provided. The second from $v_\theta^\text{end}$ to
-$v_p^\text{stop}$ represents the fact that the service may only stop being
-provided after $\theta$ has finished.
-Figure~\ref{fig:service_ports_graph} depicts the transformation of a
-service use port \emph{su} bound to transition \emph{c2t}.
-\[
-A_{P_{u}}=\bigcup_{\left(p,\theta\right)\in\left(B_{P_{u}}\right)_{all}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right),\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right\} 
-\]
-
-For each binding between a service provide port $p$ and a group $g$ we
-associate two sets of arcs. The first set of transitions going from
-$v_\pi^\text{place}$ to $v_p^\text{start}$ for each place $\pi$ in the
-entrance of $g$ represents the fact that a token must enter the group
-before the service becomes active. The second set of transitions going
-from $v_p^\text{stop}$ to $v_\pi^\text{leaving}$ for each place
-$\pi$ in the exit of $g$ represents the fact that the service must not
-be in use anymore before all tokens can leave the group.
-Figure~\ref{fig:service_ports_graph} depicts the transformation of a
-service provide port \emph{sp} bound to the group containing places
-\emph{c1p1} and \emph{c1p2}. Note that \emph{c1p1} is the only entry
-place of the group and \emph{c1p2} is the only exit place.
+data-provide port \emph{dp} bound to place \emph{c1p} and connected to
+data-use port \emph{du} which is bound to transition \emph{c2t}.
 \begin{align*}
-A_{P_{p}}=\bigcup_{\left(p,g\right)\in\left(B_{P_{p}}\right)_{all}} & \left( \bigcup_{\pi\in\left(g_{in}\right)_{all}\left(g\right)}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\} \cup \right. \\
- & \left. \bigcup_{\pi\in\left(g_{out}\right)_{all}\left(g\right)}\left\{ \left(v_p^\text{stop},v_\pi^\text{leaving},0\right)\right\} \right)
+A_{D}=\bigcup_{p\in D_p}
+& \left(\bigcup_{\pi,\,\left(p,\pi\right)\in\left(B_{D_{p}}\right)_{all}}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right. \\
+& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_D \\ \theta,\,\left(u,\theta\right)\in\left(B_{D_{u}}\right)_{all}}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right)\right\}\right)
 \end{align*}
-
-For each connection between data provide port $p$ and data use port $u$
-in the assembly, we associate one arc going from $v_p^\text{start}$ to
-$v_u^\text{start}$. This represents the fact that the data may only be
-used after it has been provided.
-Figure~\ref{fig:data_ports_graph} depicts the transformation of a
-connection between data provide port \emph{dp} and data use port
-\emph{du}.
-\[
-A_{L_{D}}=\bigcup_{\left(p,u\right)\in L_{D}}\left\{ \left(v_p^\text{start},v_u^\text{start},0\right)\right\} 
-\]
 
 \begin{figure*}[h]
   \subfloat[Concerto assembly]{%
@@ -290,13 +239,11 @@ A_{L_{D}}=\bigcup_{\left(p,u\right)\in L_{D}}\left\{ \left(v_p^\text{start},v_u^
         \draw [arrow] (c1p1) -- (c1p1l) node[midway, right] {$0$};
         \draw [arrow] (c1p1l) -- (c1t2) node[midway, right] {$0$};
         \node (dp) [provide_start, right of=c1p1, xshift=1.2cm] {$v_\text{dp}^\text{start}$};
-        \node (du) [use_start, right of=dp, xshift=1.2cm] {$v_\text{du}^\text{start}$};
-        \node (c2t) [beginning, right of=du, xshift=1.2cm] {$v_\text{c2t}^\text{beginning}$};
+        \node (c2t) [beginning, right of=dp, xshift=1.2cm] {$v_\text{c2t}^\text{beginning}$};
         \node (c2t_end) [end, above of=c2t] {$v_\text{c2t}^\text{end}$};
         \draw [arrow] (c2t) -- (c2t_end) node[midway, right] {$time(\text{c2t})$};
         \draw [arrow] (c1p1) -- (dp) node[midway, below] {$0$};
-        \draw [arrow] (dp) -- (du) node[midway, below] {$0$};
-        \draw [arrow] (du) -- (c2t) node[midway, below] {$0$};
+        \draw [arrow] (dp) -- (c2t) node[midway, below] {$0$};
       \end{tikzpicture}
     \end{minipage}
   }
@@ -304,19 +251,31 @@ A_{L_{D}}=\bigcup_{\left(p,u\right)\in L_{D}}\left\{ \left(v_p^\text{start},v_u^
   \label{fig:data_ports_graph}
 \end{figure*}
 
-For each connection between service provide port $p$ and service use port
-$u$ in the assembly, we associate two arcs. The first from
-$v_p^\text{start}$ to $v_u^\text{start}$ represents the fact that the
-service may only be used after it has started being provided.
-The second from $v_u^\text{stop}$ to $v_p^\text{stop}$ represents the fact
-that the service may stop being provided only after it has stopped being
-used.
+For each service-provide port $p$, we associate (a) for each binding between
+$p$ and a group $g$ one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$
+for each $\pi$ in $g_{in}(g)$ and one arc going from $v_p^\text{stop}$ to
+$v_\pi^\text{leaving}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
+connection connecting $p$ to a service-use port $u$, for each binding between
+$u$ and a transition $\theta$ one arc going from $v_p^\text{start}$ to
+$v_\theta^\text{beginning}$ and one arc going from $v_\theta^\text{end}$ to
+$v_p^\text{stop}$.
+The (a) arcs represent the fact that the service becomes available when all
+groups bound to it have a token, and each of them can be deactivated only when
+the provide port is not used anymore. The (b) arcs represent the
+fact that the transitions bound to a service-use port may only execute once
+the port is provided, and do not use the port anymore once they are over.
 Figure~\ref{fig:service_ports_graph} depicts the transformation of a
-connection between service provide port \emph{sp} and service use port
-\emph{su}.
-\[
-A_{L_{P}}=\bigcup_{\left(p,u\right)\in L_{P}}\left\{ \left(v_p^\text{start},v_u^\text{start},0\right),\left(v_u^\text{stop},v_p^\text{stop},0\right)\right\} 
-\]
+service-provide port \emph{sp} bound to a group with \emph{c1p1} as entrance
+place and \emph{c1p2} as exit place, and connected to service-use port
+\emph{su} which is bound to transition \emph{c2t}.
+
+\MC[Maverick]{TODO: Mettre en forme la formule pour qu'elle ne dépasse pas à droite}
+
+\begin{align*}
+A_{S}=\bigcup_{p\in S_p}
+& \left(\bigcup_{g,\,\left(p,g\right)\in\left(B_{S_{p}}\right)_{all}}\left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right)\cup\left(\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leaving},0\right)\right\}\right)\right. \\
+& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\ \theta,\,\left(u,\theta\right)\in\left(B_{S_{u}}\right)_{all}}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right),\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right\}\right)
+\end{align*}
 
 \begin{figure*}[h]
   \subfloat[Concerto assembly]{%
@@ -345,17 +304,13 @@ A_{L_{P}}=\bigcup_{\left(p,u\right)\in L_{P}}\left\{ \left(v_p^\text{start},v_u^
         \draw [arrow] (c1p2) -- (c1p2l) node[midway, right] {$0$};
         \draw [arrow] (c1p2l) -- (c1t3) node[midway, right] {$0$};
         \node (sp) [provide_start, right of=c1p1, xshift=1cm] {$v_\text{sp}^\text{start}$};
-        \node (su) [use_start, right of=sp, xshift=1cm] {$v_\text{su}^\text{start}$};
-        \node (c2t) [beginning, right of=su, xshift=1cm] {$v_\text{c2t}^\text{beginning}$};
+        \node (c2t) [beginning, right of=sp, xshift=1cm] {$v_\text{c2t}^\text{beginning}$};
         \node (c2t_end) [end, above of=c2t] {$v_\text{c2t}^\text{end}$};
         \node (sps) [provide_stop, right of=c1p2l, xshift=1cm] {$v_\text{sp}^\text{stop}$};
-        \node (sus) [use_stop, left of=c2t_end, xshift=-1cm] {$v_\text{su}^\text{stop}$};
         \draw [arrow] (c2t) -- (c2t_end) node[midway, right] {$time(\text{c2t})$};
         \draw [arrow] (c1p1) -- (sp) node[midway, below] {$0$};
-        \draw [arrow] (sp) -- (su) node[midway, below] {$0$};
-        \draw [arrow] (su) -- (c2t) node[midway, below] {$0$};
-        \draw [arrow] (c2t_end) -- (sus) node[midway, above] {$0$};
-        \draw [arrow] (sus) -- (sps) node[midway, right] {$0$};
+        \draw [arrow] (sp) -- (c2t) node[midway, below] {$0$};
+        \draw [arrow] (c2t_end) -- (sps) node[midway, right] {$0$};
         \draw [arrow] (sps) -- (c1p2l) node[midway, above] {$0$};
       \end{tikzpicture}
     \end{minipage}
@@ -449,20 +404,25 @@ A_{F}=\left\{ v_\pi^\text{place},v^\text{sink},0\right\}
 
 Finally, we define $A$ as the union of all of these. 
 \[
-A=A_\Pi\cup A_{\Theta}\cup A_{D_{u}}\cup A_{D_{p}}\cup A_{P_{u}}\cup A_{P_{p}}\cup A_{L_{D}}\cup A_{L_{P}}\cup A_{I}\cup A_{F}
+A=A_\Pi\cup A_{\Theta}\cup A_{D}\cup A_{S}\cup A_{I}\cup A_{F}
 \]
 
 
 \subsection{Time estimation}
 
-We define the time estimation of the execution of the \mad assembly
-to be the length of a longest path between $v^\text{source}$ and
-$v^\text{sink}$ in $G$.
+In the following, we denote $DG(ass)=(V,A)$ the dependency graph corresponding
+to assembly $ass$, and $DG(comp)$ the part of a dependency graph
+corresponding to component $comp$.
 
-\begin{property}
-If $v^\text{sink}$ is reachable from $v^\text{source}$ and $G$ has no
-cycle then the time estimation is well-defined.
-\end{property}
+We define the time estimation of the execution of the \mad assembly $ass$
+to be the length of a longest path between $v^\text{source}$ and
+$v^\text{sink}$ in $DG(ass)$.
+
+\begin{lemma}
+ In $DG(ass)$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there
+ are no cycles, then the time estimation for $ass$ is well-defined.
+ \label{lemma:well_defined}
+\end{lemma}
 
 \begin{proof}
  If $v^\text{sink}$ is reachable from $v^\text{source}$, there exists at least
@@ -473,76 +433,86 @@ cycle then the time estimation is well-defined.
  well-defined.
 \end{proof}
 
-\begin{property}
-  If a place \emph{pTarget} is reachable from place \emph{pStart} (distinct
-  from \emph{pTarget}) in the \net of a component then $v_{pTarget}^{place}$ is reachable
-  from $v_{pStart}^{place}$ in a dependency graph obtained from an assembly
-  containing this component.
-  \label{propertyReachable}
-\end{property}
+\begin{lemma}
+ In a component $comp$, if place \emph{pTarget} is reachable from place
+ \emph{pStart} (distinct from \emph{pTarget}), then $v_{pTarget}^{place}$
+ is reachable from $v_{pStart}^{place}$ in a $DG(comp)$.
+ \label{lemma:reachable}
+\end{lemma}
 
 \begin{proof}
- Consider a path $P$ in the \net of the component going from \emph{pStart} to
+ Consider a path $P$ in the \net of $comp$ going from \emph{pStart} to
  \emph{pTarget} (this path exists because \emph{pTarget} is reachable from
  \emph{pStart}). This path is made of a sequence of places connected by
- transitions: $P=(pStart,t1,p2,t2,\dots,t_n,pTarget)$. By construction,
- there exists a path $(v_{pStart}^{place},v_{pStart}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,\\v_{pTarget}^{place})$ in the dependency graph.
+ transitions:\\
+ $P=(pStart,t1,p2,t2,\dots,t_n,pTarget)$.\\
+ By construction, there exists a path\\
+ $(v_{pStart}^{place},v_{pStart}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,v_{pTarget}^{place})$\\
+ in $DG(comp)$.
 \end{proof}
 
 
-\begin{property}
-In a \mad dependency graph, if there is at least one component in the
-assembly then $v^\text{sink}$ is always reachable from $v^\text{source}$.
-\end{property}
+\begin{lemma}
+ If an assembly $ass$ has one or more components then $v^\text{sink}$ is
+ reachable from $v^\text{source}$ in $DG(ass)$.
+ \label{lemma:source_sink}
+\end{lemma}
 
 \begin{proof}
-  Let us consider one component, its initial place \emph{pi} and one of its
-  final places \emph{pf}. By construction, $v_{pi}^\text{place}$ is reachable
-  from $v^\text{source}$ and $v^\text{sink}$ is reachable from
-  $v_{pf}^\text{place}$. The last thing to prove is that $v_{pf}^\text{place}$
-  is reachable from $v_{pi}^\text{place}$.
-  The end of the execution of a \mad component is defined as
-  when all its tokens are in final places, \ie when there are no more
-  transitions to perform. Therefore, by definition \emph{pf} is
-  necessarily reachable from \emph{pi} in the \net of the component.
-  We conclude by applying Property~\ref{propertyReachable}.
+ Let us consider one component $comp$, its initial place \emph{pi} and one of
+ its final places \emph{pf}. By construction, $v_{pi}^\text{place}$ is
+ reachable from $v^\text{source}$ and $v^\text{sink}$ is reachable from
+ $v_{pf}^\text{place}$ in the dependency graph of an assembly containing this
+ component. The last thing to prove is that $v_{pf}^\text{place}$ is reachable
+ from $v_{pi}^\text{place}$ in $DG(comp)$.
+ The end of the execution of a \mad component is defined as
+ when all its tokens are in final places, \ie when there are no more
+ transitions to perform. Therefore, by definition \emph{pf} is
+ necessarily reachable from \emph{pi} in the \net of $comp$.
+ We conclude by applying Lemma~\ref{lemma:reachable}.
 \end{proof}
 
-\begin{property}
-If a component is well-formed then its corresponding dependency graph has
-no cycle.
-\end{property}
+\begin{lemma}
+ If a component $comp$ is well-formed then $DG(comp)$ has no cycle.
+ \label{lemma:no_cycles_component}
+\end{lemma}
 
 \begin{proof}
- By construction, in the dependency graph corresponding to a component the
- vertices and arcs corresponding to places do not form cycles and are disjoint,
- so they cannot produce a cycle by themselves. Likewise, the arcs corresponding
- to port bindings have either their source vertex or their destination vertex of
- degree 1, so they cannot produce a cycle. Only the arcs corresponding to
- transitions can produce cycles. Moreover, the arcs in the dependency graph
- connect only the vertices corresponding to the places which are connected in
- the \net. This means that if there is a cycle in the dependency graph, there is
- a cycle in the \net. However, the \net of a well-formed \mad component
- has no cycle. Therefore there are no cycles in the dependency graph.
+ By construction, in $DG(comp)$ the vertices and arcs corresponding to places do
+ not form cycles and are disjoint, so they cannot produce a cycle by themselves.
+ Likewise, the arcs corresponding to port bindings have either their source
+ vertex or their destination vertex of degree 1, so they cannot produce a cycle.
+ Only the arcs corresponding to transitions can produce cycles. Moreover, the
+ arcs in $DG(comp)$ connect only the vertices corresponding to the places which
+ are connected in the \net. This means that if there is a cycle in $DG(comp)$,
+ there is a cycle in the \net. However, the \net of a well-formed \mad component
+ has no cycle. Therefore there are no cycles in $DG(comp)$.
 \end{proof}
 
-\begin{property}
-In an assembly with no deadlocks, if each port is bound to at most one
-element (place, transition or group) and if the entry and exit sets of each group
-always contain at most one place then the dependency graph corresponding to the
-assembly has no cycles.
-\end{property}
+\begin{lemma}
+ In an assembly $ass$ of well-formed components with no deadlocks, if each port
+ is bound to at most one element (place, transition or group) and if
+ $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
+ $g$ in $ass$ then the $DG(ass)$ has no cycles.
+ \label{lemma:no_cycles_assembly}
+\end{lemma}
 
 \begin{proof}
- If there is no deadlock in the \mad assembly, then there can be no ``crossing
- dependencies'' (see Figure~\ref{fig:deadlock}). This means that
- the activation and deactivation of two distinct sets of use and provide
- ports cannot create a cycle. This reasoning also applies to the activation
- and deactivation of a service use port and a service provide port (if they
- were to happen in a different order in the two components, the dependency
- graph would have a cycle, but because each port can be activated only once,
- there would be a deadlock in the assembly).
- \MC{À améliorer}
+ By Lemma~\ref{lemma:no_cycles_component}, we have that the dependency graph
+ of all the components in $ass$ have no cycles.
+ Then, the only way a cycle may exist in $DG(ass)$ is if the vertices and arcs
+ corresponding to connections cause a cycle to exist.
+ This may be achived in two ways: because of a single service port bound to
+ group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
+ $\left|g_{out}(g)\right|=1$) or because of two or more use and provide ports.
+ First, because $\left|g_{out}(g)\right|=1$ (we consider $pout$ to be the only
+ place in $g_{out}(g)$), and because by construction $v_{pout}^{leaving}$ is
+ reachable from $v_{pin}^{place}$ (where $pin$ is the only place in $g_{in}(g)$,
+ then $v_{pin}^{place}$ is not reachable from $v_{pout}^{leaving}$ (otherwise
+ there would be a cycle in the dependency graph of the component). Second, a
+ cycle can be caused by multiple connections if there are \emph{crossing
+ dependencies} (see Figure~\ref{fig:deadlock}). However, this would create a
+ deadlock in the assembly, which is not possible by hypothesis.
 \end{proof}
 
 \begin{figure}[h]
@@ -553,32 +523,39 @@ assembly has no cycles.
   \label{fig:deadlock}
 \end{figure}
 
-Because $G$ is a DAG, finding the longest path between $v^\text{source}$
-and $v^\text{sink}$ can be done in $\mathcal{O}(|V|+|A|)$ by sorting the
+\begin{theorem}
+ In an assembly $ass$ of one or more well-formed components with no deadlocks,
+ if each port is bound to at most one element (place, transition or group) and if
+ $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
+ $g$ in $ass$ then the time estimation obtained using $DG(ass)$ is well-defined.
+ \label{theorem:well_defined}
+\end{theorem}
+
+\begin{proof}
+ By applying Lemma~\ref{lemma:source_sink}, we know that $v^\text{sink}$ is reachable
+ from $v^\text{source}$. By applying Lemma~\ref{lemma:no_cycles_assembly}, we know
+ that there are no cycles in $DG(ass)$. We conclude by applying
+ Lemma~\ref{lemma:well_defined}.
+\end{proof}
+
+
+\subsection{Complexity}
+
+We now determine the size complexity of $DG(ass)=(V,A)$ and the time
+complexity of computing the time estimation.
+
+First, we notice that
+$|V| = \mathcal{O}\left(\left|\pi_{all}\right|+\left|\theta_{all}\right|+\left|S_{p_{all}}\right|+\left|D_{p_{all}}\right|\right)$
+and
+$|A| = \mathcal{O}\left(\left|\pi_{all}\right|+\left|\theta_{all}\right|+\left|B_{S_p}\right|+\left|B_{D_p}\right|+\left|B_{S_u}\right|\times\left|L_S\right|\right.$ \\
+$\left.+\left|B_{D_u}\right|\times\left|L_D\right|\right)$
+.
+
+Because $G$ is a a directed acyclic graph, finding the longest path
+between $v^\text{source}$ and $v^\text{sink}$, \ie finding a time estimation,
+can be done in $\mathcal{O}(|V|+|A|)$ by sorting the
 vertices topologically and iterating through them, computing their maximum
-distance from the source using the one of their parents. Note that
-$|V| = \mathcal{O}(pl+tr+po)$ and $|A| = \mathcal{O}(tr+po+dp)$ where $pl$
-is the number of places in the whole assembly, $tr$ is the number of
-transitions, $po$ is the number of ports and $dp$ is the number of
-dependencies. Therefore, the complexity of estimating the running time of
-a \mad commissionning is $\mathcal{O}(pl+tr+po+dp)$.
-
-
-\subsection{Requirements on the assembly}
-
-In order to avoid non-determinism, which a dependency graph would not be
-able to capture, we impose some requirements on a \mad assembly
-for it to be compatible with the performance model. However, these
-requirements are quite reasonable in the sense that none of the use
-cases we have thought of do not meet these requirements.
-%
-First, each port may only be activated once and deactivated once, and
-may only be connected to one group. Second, all groups must have a
-single entry point, \ie only one transition going from a place outside
-of the group to a place inside of the group. Likewise, they must have a
-single exit point (if any), \ie at most one transition going from a
-place inside of the group to a place outside of the group.
-
+distance from the source using the one of their parents.
 \subsection{Example}
 
-\MC[Hélène]{Prendrait trop de place ? (vu la taille de la Figure~\ref{fig:source_sink_graph})}
+\MC[Maverick, Hélène]{TODO à la place de la Figure~\ref{fig:source_sink_graph}}

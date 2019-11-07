@@ -57,8 +57,8 @@ non-empty set of initial places of the component.
       \hline
       & \emph{Ports}\\
       \hline
-      $P_{u}$ & set of use ports of a component\\
-      $P_{p}$ & set of provide ports\\
+      $S_{u}$ & set of use ports of a component\\
+      $S_{p}$ & set of provide ports\\
       $T_{port}$ & set of types of ports\\
       $type_{p}$ & function mapping a port to its type\\
       $D_{u}$ & set of data use ports of a component\\
@@ -70,8 +70,8 @@ non-empty set of initial places of the component.
       \hline
       & \emph{Bindings}\\
       \hline
-      $B_{P_{u}}$ & set of pairs mapping use ports to transitions\\
-      $B_{P_{p}}$ & set of pairs mapping provide ports to groups of places\\
+      $B_{S_{u}}$ & set of pairs mapping use ports to transitions\\
+      $B_{S_{p}}$ & set of pairs mapping provide ports to groups of places\\
       $B_{D_{u}}$ & set of pairs mapping data use ports to transitions\\
       $B_{D_{p}}$ & set of pairs mapping data provide ports to places\\
       \hline
@@ -79,8 +79,8 @@ non-empty set of initial places of the component.
       & \emph{Assembly}\\
       \hline
       $C$ & set of component instances of an assembly\\
-      $L_{P}$ & set of use-provide connections of an assembly\\
-      $L_{D}$ & set of data-use-provide connections of an assembly\\
+      $L_S$ & set of use-provide connections of an assembly\\
+      $L_D$ & set of data-use-provide connections of an assembly\\
       \hline
       \hline
       & \emph{Semantics}\\
@@ -115,9 +115,9 @@ transition has finished.
 Places and transitions are internal elements of a \mad component.
 The external interfaces of a component in \mad is
 composed of \emph{ports}. A component contains a set of \emph{use-ports}
-denoted $P_{u}$, and a set of \emph{provide-ports}, denoted
-$P_{p}$. Each port is associated to a type in $T_{port}$, and the
-function $type_{p}\,:\,P_{u}\cup P_{p}\rightarrow T_{port}$ maps the ports
+denoted $S_{u}$, and a set of \emph{provide-ports}, denoted
+$S_{p}$. Each port is associated to a type in $T_{port}$, and the
+function $type_{p}\,:\,S_{u}\cup S_{p}\rightarrow T_{port}$ maps the ports
 to their type. 
 
 In addition to traditional use-provide ports of component models,
@@ -135,14 +135,14 @@ D_{p}\rightarrow T_{data}$ returns the data type of a given data port.
 
 In a \mad component, places, groups of places and transitions can be
 bound to ports through \emph{bindings}. There are four sets of bindings.
-First, we denote $B_{P_{u}}$ the set of pairs that maps
+First, we denote $B_{S_{u}}$ the set of pairs that maps
 each use port to one or multiple internal transitions in $\Theta$, indicating
 that these transitions use the service associated to this port: 
-$\left(p,\theta\right)\,:\,p\in P_{u},\,\theta\in\Theta$. Second, we
-denote $B_{P_{p}}$ the set of pairs that maps each provide port to one or
+$\left(p,\theta\right)\,:\,p\in S_{u},\,\theta\in\Theta$. Second, we
+denote $B_{S_{p}}$ the set of pairs that maps each provide port to one or
 multiple groups of places, indicating that if at least one token exists in each
 group, the port is active: $\left(p,g\right)\,:\,p\in
-P_{p},\,g\in G$. Third, we denote $B_{D_{u}}$ the set of pairs that
+S_{p},\,g\in G$. Third, we denote $B_{D_{u}}$ the set of pairs that
 maps each data use port to one or multiple internal transitions in $\Theta$,
 indicating that these transitions use the data associated to this port: 
 $\left(d,\theta\right)\,:\,d\in D_{u},\,\theta\in\Theta$. Finally, we
@@ -159,20 +159,20 @@ D_{p},\,\pi\in \Pi$.
 An \emph{assembly} of components represents the instantiation of
 components as defined in the previous section, and their connections
 through their ports. In \mad an assembly is defined as a triplet
-$(C, L_{P}, L_{D})$, where $C$ is a finite set of component instances,
-$L_{P}$ is the set of connections (links) between use ports and
-provide ports of compatible types, and $L_{D}$ is the set of
+$(C, L_S, L_D)$, where $C$ is a finite set of component instances,
+$L_S$ is the set of connections (links) between use ports and
+provide ports of compatible types, and $L_D$ is the set of
 connections between data-use ports and data-provide ports of
 compatible types. For all the components $c_1,\dots,c_n \in C$, we
 denote with a star any union of the corresponding sets, for instance
 $\Pi^* = \Pi_1 \cup \dots \cup \Pi_n$. We give a similar definition
 for functions, for instance
-$type_{p}^*\,:\,P_{u}^*\cup P_{p}^*\rightarrow T_{port}$. Connections
+$type_{p}^*\,:\,S_{u}^*\cup S_{p}^*\rightarrow T_{port}$. Connections
 are defined as follows:
 
 \begin{itemize}
-\item $\left(u,p\right)\ \in L_{P},:\,u\in P_{u}^{*},\,p\in P_{p}^{*},\,type_{p}^{*}\left(u\right)=type_{p}^{*}\left(p\right)$,
-\item $\left(u,p\right)\ \in L_{D},:\,u\in D_{u}^{*},\,p\in D_{p}^{*},\,type_{d}^{*}\left(u\right)=type_{d}^{*}\left(p\right)$.
+\item $\left(u,p\right)\ \in L_S,:\,u\in S_{u}^{*},\,p\in S_{p}^{*},\,type_{p}^{*}\left(u\right)=type_{p}^{*}\left(p\right)$,
+\item $\left(u,p\right)\ \in L_D,:\,u\in D_{u}^{*},\,p\in D_{p}^{*},\,type_{d}^{*}\left(u\right)=type_{d}^{*}\left(p\right)$.
 \end{itemize}
 
 %--------------------------
@@ -181,7 +181,7 @@ are defined as follows:
 %--------------------------
 
 At each moment in the execution of a \mad deployment assembly
-$(C, L_{P}, L_{D})$, we define two functions giving the current
+$(C, L_S, L_D)$, we define two functions giving the current
 status of this assembly. First, the marking function is defined
 to evaluate if one element of any component holds a token:
 $mk\,:\,\Pi^{*}\cup\Delta_{i}^{*}\cup\Delta_{o}^{*}\cup\Theta^{*}\rightarrow\mathbb{B}$
@@ -320,15 +320,15 @@ Figure~\ref{fig:r4} in a simplified manner.
 \begin{figure*}[tp]
 %
 \begin{equation}
-\cfrac{\theta =\left(s,d\right) \in \Theta^*,s \in \Delta_o^*,d \in \Delta_i^*\qquad mk\left(s\right)\qquad\forall p \in P_{u}\cup D_{u},\left(p,\theta\right)\in B_{P_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,\text{is\_ready}(p)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[s\coloneqq\text{false}\right]\left[\theta\coloneqq\text{true}\right],val\right\rangle }
+\cfrac{\theta =\left(s,d\right) \in \Theta^*,s \in \Delta_o^*,d \in \Delta_i^*\qquad mk\left(s\right)\qquad\forall p \in S_{u}\cup D_{u},\left(p,\theta\right)\in B_{S_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,\text{is\_ready}(p)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[s\coloneqq\text{false}\right]\left[\theta\coloneqq\text{true}\right],val\right\rangle }
 \label{eq:r1}
 \end{equation}
 %
 \begin{align*}
-  \text{where: }\text{is\_ready}(p) = &\, \exists u\in P_u\cup D_u,\,(u,p)\in L_{S}\cup L_{D}\land \text{is\_conn\_enabled}\left((u,p)\right) \\
+  \text{where: }\text{is\_ready}(p) = &\, \exists u\in S_u\cup D_u,\,(u,p)\in L_{S}\cup L_D\land \text{is\_conn\_enabled}\left((u,p)\right) \\
   \text{is\_conn\_enabled}\left((u,p)\right) = &\, \begin{cases}
-\forall g\in G,\left(p,g\right)\in B_{P_{p}}\,:\,\text{is\_group\_enabled}\left(g,mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
-val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_{D}
+\forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,\text{is\_group\_enabled}\left(g,mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
+val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
 \end{cases} \\
 \text{is\_group\_enabled}\left(g,mk\right) = & \left(\exists\,\pi\in g:\,mk\left(\pi\right)\right)\\
  & \, \lor\left(\exists\,\delta\in\Delta_{o}^{*}\cup\Delta_{i}^{*}:\,mk\left(\delta\right)\land \left(\exists(s,d)\in\Theta^{*}:\,\left(\delta=s\lor \delta=d\right)\land \text{is\_in\_group}\left((s,d),g\right)\right)\right)\\
@@ -356,8 +356,8 @@ val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_{D}
 \end{equation}
 %
 \begin{align*}
-\text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{P_p}:\,\text{is\_used}(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
-\text{is\_used}\left(p\right) = & \exists u\in P_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_{P}\land \left(u,\theta\right)\in B_{P_u}^{*}\land mk\left(\theta\right) \\
+\text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,\text{is\_used}(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
+\text{is\_used}\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land mk\left(\theta\right) \\
 \text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,mk\right)\land\lnot \text{is\_group\_enabled} \left(g,mk\left[\pi\coloneqq \text{false}\right]\left[\forall d\in D_o \,:\,d\coloneqq \text{true}\right]\right)\right) \\
 \end{align*}
 %
