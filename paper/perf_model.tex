@@ -269,13 +269,13 @@ service-provide port \emph{sp} bound to a group with \emph{c1p1} as entrance
 place and \emph{c1p2} as exit place, and connected to service-use port
 \emph{su} which is bound to transition \emph{c2t}.
 
-\MC[Maverick]{TODO: Mettre en forme la formule pour qu'elle ne dépasse pas à droite}
-
-\begin{align*}
+\begin{alignat*}{3}
 A_{S}=\bigcup_{p\in S_p}
-& \left(\bigcup_{g,\,\left(p,g\right)\in\left(B_{S_{p}}\right)_{all}}\left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right)\cup\left(\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leaving},0\right)\right\}\right)\right. \\
-& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\ \theta,\,\left(u,\theta\right)\in\left(B_{S_{u}}\right)_{all}}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right),\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right\}\right)
-\end{align*}
+& \left(\bigcup_{g,\,\left(p,g\right)\in\left(B_{S_{p}}\right)_{all}} \right. && \left. \left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right.\right. \\
+&&& \left. \cup\left.\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leaving},0\right)\right\}\right)\right. \\
+& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\ \theta,\,\left(u,\theta\right)\in\left(B_{S_{u}}\right)_{all}}} \right. && \left. \left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right),\right.\right. \\
+&&& \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
+\end{alignat*}
 
 \begin{figure*}[h]
   \subfloat[Concerto assembly]{%
@@ -537,6 +537,15 @@ $v^\text{sink}$ in $DG(ass)$.
  that there are no cycles in $DG(ass)$. We conclude by applying
  Lemma~\ref{lemma:well_defined}.
 \end{proof}
+
+\paragraph{Remark}
+
+The restrictions imposed in \ref{theorem:well_defined} are here to consider only
+assemblies for which the structure of the dependency graph does not change
+depending on the duration of the transitions. To handle arbitrary assemblies,
+a more complex performance model is needed, which is left as future work. In
+practice, we expect most real-life assemblies to fulfill these requirements.
+In particular, all of the assemblies presented in this article do.
 
 
 \subsection{Complexity}
