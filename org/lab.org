@@ -28,8 +28,9 @@
 
 * Introduction
 This page aims to offer a practical way of reproducing the experiments presented in the paper [].
-Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]].
-In this we go through the various steps required to obtain the 
+Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]], and some SSH benchmarks.
+In this lab we go through the various steps from scratch to be able to reproduce the experiments and the 
+graphs obtained in our paper.
 
 * Open Stack Use Case
 ** Requirements
@@ -43,7 +44,7 @@ To launch the experiments on Grid 5000:
 
 
 All other required librairies will be installed in a virtual environment and are contained in the =requirements.txt= file at the root directory of the lab.
-The lab code can be found on [[https://gitlab.inria.fr/][Gitlab]].
+The lab code can be found on [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks][Gitlab]].
 
 *** Grid5000 setup
 :PROPERTIES:
@@ -83,7 +84,7 @@ First step is recovering all the code from the public repository. It also includ
 It is possible to reproduce the graphs and gant charts from the results, please see the related section on [[#repro][Repoducing data plots]].
 #+NAME: Getting the lab code
 #+BEGIN_SRC sh 
-git clone https://gitlab.inria.fr/dpertin/lab-openstack-concerto.git && cd lab-openstack-concerto
+git clone https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks.git && cd madeus-openstack-benchmarks
 #+END_SRC
 
 ** Starting a virtual environment
@@ -283,7 +284,7 @@ It is posible to define other scenarios following the examples already present i
 
 *** Behind the scenes
 The call to =python mad.py bench= will run a tmux session named mad on the remote node with the **concerto-node** role that can be accessed through 
-``` ssh [concerto-node-adress]```
+=ssh [concerto-node-adress]=
 and 
 #+BEGIN_SRC sh
 tmux attach -t mad
@@ -351,7 +352,7 @@ cd ~/madpp && source source_dir.sh
 ** Launching the benchmarks
 *** Sequential tests
 The sequential tests are defined in the =reserve_and_test.py= file in the =tests/sequential_test/= directory. 
-The configuration is in the file conf.yaml of the directory. 
+The configuration is in the conf.yaml file of the directory. 
 #+BEGIN_SRC yaml
 g5k:
   # reservation: "2018-03-12 19:00:01"                                                                                                                                                                                                 
@@ -376,6 +377,88 @@ g5k:
         site: nantes
 #+END_SRC
 If your want to test on other sites or with other clusters you can change the values in this file to that purpose.
+**** Resulting directory
+:PROPERTIES:
+:CUSTOM_ID: customdir
+:END:
+The results are saved in a directory that is defined by default as `exp` but can be changed by modifying the 
+`reserve_and_test.py` file, replacing the main l.50 by this:
+#+BEGIN_SRC python
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    perform_experiment(
+        list_chain_length=[1, 5, 25, 100],
+        working_directory='directory_name',
+        nb_repeats=5
+    )
+#+END_SRC
+To launch the experiments for sequential ssh test you can use the following command:
 #+BEGIN_SRC sh
 python3 tests/sequential_test/reserve_and_test.py
 #+END_SRC
+*** Parallel tests
+The parallel tests are defined in the =reserve_and_test.py= file in the =test/sequential_test/= directory.
+The configuration is in the conf.yaml file of the directory
+#+BEGIN_SRC yaml
+g5k:
+  # reservation: "2018-03-12 19:00:01"
+  walltime: "01:00:00"
+  dhcp: true
+  job_name: concerto_ssh_scalability
+  env_name: debian10-x64-base
+  resources:
+    machines:
+      - roles:
+          - remote
+        cluster: ecotype
+        nodes: 10  # will be changed by reserve_and_test
+        primary_network: n1
+        secondary_networks: []
+      - roles:
+          - concerto
+        cluster: ecotype
+        nodes: 1
+        primary_network: n1
+        secondary_networks: []
+    networks:
+      - id: n1
+        roles:
+          - control_network
+          - database_network
+        type: prod
+        site: nantes
+#+END_SRC
+The results are saved by default in two directory, `exp_ssh` for the run with ssh experiment 
+and `exp_no_ssh`  for the dry run experiment. These directories can be changed in the `reserve_and_test.py`
+file, by changing the main l.71 and l.79:
+#+BEGIN_SRC python
+if __name__ == '__main__':
+    logging.basicConfig(level=logging.DEBUG)
+    perform_experiment(
+        list_nb_components=[1, 5, 10, 15, 20],
+        list_nb_parallel_transitions=[1, 5, 10, 20],
+        sleep_time=10,
+        nb_repeats=5,
+        working_directory="exp_ssh",
+        ssh_test=True
+    )
+    perform_experiment(
+        list_nb_components=[1, 5, 10, 15, 20, 50],
+        list_nb_parallel_transitions=[1, 5, 10, 20],
+        sleep_time=1,
+        nb_repeats=5,
+        working_directory="exp_no_ssh",
+        ssh_test=False
+    )
+#+END_SRC
+You can change the directory here should you want to.
+#+BEGIN_SRC sh
+python3 tests/parallel_test/reserve_and_test.py
+#+END_SRC
+** Recover the benchmark results
+Once the benchmarks are done, the results are in the directories previously presented in [[#customdir][Launching the benchmarks]].
+You can make an archive out of the results, for example from the `exp` directory.
+#+BEGIN_SRC sh
+tar -czvf results.tar.gz exp
+#+END_SRC
+
