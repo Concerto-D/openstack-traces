@@ -79,8 +79,6 @@ distributed software systems.}
   \label{fig:example}
 \end{figure}
 
-\MC[Maverick]{TODO: mettre à jour la figure (inverser le nombre de places des composants)}
-
 \paragraph{Example}{ Figure~\ref{fig:example} depicts the \mad
   commissioning of an Apache web server and a MariaDB database. This
   example is based on a real container-based deployment described by
@@ -260,7 +258,7 @@ are different from Petri nets places and transitions, and additional
 elements such as groups or ports also make \mad different from
 Petri nets. Details of the transformation from a \mad assembly to a
 Petri net have been given in~\cite{}. The execution of a \mad assemvly
-is defined by seven operational semantics rules. In this section we only
+is defined by four operational semantics rules. In this section we only
 sketch the role of each of these rules which are formally specified in
 Section~\ref{sec:forma_model}. Before giving the role of each rule,
 one can note in Figure~\ref{fig:example} the small squares that
@@ -281,25 +279,14 @@ synchronization of transitions.
 \item \emph{Ending a transition}: when a transition holds a token and
   when the action associated to the transition is terminated, the
   token is moved from the transition to its destination dock.
-\item \emph{Joining a place}: when all input docks associated to a
+\item \emph{Entering a place}: when all input docks associated to a
   place hold a token, tokens can be merged to a single one placed
   within the place.
-\MC[Hélène]{Joining -> Entering a place?}
 \item \emph{Leaving a place}: when a place holds a token, and if the
   token leaving that place does not cause a provide port currently
   used by other components to be disabled,
   the token can be duplicated and placed in each output dock of the
   place.
-\item \emph{Enabling use-provide connection}: a use-provide connection
-  which is disabled can be enabled when the group associated to the
-  provide port holds a token.
-\item \emph{Disabling use-provide connection}: a use-provide
-  connection which is enabled becomes disabled as soon as there is no
-  more token in any group associated to the provide port.
-\item \emph{Enabling data connection}: a data-use-provide connection
-  which is disabled can be enabled when the place associated to the
-  provide port holds a token. In this case the value is taken from one
-  of the previous transition actions.
 \end{enumerate}
 
 One can note that a data connection cannot be disabled. It

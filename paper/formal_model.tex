@@ -218,6 +218,58 @@ At initialization the valuation is defined as follows:
     D_{P}^*\rightarrow \mathbb{D}$ that returns the data value to assign to a
     given data-provide port after an action.
 \end{itemize}
+
+\noindent\textbf{Terminology.}
+
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.7\columnwidth]{./images/enabled_service.pdf}
+
+    \caption{The connection is enabled because its provide port is enabled, as all the groups it is bound to hold a token.}
+
+    \label{fig:enabled_service}
+  \end{center}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=0.7\columnwidth]{./images/disabled_service.pdf}
+\end{center}
+\caption{The connection is disabled because its provide port is disabled, as one of the groups it is bound to does not hold a token.}
+\label{fig:disabled_service}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=0.4\columnwidth]{./images/enabled_data.pdf}
+\end{center}
+\caption{The connection is enabled because its data-provide port holds a value.}
+\label{fig:enabled_data}
+\end{figure}
+
+\begin{figure}[t]
+\begin{center}
+  \includegraphics[width=0.4\columnwidth]{./images/disabled_data.pdf}
+\end{center}
+\caption{The connection is disabled because its data-provide port does not hold a value.}
+\label{fig:disabled_data}
+\end{figure}
+
+
+
+
+A group is said to be enabled if it contains at least one token (otherwise
+it is disabled). A service-provide port is said to be enabled if all the groups it
+is bound to are enabled (otherwise it is disabled). A service connection is said to
+be enabled if its provide port is enabled (otherwise it is disabled).
+Figure~\ref{fig:enabled_service} gives an example of enabled service connection,
+while Figure~\ref{fig:disabled_service} gives an example of disabled service connection.
+
+A data-provide port is said to be enabled if it holds a value (otherwise it is disabled).
+A data connection is said to be enabled if its provide port is enabled (otherwise it is
+disabled).
+Figure~\ref{fig:enabled_data} gives an example of enabled data connection,
+while Figure~\ref{fig:disabled_data} gives an example of disabled data connection.
     
 In this paper, we present four rules to operate the \mad model. We
 leave for future work the extension of these rules to support errors
@@ -232,16 +284,9 @@ hypotheses needed to fire a transition, \ie starting a transition,
 and the lower part indicates the conclusion of the rule, \ie the valuation
 changes. To fire a transition, the source dock of the transition
 $\theta$ needs a token, and for any port bound to the transition
-$\theta$ the connection of this port must be enabled. A data connection is
-enabled if its provide port holds a value. A service connection
-is enabled if all the groups bound to its provide port are enabled.
-A group is enabled if it holds at least one token. The conclusion of
-this rule is to move the token from the output dock to the
-transition. The upper part of Figure~\ref{fig:r1} illustrates the
+$\theta$ the connection of this port must be enabled.
+The upper part of Figure~\ref{fig:r1} illustrates the
 hypotheses and the lower part the conclusion of the rule.
-\MC[Hélène, Maverick]{Définir enabled pour les groupes et les connexions avant ?
-Possiblement avec des figures (pour ne pas surcharger la figure de cette
-règle) ?}
 
 \begin{figure}[t]
 \begin{center}
