@@ -42,7 +42,6 @@ To launch experiments on a local machine:
 To launch the experiments on Grid 5000:
 - a Grid5000 account and to setting up your ssh config appropriately (see [[#g5k][Grid5000 setup]])
 
-
 All other required librairies will be installed in a virtual environment and are contained in the =requirements.txt= file at the root directory of the lab.
 The lab code can be found on [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks][Gitlab]].
 
@@ -86,6 +85,11 @@ It is possible to reproduce the graphs and gant charts from the results, please 
 #+BEGIN_SRC sh 
 git clone https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks.git && cd madeus-openstack-benchmarks
 #+END_SRC
+Because we use a submodule for the Madeus assemblies regarding openstack, you need to recover that code as well:
+#+BEGIN_SRC sh
+cd madeus-openstack && git submodule update --init
+#+END_SRC
+This will clone the proper assembly code in the madeus-openstack directory. The original repository is visible at the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack][Madeus-openstack repository]].
 
 ** Starting a virtual environment
 It is recommended to run experiments in a virtual environment to keep your python installation clean.
@@ -212,7 +216,7 @@ We defined specific roles for our machines:
 - The *mad-node* is the node responsible for launching the assemblies for the deployment of openstack on the *openstack* nodes
 - The *openstack* are the nodes where openstack will be deployed and in our experiment they each have one specific role (*compute*, *control* and *network*), according to openstack deployment usages
 - The *disco/registry* is the node that will hold the docker image repository, for the cases when the repository is local, as opposed to remote or cached.
-
+  
 ** Mad Workflow
 A typical experiment using Mad is the sequence of several phases:
 
@@ -225,14 +229,14 @@ The =README.md= file contains more information about the various commands availa
 ** Deploying Openstack on the Grid5000 nodes using kolla-ansible
 The mad tool features commands to launch a deployment of openstack on g5k nodes with the use of the =deploy=, and =install-os= commands.
 #+BEGIN_SRC sh
-python mad.py deploy --provider g5k --registry
-python mad.py install-os
-python mad.py destroy--hard
+python mad-enoslib.py deploy --provider g5k --registry
+python mad-enoslib.py install-os
+python mad-enoslib.py destroy--hard
 #+END_SRC
 The =destroy--hard= command is there to clean up the nodes once the deployment has been done.
 ** Request the resources for the benchmarks
 #+BEGIN_SRC sh
-python mad.py deploy -c reservation.yaml -p g5k --bootstrap
+python mad-enoslib.py deploy -c reservation.yaml -p g5k --bootstrap
 #+END_SRC 
 where the =-c= option indicates our reservation file, =-p= indicates the requested provier, and the =--bootstrap= flag indicates that it will populate the inventory with the proper information about the machines reserved and transfer all necessary environment values and files to the different nodes.
 This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the **current** directory. These configuration files are necessary for the OpenStack deployment. 
@@ -240,7 +244,7 @@ This step will issue the reservation of the machines to the chosen Grid5000 clus
 ** Launch the OpenStack benchmarks
 Once the nodes have been reserved, to reproduce the benchmarks, you can specify which test to run by inputing it in the command as for example:
 #+BEGIN_SRC sh
-python mad.py bench -c reservation.yaml --provider g5k --test all
+python mad-enoslib.py bench -c reservation.yaml --provider g5k --test all
 #+END_SRC
 launches the scenario defined in the =reservation.yaml= file as =all=.
 
@@ -253,7 +257,7 @@ launches the scenario defined in the =reservation.yaml= file as =all=.
 all:
     # Here are defined the parameters related to the Execo bench engine:
     params:
-      test_type: ["seq_1t", "dag_2t", "dag_nt4"]
+      test_type: ["m_ansible", "madeus", "m_aeolus", "m_sequential"]
       registry: ["cached", "local", "remote"]
 
     # Here are defined global parameters for our benchmarks:
@@ -262,7 +266,7 @@ all:
 test:
     # Here are defined the parameters related to the Execo bench engine:
     params:
-      test_type: ["seq_1t", "dag_2t", "dag_nt4"]
+      test_type: ["m_ansible", "m_aeolus", "madeus"]
       registry: ["cached", "local", "remote"]
 
     # Here are defined global parameters for our benchmarks:
@@ -271,7 +275,7 @@ test:
 single:
     # Here are defined the parameters related to the Execo bench engine:
     params:
-      test_type: ["dag_nt4"]
+      test_type: ["madeus"]
       registry: ["local"]
 
     # Here are defined global parameters for our benchmarks:
@@ -294,7 +298,7 @@ to observe the deployment process from the nodes.
 ** Recover the benchmark results
 To recover the results from the previously launched benchmarks, just run the following command:
 #+BEGIN_SRC sh
-python mad.py backup 
+python mad-enoslib.py backup 
 #+END_SRC
 The backup command allows to recover the environment configuration from the experiment and the resulting files that are on the concerto node, such as the kolla logs and the madeus directory.
 The resulting files are in the =backups= directory, under the timestamp of the experiment start.
@@ -302,7 +306,7 @@ The resulting files are in the =backups= directory, under the timestamp of the e
 ** Plot the data from the benchmarks results
 Once the resulting files have been recovered through the **backup** command, the use of **analyze** will allow for the creation of time charts, by replacing =Timestamp= by the timestamp of the experiment that is the name of the backup directory just created.
 #+BEGIN_SRC sh
-python mad.py analyze -b backups/Timestamp
+python mad-enoslib.py analyze -b backups/Timestamp
 #+END_SRC
 This will go through the results and plot the charts of the experiment times.
 ** Reproduce data plots from our results
@@ -311,7 +315,7 @@ This will go through the results and plot the charts of the experiment times.
 :END:
 Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used by replacing =result_directory= with the directory containing all the resulting files:
 #+BEGIN_SRC sh
-python mad.py analyze -b result_directory
+python mad-enoslib.py analyze -b result_directory
 #+END_SRC
 This command will produce several files:
 - a svg file with the histogram of deployment times such as this example
