@@ -1,0 +1,5 @@
+cachedir
+exp
+results*.gpl
+results*.json
+times.json
