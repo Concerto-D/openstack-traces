@@ -108,7 +108,7 @@ verification and safety in commissionings and by extension
 reconfigurations. For instance, even if this contribution is not
 presented in this paper, the formal model \mad has been
 successfully used to verify safety properties on distributed software
-commissionings by model checking~\cite{}.
+commissionings by model checking~\cite{coullon:hal-02323641}.
 
 %----------------------------
 \subsection{Description and comparison of the related work}
@@ -291,8 +291,9 @@ components the \emph{inter-taks} metric is not supported, however,
 relations between components make both \emph{SIMH} and
 \emph{inter-comp} metrics theoretically available in \tosca. No
 information have been found on the complete support of these metrics
-in \tosca implementations~\cite{}. Finally, come efforst have been
-done to formally define the \tosca standard~\cite{}.
+in \tosca implementations~\cite{cloudify:web,opentosca:web}. Finally,
+come efforst have been done to formally define the \tosca
+standard~\cite{tosca:web}.
 
 % Kubernetes
 \paragraph{Kubernetes}
@@ -329,24 +330,62 @@ required database and thus fails. For this reason, the metric
 % - intra-task parallelism
 % - performance model and formal
 
-In the previous section, eight different solutions of the related work
-have been compared according to software engineering metrics,
-parallelism metrics and one metric regarding the formal definition of
-the considered solution. Table~\ref{tab:comparison} resumes this
-comparison and raises some questions that need to be discussed.
+In the previous section, eight different related works have been
+compared according to software engineering metrics, parallelism
+metrics and one metric regarding the formal definition of the
+considered solution. Table~\ref{tab:comparison} resumes this
+comparison and raises a few key points that we discuss in the
+following.
 
-\paragraph{How to combine flexibility and automation?}
-blabla
+As usual when working on programming languages, the existing
+tools illustrate the difficult trade-off between flexibility and
+automation. On the one hand, when the tool is highly programmable,
+developers have the ability to manage their own code organization and
+to handle any kind of software engineering or efficiency property. For
+instance, by using \shell, any of the introduced metrics could be
+handled. However, each of them would have to be hand-coded which is
+difficult and error prone. On the other hand, some existing solutions
+such as \deployware and \juju restrict the internal commissioning
+behavior of components to a fix set of actions (\eg install,
+configure, start). Such choice has the advantage of guaranteeing the
+full control of the automated parallelism level but also restrict
+potential optimizations due to the specificity of each component and
+the interactions between components and their tasks.
 
-\paragraph{Parallelism at which price?}
-blabla
+One can note that \aeolus is the solution with the highest score
+regarding the introduced metrics. Indeed, \aeolus combines advantages
+of component models to structure the code of software commissionings
+and enhance its separation of concerns, while introducing an
+additional way to model the internal commissioning behavior of each
+component through tasks. It seems that \aeolus offers a good trade-off
+between flexibility and automation. However, while offering the best
+combination of metrics, \aeolus partially handle separation of
+concerns between components.
+
+Furthermore, one can note that no existing solution offers a full
+support for \emph{intra-tasks} parallelism level. Actually, if a few
+existing solutions already offer a way to model the internal
+commissioning behavior of each component by using tasks, dependencies
+between those tasks are limited to a sequential imperative order thus
+making \emph{intra-tasks} parallelism impossible. Such parallelism
+could be handled manually by some of the existing tools, however such
+parallel aspects are difficult to implement and error prone, thus they
+should be handled automatically.
+
+If introducing more parallelism opens up additional performance
+capabilities, it also introduces more complexity for the user. For
+this reason, formalizing the commissioning solution is of high
+importance to guarantee properties such as attainability of
+commissionings.
 
 \begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
   colback=black!5!white,colframe=black!30,colbacktitle=black!60,
   title=Contribution,fonttitle=\bfseries,
   boxed title style={size=small,colframe=black!60,boxrule=0.2mm},
   boxrule=0.2mm]
-  Blabla
+  \mad is a formal component model inpired by \aeolus that enhances
+  the automation, the separation of concerns and the parallelism level
+  of distributed software commissionings.
 \end{tcolorbox}
 
 % One further aspect of the level of programmability provided by commissioning

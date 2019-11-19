@@ -102,20 +102,23 @@ coordination mechanisms.
 \paragraph{Software configuration tools}
 A second class of languages and tools is called \emph{software
   configuration tools}. This class contains the set of quite recent
-DevOps tools such as \ansible~\cite{}, \puppet~\cite{}, \chef~\cite{},
-\salt~\cite{}, as well as some academic contributions
-\deployware~\cite{}, \aeolus~\cite{} etc. The goal of these tools is
-to enhance the productivity when defining components or services
-commissionings and the coordination of their tasks. Most of the time
-these tools add an abstraction on top of scripting languages to hide
-some of their technical details (\eg SSH connections). These tools use
-different methods to acheive their goal. For instance, Ansible adopts
-a procedural imperative style in \texttt{yaml} as a series of tasks to
-execute, while Puppet adopts a declarative approach in \texttt{Python}
-by combining different instances of resources (\ie service, packages
-etc.). In a declarative approach the user describes what is needed not
-how to get it which is left to the tool developers. Such approach
-enhances productivity but reduces flexibility for the user.
+DevOps tools such as \ansible~\cite{ansible:web},
+\puppet~\cite{puppet:web}, \chef~\cite{chef:web},
+\salt~\cite{salt:web}, as well as some academic contributions
+\deployware~\cite{flissi2008ccgrid},
+\aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of
+these tools is to enhance the productivity when defining components or
+services commissionings and the coordination of their tasks. Most of
+the time these tools add an abstraction on top of scripting languages
+to hide some of their technical details (\eg SSH connections). These
+tools use different methods to acheive their goal. For instance,
+Ansible adopts a procedural imperative style in \texttt{yaml} as a
+series of tasks to execute, while Puppet adopts a declarative approach
+in \texttt{Python} by combining different instances of resources (\ie
+service, packages etc.). In a declarative approach the user describes
+what is needed not how to get it which is left to the tool
+developers. Such approach enhances productivity but reduces
+flexibility for the user.
 
 \paragraph{Infrastructure definition tools}
 Some tools, that are sometimes called \emph{infrastructure definition
@@ -128,26 +131,28 @@ requirements, different operating systems, different versions of
 packages etc. Virtualization has partly been introduced to enhance
 infrastructure management (in addition to enhancing portability of
 applications, isolation between users etc.). This kind of tools, that
-counts \docker~\cite{}, \terraform~\cite{}, \juju~\cite{},
-\cloudformation~\cite{} or \heat~\cite{} for instance, use
-virtualization mechanisms (\eg virtual machines, containers) to reduce
-the commissioning process to a set of commands to deploy a virtual
-resource (by using an image) on a physical machine. This technique
-potentially reduces the complexity of the commissioning procedures if
-the needed image is already available, otherwise the initial
-commissioning commands and coordination have to be done to create the
-image. Some of these tools are specific to a given virtualization
-technique (\eg \docker, \cloudformation and \heat), while others offer
-\emph{providers} for different kinds of Cloud infrastructures (\eg
-\terraform, \juju). The \tosca standard~\cite{}, and its
-implementations~\cite{} can be classified as a descriptive
-provisioning tool. More precisely \tosca is presented as a Cloud
-Modeling Language (CML). By using \tosca a set cloud-based services
-is modeled as a graph where each node represents one component of the
-application and each edge represents the relationship among
-components. \tosca enables the portability and automated management
-across cloud platforms and infrastructures. In \tosca commissioning
-actions are scripts encapsulated in \emph{artifacts}.
+counts \docker~\cite{docker:web}, \terraform~\cite{terraform:web},
+\juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or
+\heat~\cite{heat:web} for instance, use virtualization mechanisms (\eg
+virtual machines, containers) to reduce the commissioning process to a
+set of commands to deploy a virtual resource (by using an image) on a
+physical machine. This technique potentially reduces the complexity of
+the commissioning procedures if the needed image is already available,
+otherwise the initial commissioning commands and coordination have to
+be done to create the image. Some of these tools are specific to a
+given virtualization technique (\eg \docker, \cloudformation and
+\heat), while others offer \emph{providers} for different kinds of
+Cloud infrastructures (\eg \terraform, \juju). The \tosca
+standard~\cite{tosca:web}, and its
+implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can
+be classified as a descriptive provisioning tool. More precisely
+\tosca is presented as a Cloud Modeling Language (CML). By using
+\tosca a set cloud-based services is modeled as a graph where each
+node represents one component of the application and each edge
+represents the relationship among components. \tosca enables the
+portability and automated management across cloud platforms and
+infrastructures. In \tosca commissioning actions are scripts
+encapsulated in \emph{artifacts}.
 
 \paragraph{Orchestration tools}
 Finally, some recent tools go further by offering an
@@ -155,11 +160,12 @@ Finally, some recent tools go further by offering an
 running many services simultaneously to orchestrate. In such case
 being able to deploy or install distributed software is only a part of
 the problem as services also need to be restarted in case of fault, or
-to be scaled in case of overload etc. The famous \kubernetes~\cite{}
-enter in this class as well as \dockerswarm~\cite{}. If these tools
-are above the scope of this paper, a subpart of their architecture
-handles distributed software commissionings. For instance \kubernetes
-relies on \docker for commissionings.
+to be scaled in case of overload etc. The famous
+\kubernetes~\cite{kubernetes:web} enter in this class as well as
+\dockerswarm~\cite{dockerswarm:web}. If these tools are above the
+scope of this paper, a subpart of their architecture handles
+distributed software commissionings. For instance \kubernetes relies
+on \docker for commissionings.
 
 In pratice, these tools are often combined by system administrators
 and operators to acheive both distributed software commissioning and
@@ -227,11 +233,11 @@ of distributed software commissionings. A few of them are given below:
 \item by working on the optimization of a given system command (\eg
   \nix package manager instead of \texttt{apt-get});
 \item if using virtual images or container images, by improving the
-  boot time of hypervisors~\cite{yolo};
+  boot time of hypervisors~\cite{nguyen:hal-02172288};
 \item if using \docker images, by optimizing the placement of image
-  layers on the network~\cite{Nitro};
+  layers on the network~\cite{darrous:hal-01745405};
 \item by exposing more parallelism in commissioning
-  languages~\cite{madeus, aeolus}.
+  languages~\cite{dicosmo:hal-01233489}.
 \end{itemize}
 
 \begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
