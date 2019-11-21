@@ -29,7 +29,9 @@ experimental results and the quality of the prototype of \mad}
 % capturing both intra-component and inter-component dependencies, we
 % reduce this problem to finding the longest path in a DAG.
 
+%--------------------------------------
 \subsection{Notations}
+%--------------------------------------
 
 Recall that given a component, we denote its set of places $\Pi$ and its
 set of transitions $\Theta$. In the following, we consider that the
@@ -62,47 +64,50 @@ of the group)
 \end{itemize}
 
 Recall that an assembly is a tuple $\left(C,L_S,L_D\right)$. In
-the following, we consider that
-$C=\bigcup_{i=1}^{n}\left\{ \left(\Pi_{i}\dots,\left(B_{D_{p}}\right)_{i}\right)\right\} $.
-For each notation $X$ specific to a component, we denote $X_{all}$ the
+the following, for any component $c_i \in C$, any of its
+associated set is denoted $X_i$, \eg $\Pi_i$ for the set of places of
+the component $c_i$.
+As previously for each set $X$ defining a component, we denote $X^*$ the
 union (in the case of an assembly) or the extension (in the case of
 a function) for all components. For instance:
 \begin{itemize}
-\item $\Pi_{all}=\bigcup_{i=1}^{n}\Pi_{i}$ (set of all \emph{places} in
+\item $\Pi^*=\bigcup_{i=1}^{n}\Pi_{i}$ (set of all \emph{places} in
 the assembly)
-\item $\left(time\right)_{all}\,:\,\Theta_{all}\rightarrow\mathbb{R}^{+}$
+\item $\left(time\right)^*\,:\,\Theta^*\rightarrow\mathbb{R}^{+}$
 (function giving the \emph{execution time} of each transition) with:
-$\left(time\right)_{all}\left(x\right)=\left(time\right)_{i}\left(x\right)$
-if $x\in\Theta_{i}$ 
+$\left(time\right)^*\left(\theta\right)=\left(time\right)_{i}\left(\theta\right)$
+if $\theta\in\Theta_{i}$ 
 \end{itemize}
 The execution flow graph is an oriented weighted graph \emph{$\left(V,A\right)$}
-where $V$ is the set of vertices and $A$ is the multiset of weighted
+where $V$ is the set of vertices and $Ass$ is the multiset of weighted
 arcs with elements in $V\times V\times\mathbb{R}^{+}$. We define
-$V$ and $A$ in the following.
+$V$ and $Ass$ in the following.
 
+%--------------------------------------
 \subsection{Vertices}
+%--------------------------------------
 
 For each place, we associate two vertices: one representing the place
 itself and one representing the event of a token leaving the place.
 \[
-V_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ v_\pi^\text{place},v_\pi^\text{leaving}\right\} 
+V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{place},v_\pi^\text{leav}\right\} 
 \]
 
 For each transition, we associate two vertices: one representing the
 beginning of the transition and one representing its end.
 \[
-V_{\Theta}=\bigcup_{\theta\in\Theta_{all}}\left\{ v_\theta^\text{beginning},v_\theta^\text{end}\right\} 
+V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{beg},v_\theta^\text{end}\right\} 
 \]
 
 For each data-provide port we associate one vertex representing its activation.
 \[
-V_{D_p}=\bigcup_{p\in\left(D_p\right)_{all}}\left\{ v_p^\text{start}\right\} 
+V_{D_p}=\bigcup_{p\in\left(D_p\right)^*}\left\{ v_p^\text{start}\right\} 
 \]
 
 For each service-provide port we associate two vertices: one representing
 its activation and one its deactivation.
 \[
-V_{S_p}=\bigcup_{p\in\left(S_p\right)_{all}}\left\{ v_p^\text{start},v_p^\text{stop}\right\} 
+V_{S_p}=\bigcup_{p\in\left(S_p\right)^*}\left\{ v_p^\text{start},v_p^\text{stop}\right\} 
 \]
 
 Finally, we define $V$ as the union of all these, plus one source
@@ -111,8 +116,9 @@ and one sink vertices.
 V=V_{\Pi}\cup V_{\Theta}\cup V_{D_p}\cup V_{S_p}\cup\left\{ v^\text{source},v^\text{sink}\right\} 
 \]
 
-
+%--------------------------------------
 \subsection{Arcs}
+%--------------------------------------
 
 In the dependency graph, arcs represent time constraints: the event represented
 by the destination vertex must happen after the one represented by the source
@@ -122,31 +128,30 @@ transitions is 0. The weights of the latter are the execution times of the
 transitions.
 
 For each place $\pi$ we associate one arc going from $v_\pi^\text{place}$ to
-$v_\pi^\text{leaving}$. This represents the fact that a token may leave $\pi$
+$v_\pi^\text{leav}$. This represents the fact that a token may leave $\pi$
 only after it has entered it.
 Figure~\ref{fig:place_graph} depicts the transformation of one place
 \emph{running} to a dependency graph.
 \[
-A_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(v_\pi^\text{place},v_\pi^\text{leaving},0\right)\right\} 
+A_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ \left(v_\pi^\text{place},v_\pi^\text{leav},0\right)\right\} 
 \]
 
 %%%%%%%%%%%%%%%
 \input{figures/placetodag.tex}
 
 For each transition $\theta$ going from $\pi_s$ to $\pi_d$, we associate
-three arcs. The first between $v_\theta^\text{beginning}$ and $v_\theta^\text{end}$
+three arcs. The first between $v_\theta^\text{beg}$ and $v_\theta^\text{end}$
 represents the fact that the end of $\theta$ happens at the time of the
-start of $\theta$ plus its duration. The second between $v_{\pi_{s}}^\text{leaving}$
-and $v_\theta^\text{beginning}$ represents the fact that $\theta$ may only
+start of $\theta$ plus its duration. The second between $v_{\pi_{s}}^\text{leav}$
+and $v_\theta^\text{beg}$ represents the fact that $\theta$ may only
 happen after a token leaved $\pi_s$. The third one between $v_\theta^\text{end}$ and
 $v_{\pi_{d}}^\text{place}$ represents the fact that a token may enter $\pi_d$ only
 after $\theta$ has finished.
 Figure~\ref{fig:transition_graph} depicts the transformation of three
 transitions \emph{t1}, \emph{t2} and \emph{t3} to a dependency graph.
 \begin{align*}
-A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}} & \left\{ \left(v_\theta^\text{beginning},v_\theta^\text{end},time_{all}\left(\theta\right)\right),\right.\\
- & \left(v_{\pi_{s}}^\text{leaving},v_\theta^\text{beginning},0\right),\\
- & \left. \left(v_\theta^\text{end},v_{\pi_{d}}^\text{place},0\right)\right\}
+A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta^*} & \left\{ \left(v_\theta^\text{beg},v_\theta^\text{end},time^*\left(\theta\right)\right),\right.\\
+ & \left(v_{\pi_{s}}^\text{leav},v_\theta^\text{beg},0\right),\left. \left(v_\theta^\text{end},v_{\pi_{d}}^\text{place},0\right)\right\}
 \end{align*}
 
 %%%%%%%%%%%%%%%
@@ -156,7 +161,7 @@ For each data-provide port $p$, we associate (a) for each binding between
 $p$ and a place $\pi$ one arc going from $v_\pi^\text{place}$ to
 $v_p^\text{start}$, and (b) for each connection connecting $p$
 to a data-use port $u$, for each binding between $u$ and a transition
-$\theta$ one arc going from $v_p^\text{start}$ to $v_\theta^\text{beginning}$.
+$\theta$ one arc going from $v_p^\text{start}$ to $v_\theta^\text{beg}$.
 The (a) arcs represent the fact that the data becomes
 available when a place bound to it is reached. The (b) arcs represent the
 fact that the transitions bound to a data-use port may only execute once
@@ -166,8 +171,9 @@ data-provide port \emph{dp} bound to place \emph{c1p} and connected to
 data-use port \emph{du} which is bound to transition \emph{c2t}.
 \begin{align*}
 A_{D}=\bigcup_{p\in D_p}
-& \left(\bigcup_{\pi,\,\left(p,\pi\right)\in\left(B_{D_{p}}\right)_{all}}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right. \\
-& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_D \\ \theta,\,\left(u,\theta\right)\in\left(B_{D_{u}}\right)_{all}}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right)\right\}\right)
+& \left(\bigcup_{\pi,\,\left(p,\pi\right)\in B_{D_{p}}^*}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right. \\
+& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_D \\
+  \theta,\,\left(u,\theta\right)\in B_{D_{u}}^*}}\left\{ \left(v_p^\text{start},v_\theta^\text{beg},0\right)\right\}\right)
 \end{align*}
 
 %%%%%%%%%%%%%%%
@@ -176,10 +182,10 @@ A_{D}=\bigcup_{p\in D_p}
 For each service-provide port $p$, we associate (a) for each binding between
 $p$ and a group $g$ one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$
 for each $\pi$ in $g_{in}(g)$ and one arc going from $v_p^\text{stop}$ to
-$v_\pi^\text{leaving}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
+$v_\pi^\text{leav}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
 connection connecting $p$ to a service-use port $u$, for each binding between
 $u$ and a transition $\theta$ one arc going from $v_p^\text{start}$ to
-$v_\theta^\text{beginning}$ and one arc going from $v_\theta^\text{end}$ to
+$v_\theta^\text{beg}$ and one arc going from $v_\theta^\text{end}$ to
 $v_p^\text{stop}$.
 The (a) arcs represent the fact that the service becomes available when all
 groups bound to it have a token, and each of them can be deactivated only when
@@ -193,10 +199,10 @@ place and \emph{c1p2} as exit place, and connected to service-use port
 
 \begin{alignat*}{3}
 A_{S}=\bigcup_{p\in S_p}
-& \left(\bigcup_{g,\,\left(p,g\right)\in\left(B_{S_{p}}\right)_{all}} \right. && \left. \left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right.\right. \\
-&&& \left. \cup\left.\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leaving},0\right)\right\}\right)\right. \\
-& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\ \theta,\,\left(u,\theta\right)\in\left(B_{S_{u}}\right)_{all}}} \right. && \left. \left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right),\right.\right. \\
-&&& \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
+& \left(\bigcup_{g,\,\left(p,g\right)\in B_{S_{p}}^*} \right. && \left. \left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right.\right. \\
+&&& \left. \cup\left.\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leav},0\right)\right\}\right)\right. \\
+& \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\
+      \theta,\,\left(u,\theta\right)\in B_{S_{u}}^*}} \right. && \left. \left\{ \left(v_p^\text{start},v_\theta^\text{beg},0\right),\right.\right. \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
 \end{alignat*}
 
 %%%%%%%%%%%%%%%
@@ -208,13 +214,13 @@ For each initial place $\pi$ we associate one arc going from $v^\text{source}$
 Figure~\ref{fig:source_sink_graph} depicts the transformation of two initial
 places \emph{c1p1} and \emph{c2p2}.
 \[
-A_{I}=\bigcup_{\pi\in I_{all}}\left\{ \left(v^\text{source},v_\pi^\text{place},0\right)\right\} 
+A_{I}=\bigcup_{\pi\in I^*}\left\{ \left(v^\text{source},v_\pi^\text{place},0\right)\right\} 
 \]
 
-In addition to the set of all initial places $I_{all}$, we define
-the set of all final places $F_{all}$ as the set of places which
+In addition to the set of all initial places $I^*$, we define
+the set of all final places $F^*$ as the set of places which
 do not have any outgoing transition. Formally,
-$F_{all}=\left\{ \pi\,\mid\,\pi\in\Pi_{all}\land\lnot\left(\exists\pi_{a}\in\Pi_{all}\,:\,\left(\pi,\pi_{a}\right)\in\Theta_{all}\right)\right\} $.
+$F^*=\left\{ \pi\,\mid\,\pi\in\Pi^*\land\lnot\left(\exists\pi_{a}\in\Pi^*\,:\,\left(\pi,\pi_{a}\right)\in\Theta^*\right)\right\} $.
 Then, for each final place $\pi$ we associate one arc going from
 $v_\pi^\text{place}$ to $v^\text{sink}$, representing the fact that the
 commissionning is over only after all components have reached their final places
@@ -228,25 +234,26 @@ A_{F}=\left\{ v_\pi^\text{place},v^\text{sink},0\right\}
 %%%%%%%%%%%%%%%
 \input{figures/exampletodag.tex}
 
-Finally, we define $A$ as the union of all of these. 
+Finally, we define $Ass$ as the union of all of these. 
 \[
 A=A_\Pi\cup A_{\Theta}\cup A_{D}\cup A_{S}\cup A_{I}\cup A_{F}
 \]
 
-
+%--------------------------------------
 \subsection{Time estimation}
+%--------------------------------------
 
-In the following, we denote $DG_A=(V,A)$ the dependency graph corresponding
+In the following, we denote $DG_{Ass}=(V,A)$ the dependency graph corresponding
 to assembly $A=(C,L_S,L_D)$, and $DG_c$ the part of a dependency graph
 corresponding to component $c \in C$.
 
-We define the time estimation of the execution of the \mad assembly $A$
+We define the time estimation of the execution of the \mad assembly $Ass$
 to be the length of a longest path between $v^\text{source}$ and
 $v^\text{sink}$ in $DG(ass)$.
 
 \begin{lemma}
  In $DG(ass)$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there
- are no cycles, then the time estimation for $A$ is well-defined.
+ are no cycles, then the time estimation for $Ass$ is well-defined.
  \label{lemma:well_defined}
 \end{lemma}
 
@@ -270,17 +277,16 @@ $v^\text{sink}$ in $DG(ass)$.
  Consider a path $P$ in the \net of $c \in C$ going from $\pi_s$ to
  $\pi_t$ (this path exists because $\pi_t$ is reachable from
  $\pi_s$). This path is made of a sequence of places connected by
- transitions:\\
- $P=(\pi_s,t1,p2,t2,\dots,t_n,\pi_t)$.\\
+ transitions: $P=(\pi_s,t1,p2,t2,\dots,t_n,\pi_t)$.\\
  By construction, there exists a path\\
- $(v_{\pi_s}^{place},v_{\pi_s}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,v_{\pi_t}^{place})$\\
- in $DG_c$.
+ $(v_{\pi_s}^{place},v_{\pi_s}^{leav},v_{t1}^{beg},v_{t1}^{end},v_{p2}^{place},\dots,v_{\pi_t}^{place})
+ \in DG_c$.
 \end{proof}
 
 
 \begin{lemma}
- If an assembly $A$ has one or more components then $v^\text{sink}$ is
- reachable from $v^\text{source}$ in $DG_A$.
+ If an assembly $Ass$ has one or more components then $v^\text{sink}$ is
+ reachable from $v^\text{source}$ in $DG_{Ass}$.
  \label{lemma:source_sink}
 \end{lemma}
 
@@ -316,25 +322,25 @@ $v^\text{sink}$ in $DG(ass)$.
 \end{proof}
 
 \begin{lemma}
- In an assembly $A$ of well-formed components with no deadlocks, if each port
+ In an assembly $Ass$ of well-formed components with no deadlocks, if each port
  is bound to at most one element (place, transition or group) and if
  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $A$ then the $DG_A$ has no cycles.
+ $g$ in $Ass$ then the $DG_{Ass}$ has no cycles.
  \label{lemma:no_cycles_assembly}
 \end{lemma}
 
 \begin{proof}
  By Lemma~\ref{lemma:no_cycles_component}, we have that the dependency graph
- of all the components in $A$ have no cycles.
- Then, the only way a cycle may exist in $DG_A$ is if the vertices and arcs
+ of all the components in $Ass$ have no cycles.
+ Then, the only way a cycle may exist in $DG_{Ass}$ is if the vertices and arcs
  corresponding to connections cause a cycle to exist.
  This may be acheived in two ways: because of a single service port bound to
  group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
  $\left|g_{out}(g)\right|=1$); or because of two or more use and provide ports.
- First, because $\left|g_{out}(g)\right|=1$ (we consider $pout$ to be the only
- place in $g_{out}(g)$), and because by construction $v_{pout}^{leaving}$ is
- reachable from $v_{pin}^{place}$ (where $pin$ is the only place in $g_{in}(g)$,
- then $v_{pin}^{place}$ is not reachable from $v_{pout}^{leaving}$ (otherwise
+ First, because $\left|g_{out}(g)\right|=1$ (we consider $\pi_{out}$ to be the only
+ place in $g_{out}(g)$), and because by construction $v_{\pi_{out}}^{leav}$ is
+ reachable from $v_{\pi_{in}}^{place}$ (where $\pi_{in}$ is the only place in $g_{in}(g)$,
+ then $v_{\pi_{in}}^{place}$ is not reachable from $v_{\pi_{out}}^{leav}$ (otherwise
  there would be a cycle in the dependency graph of the component). Second, a
  cycle can be caused by multiple connections if there are \emph{crossing
  dependencies} (see Figure~\ref{fig:deadlock}). However, this would create a
@@ -350,17 +356,17 @@ $v^\text{sink}$ in $DG(ass)$.
 \end{figure}
 
 \begin{theorem}
- In an assembly $A$ of one or more well-formed components with no deadlocks,
+ In an assembly $Ass$ of one or more well-formed components with no deadlocks,
  if each port is bound to at most one element (place, transition or group) and if
  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $A$, then the time estimation obtained using $DG_A$ is well-defined.
+ $g$ in $Ass$, then the time estimation obtained using $DG_{Ass}$ is well-defined.
  \label{theorem:well_defined}
 \end{theorem}
 
 \begin{proof}
  By applying Lemma~\ref{lemma:source_sink}, we know that $v^\text{sink}$ is reachable
  from $v^\text{source}$. By applying Lemma~\ref{lemma:no_cycles_assembly}, we know
- that there are no cycles in $DG_A$. We conclude by applying
+ that there are no cycles in $DG_{Ass}$. We conclude by applying
  Lemma~\ref{lemma:well_defined}.
 \end{proof}
 
@@ -376,17 +382,17 @@ In particular, all of the assemblies presented in this article do.
 
 \subsection{Complexity}
 
-We now determine the size complexity of $DG_A=(V,A)$ and the time
+We now determine the size complexity of $DG_{Ass}=(V,A)$ and the time
 complexity of computing the time estimation.
 
 First, we notice that
-$|V| = \mathcal{O}\left(\left|\pi_{all}\right|+\left|\theta_{all}\right|+\left|S_{p_{all}}\right|+\left|D_{p_{all}}\right|\right)$
+$|V| = \mathcal{O}\left(\left|\pi^*\right|+\left|\theta^*\right|+\left|S_{p^*}\right|+\left|D_{p^*}\right|\right)$
 and
-$|A| = \mathcal{O}\left(\left|\pi_{all}\right|+\left|\theta_{all}\right|+\left|B_{S_p}\right|+\left|B_{D_p}\right|+\left|B_{S_u}\right|\times\left|L_S\right|\right.$ \\
+$|A| = \mathcal{O}\left(\left|\pi^*\right|+\left|\theta^*\right|+\left|B_{S_p}\right|+\left|B_{D_p}\right|+\left|B_{S_u}\right|\times\left|L_S\right|\right.$ \\
 $\left.+\left|B_{D_u}\right|\times\left|L_D\right|\right)$
 .
 
-Because $DG_A$ is a a directed acyclic graph, finding the longest path
+Because $DG_{Ass}$ is a a directed acyclic graph, finding the longest path
 between $v^\text{source}$ and $v^\text{sink}$, \ie finding a time estimation,
 can be done in $\mathcal{O}(|V|+|A|)$ by sorting the
 vertices topologically and iterating through them, computing their maximum
