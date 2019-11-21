@@ -73,6 +73,7 @@
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{mathtools}
 \usepackage{subfig}
+\usepackage[export]{adjustbox}
 \usepackage{pifont}
 \usepackage{wasysym}
 
@@ -107,6 +108,7 @@
 \definecolor{green}{RGB}{0,150,0}
 \definecolor{backcolour}{rgb}{0.95,0.95,0.95}
 \DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFont{gray}{\color{gray}}
 \DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\linewidth}{#1#2#3}}}
 \captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 \lstset{language=Python,

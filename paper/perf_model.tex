@@ -1,9 +1,9 @@
 In this section, we present \mad' performance model. Its goal is,
 given a \mad assembly to be executed and the execution time of all the
-transitions of all the components in an assembly, to estimate the total
+transitions of all the components in the assembly, to estimate the total
 execution time of the commissionning.
 %
-Intuitively, we automatically model the execution flow of a \mad
+Intuitively, we automatically deduce the execution flow of a \mad
 assembly based on \mad' formal semantics. This is done by generating a
 dependency graph representing the execution flow of each \mad
 component in the assembly and connecting them together according to their
@@ -19,6 +19,12 @@ these transitions' individual execution time (and the other ones with 0),
 we can find the total execution time of the assembly by finding the longest
 path from the \emph{source} vertex to the \emph{sink} vertex.
 
+\HC[HC]{why a performance model? give some motivations! 2 reasons,
+  first a performance model offers a way to estimate the execution
+  time of a commissioning which could be useful for sysadmins. second,
+in this paper the performance model is used to validate the
+experimental results and the quality of the prototype of \mad}
+
 % By generating a graph modelling the execution flow of a \mad assembly,
 % capturing both intra-component and inter-component dependencies, we
 % reduce this problem to finding the longest path in a DAG.
@@ -29,19 +35,21 @@ Recall that given a component, we denote its set of places $\Pi$ and its
 set of transitions $\Theta$. In the following, we consider that the
 transitions go directly from a place to
 another place instead of from an output dock to an input dock.
-Hence, $\Theta$ is a multiset which elements are pairs of places. We
-can obtain the place corresponding to each dock by using the $place$
-function of the component.
+Hence, $\Theta$ is a multiset which elements are pairs of places.
+%We
+%can obtain the place corresponding to each dock by using the $place$
+%function of the component.
 
-In order to estimate the total commissionning time, we need to know the
-execution time of each individual transition. In the following, we
+In order to estimate the total commissionning time, we need to know
+the execution time of each individual transition. In the following, we
 consider the function $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$
-associating an execution time to each transition (taken as input).
+associating an execution time to each transition (taken as input). We
+are aware that finding precise execution times of transitions is
+difficult and the subject of many studies such as analytical
+model~\cite{} or statistical studies~\cite{}. This point is left as
+future work.
 
 We also consider the following two functions:
-\MC[Maverick]{Change group entrance and exit functions to return only one element?
-State that we consider only the assemblies in which these functions always return
-one element?}
 \begin{itemize}
 \item the \emph{group entrance function} $g_{in}\,:\,G\rightarrow\mathcal{P}\left(\Pi\right)$ with\\
 $g_{in}(g)=\left\{ \pi\,\mid\,\pi\in g\land\exists\pi_{b}\,:\,\left(\pi_{b}\not\in g\land\left(\pi_{b},\pi\right)\in\Theta\right)\right\} $
@@ -122,26 +130,8 @@ Figure~\ref{fig:place_graph} depicts the transformation of one place
 A_{\Pi}=\bigcup_{\pi\in\Pi_{all}}\left\{ \left(v_\pi^\text{place},v_\pi^\text{leaving},0\right)\right\} 
 \]
 
-\begin{figure}[h]
-  \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.5\columnwidth}%
-      \centering
-      \includegraphics[scale=0.2]{images/perf_place.pdf}
-    \end{minipage}
-  }
-  \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{0.5\columnwidth}%
-      \centering
-      \begin{tikzpicture}[node distance=1.7cm]
-        \node (leaving) [leaving] {$v_\text{running}^\text{leaving}$};
-        \node (place) [place, below of=leaving] {$v_\text{running}^\text{place}$};
-        \draw [arrow] (place) -- (leaving) node[midway, right] {$0$};
-      \end{tikzpicture}
-    \end{minipage}
-  }
-  \caption{Vertices and arcs for a place}
-  \label{fig:place_graph}
-\end{figure}
+%%%%%%%%%%%%%%%
+\input{figures/placetodag.tex}
 
 For each transition $\theta$ going from $\pi_s$ to $\pi_d$, we associate
 three arcs. The first between $v_\theta^\text{beginning}$ and $v_\theta^\text{end}$
@@ -159,48 +149,8 @@ A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta_{all}} & \left\
  & \left. \left(v_\theta^\text{end},v_{\pi_{d}}^\text{place},0\right)\right\}
 \end{align*}
 
-\begin{figure*}[h]
-  \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.8\columnwidth}%
-      \centering
-      \includegraphics[scale=0.2]{images/perf_transition.pdf}
-    \end{minipage}
-  }
-  \hfill
-  \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{1.2\columnwidth}%
-      \centering
-      \begin{tikzpicture}[node distance=1.7cm]
-        \node (p3l) [leaving] {$v_\text{p3}^\text{leaving}$};
-        \node (p3) [place, below of=p3l] {$v_\text{p3}^\text{place}$};
-        \node (t1e) [end, below of=p3] {$v_\text{t1}^\text{end}$};
-        \node (t1) [beginning, below of=t1e] {$v_\text{t1}^\text{beginning}$};
-        \node (p1l) [leaving, below of=t1] {$v_\text{p1}^\text{leaving}$};
-        \node (p1) [place, below of=p1l] {$v_\text{p1}^\text{place}$};
-        \node (t2) [beginning, right of=p1l, xshift=1.8cm] {$v_\text{t2}^\text{beginning}$};
-        \node (t2e) [end, right of=t2, xshift=1.8cm] {$v_\text{t2}^\text{end}$};
-        \node (p2) [place, above of=t2e] {$v_\text{p2}^\text{place}$};
-        \node (p2l) [leaving, above of=p2] {$v_\text{p2}^\text{leaving}$};
-        \node (t3) [beginning, above of=p2l] {$v_\text{t3}^\text{beginning}$};
-        \node (t3e) [end, right of=p3, xshift=1.8cm] {$v_\text{t3}^\text{end}$};
-        \draw [arrow] (p3) -- (p3l) node[midway, right] {$0$};
-        \draw [arrow] (p2) -- (p2l) node[midway, right] {$0$};
-        \draw [arrow] (p1) -- (p1l) node[midway, right] {$0$};
-        \draw [arrow] (t3) -- (t3e) node[midway, above] {$time(\text{t3})$};
-        \draw [arrow] (t2) -- (t2e) node[midway, below] {$time(\text{t2})$};
-        \draw [arrow] (t1) -- (t1e) node[midway, right] {$time(\text{t1})$};
-        \draw [arrow] (p1l) -- (t1) node[midway, right] {$0$};
-        \draw [arrow] (p1l) -- (t2) node[midway, below] {$0$};
-        \draw [arrow] (p2l) -- (t3) node[midway, right] {$0$};
-        \draw [arrow] (t1e) -- (p3) node[midway, right] {$0$};
-        \draw [arrow] (t2e) -- (p2) node[midway, right] {$0$};
-        \draw [arrow] (t3e) -- (p3) node[midway, above] {$0$};
-      \end{tikzpicture}
-    \end{minipage}
-  }
-  \caption{Vertices and arcs for transitions}
-  \label{fig:transition_graph}
-\end{figure*}
+%%%%%%%%%%%%%%%
+\input{figures/transtodag.tex}
 
 For each data-provide port $p$, we associate (a) for each binding between
 $p$ and a place $\pi$ one arc going from $v_\pi^\text{place}$ to
@@ -220,36 +170,8 @@ A_{D}=\bigcup_{p\in D_p}
 & \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_D \\ \theta,\,\left(u,\theta\right)\in\left(B_{D_{u}}\right)_{all}}}\left\{ \left(v_p^\text{start},v_\theta^\text{beginning},0\right)\right\}\right)
 \end{align*}
 
-\begin{figure*}[h]
-  \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.6\columnwidth}%
-      \centering
-      \includegraphics[scale=0.2]{images/perf_data_ports.pdf}
-    \end{minipage}
-  }
-  \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{1.4\columnwidth}%
-      \centering
-      \begin{tikzpicture}[node distance=1.7cm]
-        \node (c1t2) [beginning] {$v_\text{c1t2}^\text{beginning}$};
-        \node (c1p1l) [leaving, below of=c1t2] {$v_\text{c1p}^\text{leaving}$};
-        \node (c1p1) [place, below of=c1p1l] {$v_\text{c1p}^\text{place}$};
-        \node (c1t1_end) [end, below of=c1p1] {$v_\text{c1t1}^\text{end}$};
-        \draw [arrow] (c1t1_end) -- (c1p1) node[midway, right] {$0$};
-        \draw [arrow] (c1p1) -- (c1p1l) node[midway, right] {$0$};
-        \draw [arrow] (c1p1l) -- (c1t2) node[midway, right] {$0$};
-        \node (dp) [provide_start, right of=c1p1, xshift=1.2cm] {$v_\text{dp}^\text{start}$};
-        \node (c2t) [beginning, right of=dp, xshift=1.2cm] {$v_\text{c2t}^\text{beginning}$};
-        \node (c2t_end) [end, above of=c2t] {$v_\text{c2t}^\text{end}$};
-        \draw [arrow] (c2t) -- (c2t_end) node[midway, right] {$time(\text{c2t})$};
-        \draw [arrow] (c1p1) -- (dp) node[midway, below] {$0$};
-        \draw [arrow] (dp) -- (c2t) node[midway, below] {$0$};
-      \end{tikzpicture}
-    \end{minipage}
-  }
-  \caption{Vertices and arcs for data ports, bindings and connections}
-  \label{fig:data_ports_graph}
-\end{figure*}
+%%%%%%%%%%%%%%%
+\input{figures/dataporttodag.tex}
 
 For each service-provide port $p$, we associate (a) for each binding between
 $p$ and a group $g$ one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$
@@ -277,47 +199,8 @@ A_{S}=\bigcup_{p\in S_p}
 &&& \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
 \end{alignat*}
 
-\begin{figure*}[h]
-  \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.7\columnwidth}%
-      \centering
-      \includegraphics[scale=0.2]{images/perf_service_ports.pdf}
-    \end{minipage}
-  }
-  \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{1.3\columnwidth}%
-      \centering
-      \begin{tikzpicture}[node distance=1.7cm]
-        \node (c1t3) [beginning] {$v_\text{c1t3}^\text{beginning}$};
-        \node (c1p2l) [leaving, below of=c1t3] {$v_\text{c1p2}^\text{leaving}$};
-        \node (c1p2) [place, below of=c1p2l] {$v_\text{c1p2}^\text{place}$};
-        \node (c1t2_end) [end, below of=c1p2] {$v_\text{c1t2}^\text{end}$};
-        \node (c1t2) [beginning, below of=c1t2_end] {$v_\text{c1t2}^\text{beginning}$};
-        \node (c1p1l) [leaving, below of=c1t2] {$v_\text{c1p1}^\text{leaving}$};
-        \node (c1p1) [place, below of=c1p1l] {$v_\text{c1p1}^\text{place}$};
-        \node (c1t1_end) [end, below of=c1p1] {$v_\text{c1t1}^\text{end}$};
-        \draw [arrow] (c1t1_end) -- (c1p1) node[midway, right] {$0$};
-        \draw [arrow] (c1p1) -- (c1p1l) node[midway, right] {$0$};
-        \draw [arrow] (c1p1l) -- (c1t2) node[midway, right] {$0$};
-        \draw [arrow] (c1t2) -- (c1t2_end) node[midway, right] {$time(\text{c1t2})$};
-        \draw [arrow] (c1t2_end) -- (c1p2) node[midway, right] {$0$};
-        \draw [arrow] (c1p2) -- (c1p2l) node[midway, right] {$0$};
-        \draw [arrow] (c1p2l) -- (c1t3) node[midway, right] {$0$};
-        \node (sp) [provide_start, right of=c1p1, xshift=1cm] {$v_\text{sp}^\text{start}$};
-        \node (c2t) [beginning, right of=sp, xshift=1cm] {$v_\text{c2t}^\text{beginning}$};
-        \node (c2t_end) [end, above of=c2t] {$v_\text{c2t}^\text{end}$};
-        \node (sps) [provide_stop, right of=c1p2l, xshift=1cm] {$v_\text{sp}^\text{stop}$};
-        \draw [arrow] (c2t) -- (c2t_end) node[midway, right] {$time(\text{c2t})$};
-        \draw [arrow] (c1p1) -- (sp) node[midway, below] {$0$};
-        \draw [arrow] (sp) -- (c2t) node[midway, below] {$0$};
-        \draw [arrow] (c2t_end) -- (sps) node[midway, right] {$0$};
-        \draw [arrow] (sps) -- (c1p2l) node[midway, above] {$0$};
-      \end{tikzpicture}
-    \end{minipage}
-  }
-  \caption{Vertices and arcs for service ports, bindings and connections}
-  \label{fig:service_ports_graph}
-\end{figure*}
+%%%%%%%%%%%%%%%
+\input{figures/servporttodag.tex}
 
 For each initial place $\pi$ we associate one arc going from $v^\text{source}$
  to $v_\pi^\text{place}$, representing the fact that a token is placed in each
@@ -342,65 +225,8 @@ places \emph{c1p2}, \emph{c2p2} and \emph{c2p3}.
 A_{F}=\left\{ v_\pi^\text{place},v^\text{sink},0\right\} 
 \]
 
-\begin{figure*}[h]
-  \subfloat[Concerto assembly]{%
-    \begin{minipage}[c]{0.7\columnwidth}%
-      \centering
-      \includegraphics[scale=0.2]{images/perf_source_sink.pdf}
-    \end{minipage}
-  }
-  \hfill
-  \subfloat[Dependency graph]{%
-    \begin{minipage}[c]{1.3\columnwidth}%
-      \centering
-      \begin{tikzpicture}[node distance=1.7cm]
-        \node (c1p2l) [leaving] {$v_\text{c1p2}^\text{leaving}$};
-        \node (c1p2) [place, below of=c1p2l,yshift=-0.3cm] {$v_\text{p1p2}^\text{place}$};
-        \node (c1t1e) [end, below of=c1p2] {$v_\text{c1t1}^\text{end}$};
-        \node (c1t1) [beginning, below of=c1t1e] {$v_\text{c1t1}^\text{beginning}$};
-        \node (c1p1l) [leaving, below of=c1t1] {$v_\text{c1p1}^\text{leaving}$};
-        \node (c1p1) [place, below of=c1p1l] {$v_\text{c1p1}^\text{place}$};
-        
-        \node (c2p2l) [leaving, right of=c1p2l, xshift=0.6cm, yshift=-0.6cm] {$v_\text{c2p2}^\text{leaving}$};
-        \node (c2p2) [place, right of=c1p2, xshift=1.3cm] {$v_\text{c2p2}^\text{place}$};
-        \node (c2t1e) [end, below of=c2p2] {$v_\text{c2t1}^\text{end}$};
-        \node (c2t1) [beginning, below of=c2t1e] {$v_\text{c2t1}^\text{beginning}$};
-        \node (c2p1l) [leaving, below of=c2t1, xshift=1.5cm] {$v_\text{c2p1}^\text{leaving}$};
-        \node (c2p1) [place, below of=c2p1l] {$v_\text{c2p1}^\text{place}$};
-        
-        \node (c2p3) [place, right of=c2p2, xshift=1.3cm] {$v_\text{c2p3}^\text{place}$};
-        \node (c2p3l) [leaving, above of=c2p3, yshift=0.3cm] {$v_\text{c2p3}^\text{leaving}$};
-        \node (c2t2e) [end, below of=c2p3] {$v_\text{c2t2}^\text{end}$};
-        \node (c2t2) [beginning, below of=c2t2e] {$v_\text{c2t2}^\text{beginning}$};
-        
-        \node (source) [control, below of=c2p1, xshift=-1.5cm] {$v^\text{source}$};
-        \node (sink) [control, above of=c1p2l, xshift=3cm, yshift=0.6cm] {$v^\text{sink}$};
-        
-        \draw [arrow] (c1p1) -- (c1p1l) node[midway, right] {$0$};
-        \draw [arrow] (c1p2) -- (c1p2l) node[midway, right] {$0$};
-        \draw [arrow] (c2p1) -- (c2p1l) node[midway, right] {$0$};
-        \draw [arrow] (c2p2) -- (c2p2l) node[midway, right] {$0$};
-        \draw [arrow] (c2p3) -- (c2p3l) node[midway, right] {$0$};
-        \draw [arrow] (c1t1) -- (c1t1e) node[midway, right] {$time(\text{c1t1})$};
-        \draw [arrow] (c2t1) -- (c2t1e) node[midway, right] {$time(\text{c2t1})$};
-        \draw [arrow] (c2t2) -- (c2t2e) node[midway, right] {$time(\text{c2t2})$};
-        \draw [arrow] (c1p1l) -- (c1t1) node[midway, right] {$0$};
-        \draw [arrow] (c2p1l) -- (c2t1) node[midway, right] {$0$};
-        \draw [arrow] (c2p1l) -- (c2t2) node[midway, right] {$0$};
-        \draw [arrow] (c1t1e) -- (c1p2) node[midway, right] {$0$};
-        \draw [arrow] (c2t1e) -- (c2p2) node[midway, right] {$0$};
-        \draw [arrow] (c2t2e) -- (c2p3) node[midway, right] {$0$};
-        \draw [arrow] (source) -- (c1p1) node[midway, right] {$0$};
-        \draw [arrow] (source) -- (c2p1) node[midway, right] {$0$};
-        \draw [arrow] (c1p2) -- (sink) node[midway, right] {$0$};
-        \draw [arrow] (c2p2) -- (sink) node[midway, right] {$0$};
-        \draw [arrow] (c2p3) -- (sink) node[midway, right] {$0$};
-      \end{tikzpicture}
-    \end{minipage}
-  }
-  \caption{Arcs from source to initial places and from final places to sink. For the sake of clarity, there are no dependencies between the two components.}
-  \label{fig:source_sink_graph}
-\end{figure*}
+%%%%%%%%%%%%%%%
+\input{figures/exampletodag.tex}
 
 Finally, we define $A$ as the union of all of these. 
 \[
@@ -410,17 +236,17 @@ A=A_\Pi\cup A_{\Theta}\cup A_{D}\cup A_{S}\cup A_{I}\cup A_{F}
 
 \subsection{Time estimation}
 
-In the following, we denote $DG(ass)=(V,A)$ the dependency graph corresponding
-to assembly $ass$, and $DG(comp)$ the part of a dependency graph
-corresponding to component $comp$.
+In the following, we denote $DG_A=(V,A)$ the dependency graph corresponding
+to assembly $A=(C,L_S,L_D)$, and $DG_c$ the part of a dependency graph
+corresponding to component $c \in C$.
 
-We define the time estimation of the execution of the \mad assembly $ass$
+We define the time estimation of the execution of the \mad assembly $A$
 to be the length of a longest path between $v^\text{source}$ and
 $v^\text{sink}$ in $DG(ass)$.
 
 \begin{lemma}
  In $DG(ass)$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there
- are no cycles, then the time estimation for $ass$ is well-defined.
+ are no cycles, then the time estimation for $A$ is well-defined.
  \label{lemma:well_defined}
 \end{lemma}
 
@@ -434,77 +260,77 @@ $v^\text{sink}$ in $DG(ass)$.
 \end{proof}
 
 \begin{lemma}
- In a component $comp$, if place \emph{pTarget} is reachable from place
- \emph{pStart} (distinct from \emph{pTarget}), then $v_{pTarget}^{place}$
- is reachable from $v_{pStart}^{place}$ in a $DG(comp)$.
+ In a component $c \in C$, if place $\pi_t \in \Pi$ is reachable from place
+ $\pi_s \in \Pi$ (distinct from $\pi_t$), then $v_{\pi_t}^{place}$
+ is reachable from $v_{\pi_s}^{place}$ in a $DG_c$.
  \label{lemma:reachable}
 \end{lemma}
 
 \begin{proof}
- Consider a path $P$ in the \net of $comp$ going from \emph{pStart} to
- \emph{pTarget} (this path exists because \emph{pTarget} is reachable from
- \emph{pStart}). This path is made of a sequence of places connected by
+ Consider a path $P$ in the \net of $c \in C$ going from $\pi_s$ to
+ $\pi_t$ (this path exists because $\pi_t$ is reachable from
+ $\pi_s$). This path is made of a sequence of places connected by
  transitions:\\
- $P=(pStart,t1,p2,t2,\dots,t_n,pTarget)$.\\
+ $P=(\pi_s,t1,p2,t2,\dots,t_n,\pi_t)$.\\
  By construction, there exists a path\\
- $(v_{pStart}^{place},v_{pStart}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,v_{pTarget}^{place})$\\
- in $DG(comp)$.
+ $(v_{\pi_s}^{place},v_{\pi_s}^{leaving},v_{t1}^{beginning},v_{t1}^{end},v_{p2}^{place},\dots,v_{\pi_t}^{place})$\\
+ in $DG_c$.
 \end{proof}
 
 
 \begin{lemma}
- If an assembly $ass$ has one or more components then $v^\text{sink}$ is
- reachable from $v^\text{source}$ in $DG(ass)$.
+ If an assembly $A$ has one or more components then $v^\text{sink}$ is
+ reachable from $v^\text{source}$ in $DG_A$.
  \label{lemma:source_sink}
 \end{lemma}
 
 \begin{proof}
- Let us consider one component $comp$, its initial place \emph{pi} and one of
- its final places \emph{pf}. By construction, $v_{pi}^\text{place}$ is
- reachable from $v^\text{source}$ and $v^\text{sink}$ is reachable from
- $v_{pf}^\text{place}$ in the dependency graph of an assembly containing this
- component. The last thing to prove is that $v_{pf}^\text{place}$ is reachable
- from $v_{pi}^\text{place}$ in $DG(comp)$.
+ Let us consider one component $c \in C$, its initial place $\pi_i$ and one of
+ its final places $\pi_f$. By construction, $v_{\pi_i}^\text{place}$ is
+ reachable from $v^\text{source}$, and $v^\text{sink}$ is reachable from
+ $v_{\pi_f}^\text{place}$ in the dependency graph of an assembly containing this
+ component. The last thing to prove is that $v_{\pi_f}^\text{place}$ is reachable
+ from $v_{\pi_i}^\text{place}$ in $DG_c$.
  The end of the execution of a \mad component is defined as
  when all its tokens are in final places, \ie when there are no more
- transitions to perform. Therefore, by definition \emph{pf} is
- necessarily reachable from \emph{pi} in the \net of $comp$.
+ transitions to perform. Therefore, by definition $\pi_f$ is
+ necessarily reachable from $\pi_i$ in the \net of $c \in C$.
  We conclude by applying Lemma~\ref{lemma:reachable}.
 \end{proof}
 
 \begin{lemma}
- If a component $comp$ is well-formed then $DG(comp)$ has no cycle.
+ If a component $c \in C$ is well-formed then $DG_c$ has no cycle.
  \label{lemma:no_cycles_component}
 \end{lemma}
 
 \begin{proof}
- By construction, in $DG(comp)$ the vertices and arcs corresponding to places do
+ By construction, in $DG_c$ the vertices and arcs corresponding to places do
  not form cycles and are disjoint, so they cannot produce a cycle by themselves.
  Likewise, the arcs corresponding to port bindings have either their source
  vertex or their destination vertex of degree 1, so they cannot produce a cycle.
  Only the arcs corresponding to transitions can produce cycles. Moreover, the
- arcs in $DG(comp)$ connect only the vertices corresponding to the places which
- are connected in the \net. This means that if there is a cycle in $DG(comp)$,
+ arcs in $DG_c$ connect only the vertices corresponding to the places which
+ are connected in the \net. This means that if there is a cycle in $DG_c$,
  there is a cycle in the \net. However, the \net of a well-formed \mad component
- has no cycle. Therefore there are no cycles in $DG(comp)$.
+ has no cycle. Therefore there are no cycles in $DG_c$.
 \end{proof}
 
 \begin{lemma}
- In an assembly $ass$ of well-formed components with no deadlocks, if each port
+ In an assembly $A$ of well-formed components with no deadlocks, if each port
  is bound to at most one element (place, transition or group) and if
  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $ass$ then the $DG(ass)$ has no cycles.
+ $g$ in $A$ then the $DG_A$ has no cycles.
  \label{lemma:no_cycles_assembly}
 \end{lemma}
 
 \begin{proof}
  By Lemma~\ref{lemma:no_cycles_component}, we have that the dependency graph
- of all the components in $ass$ have no cycles.
- Then, the only way a cycle may exist in $DG(ass)$ is if the vertices and arcs
+ of all the components in $A$ have no cycles.
+ Then, the only way a cycle may exist in $DG_A$ is if the vertices and arcs
  corresponding to connections cause a cycle to exist.
- This may be achived in two ways: because of a single service port bound to
+ This may be acheived in two ways: because of a single service port bound to
  group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
- $\left|g_{out}(g)\right|=1$) or because of two or more use and provide ports.
+ $\left|g_{out}(g)\right|=1$); or because of two or more use and provide ports.
  First, because $\left|g_{out}(g)\right|=1$ (we consider $pout$ to be the only
  place in $g_{out}(g)$), and because by construction $v_{pout}^{leaving}$ is
  reachable from $v_{pin}^{place}$ (where $pin$ is the only place in $g_{in}(g)$,
@@ -515,26 +341,26 @@ $v^\text{sink}$ in $DG(ass)$.
  deadlock in the assembly, which is not possible by hypothesis.
 \end{proof}
 
-\begin{figure}[h]
+\begin{figure}[t]
   \begin{center}
-    \includegraphics[width=0.7\linewidth]{./images/deadlock.pdf}
+    \includegraphics[width=0.5\linewidth]{./images/deadlock.pdf}
   \end{center}
   \caption{Example of an invalid assembly: crossing dependencies cause a deadlock.}
   \label{fig:deadlock}
 \end{figure}
 
 \begin{theorem}
- In an assembly $ass$ of one or more well-formed components with no deadlocks,
+ In an assembly $A$ of one or more well-formed components with no deadlocks,
  if each port is bound to at most one element (place, transition or group) and if
  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $ass$ then the time estimation obtained using $DG(ass)$ is well-defined.
+ $g$ in $A$, then the time estimation obtained using $DG_A$ is well-defined.
  \label{theorem:well_defined}
 \end{theorem}
 
 \begin{proof}
  By applying Lemma~\ref{lemma:source_sink}, we know that $v^\text{sink}$ is reachable
  from $v^\text{source}$. By applying Lemma~\ref{lemma:no_cycles_assembly}, we know
- that there are no cycles in $DG(ass)$. We conclude by applying
+ that there are no cycles in $DG_A$. We conclude by applying
  Lemma~\ref{lemma:well_defined}.
 \end{proof}
 
@@ -550,7 +376,7 @@ In particular, all of the assemblies presented in this article do.
 
 \subsection{Complexity}
 
-We now determine the size complexity of $DG(ass)=(V,A)$ and the time
+We now determine the size complexity of $DG_A=(V,A)$ and the time
 complexity of computing the time estimation.
 
 First, we notice that
@@ -560,7 +386,7 @@ $|A| = \mathcal{O}\left(\left|\pi_{all}\right|+\left|\theta_{all}\right|+\left|B
 $\left.+\left|B_{D_u}\right|\times\left|L_D\right|\right)$
 .
 
-Because $G$ is a a directed acyclic graph, finding the longest path
+Because $DG_A$ is a a directed acyclic graph, finding the longest path
 between $v^\text{source}$ and $v^\text{sink}$, \ie finding a time estimation,
 can be done in $\mathcal{O}(|V|+|A|)$ by sorting the
 vertices topologically and iterating through them, computing their maximum
