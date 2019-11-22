@@ -1,11 +1,10 @@
 
 \graphicspath{{images/}}
 
-\subsection{Spark use-case}
-
-
-\subsection{OpenStack use-case}
+%------------------------------------
+\subsection{OpenStack}
 \label{subsec:openstack}
+%------------------------------------
 
 OpenStack~\cite{os:7923796} is the de-facto open-source solution to address the
 IaaS level of the Cloud paradigm. Since $2010$, its community has gathered
@@ -49,7 +48,9 @@ node, intra and inter-component parallelism.
 %   code and workfow
 % madeus can be used to express parallel tasks and understand module interplay
 
-\subsubsection{Presentation}
+%------------------------------------
+\subsection{OpenStack commissioning use-case}
+%------------------------------------
 
 \begin{table*}
   \begin{center}
@@ -161,7 +162,10 @@ this transition is independent for all the other ones). Similarly,
 \cref{fig:sub} depicts for each component many parallel transitions showing how
 \mad can be leveraged for intra-component parallelism in this use-case.
 
-\subsubsection{Experimental Setup and Parameters}
+%------------------------------------
+\subsection{Experimental Setup and Parameters}
+% ------------------------------------
+
 % Ici on décrit nos paramètres et le testbed
 This section defines first the experimental setup: (i) how modules are
 distributed among nodes and (ii) the testbed characteristics. Then we describe
@@ -266,8 +270,9 @@ As depicted in this table, more than $10$GB must be downloaded in our use-case.
 Furthermore, the control node has to download almost twice as much data than the
 other nodes.
 
-
-\subsubsection{Results}
+%------------------------------------
+\subsection{Results}
+%------------------------------------
 
 In this section, we analyze the results of our benchmark through different
 aspects: (i) the impact of assemblies; (ii) the precision of the performance
