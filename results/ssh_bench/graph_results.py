@@ -99,7 +99,7 @@ def graph_for_1par_xcomp(results, list_nb_components, title):
         stds.append(results_one_tr[comp]["average"])
         ideals.append(avg_time_for_one_comp * int(comp))
     avg_trace = create_trace(list_nb_components, averages, "scatter", "Experimental", stds)
-    ideal_trace = create_trace(list_nb_components, ideals, "scatter", "Ideal", None)
+    ideal_trace = create_trace(list_nb_components, ideals, "scatter", "Theoretical", None)
     trace_data = [avg_trace, ideal_trace]
     fig = create_figure(trace_data, "Components", "Time", title, False)
     return fig
@@ -119,7 +119,7 @@ def figure_dry_run_seq(results, list_chain_length, title):
         stds.append(results[chain]["std"])
 
     avg_trace = create_trace(list_chain_length, averages, "scatter", "Experimental", stds)
-    ideal_trace = create_trace(list_chain_length, ideals, "scatter", "Ideal", None)
+    ideal_trace = create_trace(list_chain_length, ideals, "scatter", "Theoretical", None)
     trace_data = [avg_trace, ideal_trace]
     fig = create_figure(trace_data, "Components", "Time", title, False)
     return fig
