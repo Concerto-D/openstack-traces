@@ -114,10 +114,11 @@ def main():
     config = load_config("concerto_config.json")
     list_chain_length = config['list_chain_length']
     nb_repeats = config['nb_repeats']
+    sleep_time = config['sleep_time']
 
     run_experiments(
         list_chain_length, nb_repeats,
-        sleep_time=0,
+        sleep_time=sleep_time,
         gantt=False,
         verbosity=-1,
         printing=True,
