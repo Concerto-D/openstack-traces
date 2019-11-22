@@ -303,12 +303,20 @@ python mad-enoslib.py backup
 The backup command allows to recover the environment configuration from the experiment and the resulting files that are on the concerto node, such as the kolla logs and the madeus directory.
 The resulting files are in the =backups= directory, under the timestamp of the experiment start.
 
+The backup command can also be used to save an environment and benchmark configuration if the reservation is reaching its limits.
+*** Restoring a previous environment
+The *restore* option of deploy allows to restore the environment configuration and to restart the benchmark from where it was stopped
+#+BEGIN_SRC sh
+python mad-enoslib.py deploy -c reservation.yaml -b --restore backup_dir
+#+END_SRC
+
 ** Plot the data from the benchmarks results
 Once the resulting files have been recovered through the **backup** command, the use of **analyze** will allow for the creation of time charts, by replacing =Timestamp= by the timestamp of the experiment that is the name of the backup directory just created.
 #+BEGIN_SRC sh
 python mad-enoslib.py analyze -b backups/Timestamp
 #+END_SRC
 This will go through the results and plot the charts of the experiment times.
+
 ** Reproduce data plots from our results
 :PROPERTIES:
 :CUSTOM_ID: repro
