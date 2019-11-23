@@ -79,10 +79,10 @@ compare the related work:
   \item \emph{inter-comp}: if the work offers a transparent way to
     simultaneously execute the commissionings of multiple components
     if no dependency exists between those components;
-  \item \emph{inter-tasks}: if the work offers a transparent way to
+  \item \emph{inter-comp-tasks}: if the work offers a transparent way to
     simultaneously execute the commissioning tasks of multiple
     components until a dependency between multiple tasks is reached;
-  \item \emph{intra-tasks}: if the work offers a way to simultaneously
+  \item \emph{intra-comp-tasks}: if the work offers a way to simultaneously
     execute two commissioning tasks of a given component, in other
     words if a partial order of tasks can be given for a component.
 \end{itemize}
@@ -90,8 +90,10 @@ One can note that the level of parallelism offered by a given tool is
 directly correlated to the type of dependencies that can be declared
 by users. For instance, without any dependency mechanisms the best
 possible level would be SIMH, while with inter-components dependencies
-or inter-tasks dependencies more parallelism can be handled between
-components of different types.
+or \emph{inter-comp-tasks} dependencies more parallelism can be
+handled between components of different types.
+
+\HC[Helene]{Add figures to explain the four parallelism levels}
 
 One can note that presented metrics for both SE and parallelism are
 procedural-oriented as they consider \emph{tasks} and not
@@ -235,7 +237,7 @@ order of the roles she declared. This aspect makes the
 \emph{separation of concerns} metric only partially
 supported. Finally, as one of the possible type of tasks in \ansible
 is the execution of a \shell command, any script could be executed as
-a task thus making possible to handle manually the \emph{intra-tasks}
+a task thus making possible to handle manually the \emph{intra-comp-tasks}
 parallelism level.
 
 % Tasks are declared in an imperative way, however, Ansible relies heavily on
@@ -285,7 +287,7 @@ any type: scripts, executable etc.) can be added to TOSCA descriptions
 in a CSAR (Cloud Service ARchive) to detail commissioning steps. Those
 commissioning steps can thus be customized by the developper but there
 is no model and guarantees associated to them. Thus \emph{tasks} and
-\emph{intra-tasks} metrics could handled manually by the user. As
+\emph{intra-comp-tasks} metrics could handled manually by the user. As
 there is no way to declare dependencies between artifacts of
 components the \emph{inter-taks} metric is not supported, however,
 relations between components make both \emph{SIMH} and
@@ -363,11 +365,11 @@ combination of metrics, \aeolus partially handle separation of
 concerns between components.
 
 Furthermore, one can note that no existing solution offers a full
-support for \emph{intra-tasks} parallelism level. Actually, if a few
+support for \emph{intra-comp-tasks} parallelism level. Actually, if a few
 existing solutions already offer a way to model the internal
 commissioning behavior of each component by using tasks, dependencies
 between those tasks are limited to a sequential imperative order thus
-making \emph{intra-tasks} parallelism impossible. Such parallelism
+making \emph{intra-comp-tasks} parallelism impossible. Such parallelism
 could be handled manually by some of the existing tools, however such
 parallel aspects are difficult to implement and error prone, thus they
 should be handled automatically.

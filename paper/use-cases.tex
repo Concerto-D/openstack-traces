@@ -15,39 +15,40 @@ code. Its adoption is still growing in various domains such as public
 administrations, e-commerce and science\footnote{See
   \url{http://superuser.openstack.org/} for further information.}.
 
-OpenStack is a large distributed software that brings together almost
-$100$ software projects. Each project is in charge of a specific
-aspect of the infrastructure management (\eg provision virtual
-machines, provide them with storage, interconnect them through
+OpenStack is a large distributed software system that brings together
+almost $100$ software projects. Each project is in charge of a
+specific aspect of the infrastructure management (\eg provision
+virtual machines, provide them with storage, interconnect them through
 networks), and their cooperation is the key to provide the features
 required by Cloud management.
 %
 Those projects are themselves composed of several software modules
 that are responsible for very specific tasks (\eg placement,
-hypervisors). While they are not all mandatory to deploy an operable
-IaaS, $250$ software modules are available in those projects.
+hypervisors etc.). While they are not all mandatory to deploy an
+operable IaaS, $250$ software modules are available in those projects.
 %
-An OpenStack instance is a composition by the operator of those modules, which
-cooperate to respond to her requirements. For instance, the operator may need
-services to manage virtual rather than bare-metal machines, object storage
-rather than file-systems, while VLAN networks and billing services may not be
-desired in her use-case. As defined in the large OpenStack documentation, each
-software module has its own commissioning process, and may depend on other
-modules commissionings.
+An OpenStack instance is a composition of some of those modules by the
+operator. The chosen modules then cooperate to respond to the operator
+requirements. For instance, the operator may need services to manage
+virtual rather than bare-metal machines, object storage rather than
+file-systems, while VLAN networks and billing services may not be
+desired in her use-case. As defined in the large OpenStack
+documentation, each software module has its own commissioning process,
+and may depend on other modules commissionings.
 %
-The deployment of a typical OpenStack instance implies thus many software
-modules whose commissioning process is characterized by a large amount of tasks
-and interplays. As a consequence, the commissioning process of OpenStack is
-complex to understand and can be very long when tasks are executed sequentially.
+The deployment of a typical OpenStack instance implies thus many
+software modules whose commissioning process is characterized by a
+large amount of tasks and interplays. As a consequence, the
+commissioning process of OpenStack is complex to understand and can be
+very long when tasks are executed sequentially.
 %
-In the following, we show how the commissioning process of each
+In the following, we show how the commissioning process of an
 OpenStack project can be transcribed as a \mad component. Leveraging
-\mad enables us to abstract tasks as transitions and express task and
-component coordination. As a consequence, the \mad representation
-improves the global commissioning process understandability, and can
-be used to reduce commissioning time by exploiting \emph{SIMH},
-\emph{inter-comp}, \emph{inter-tasks} and \emph{intra-taks}
-parallelism.
+\mad enables us to express tasks and components coordination. As a
+consequence, the \mad modeling improves the global commissioning
+process understandability, and can be used to reduce commissioning
+time by exploiting \emph{SIMH}, \emph{inter-comp}, \emph{inter-comp-tasks}
+and \emph{intra-taks} parallelism levels.
 
 %------------------------------------
 \subsection{OpenStack commissioning use-case}
@@ -64,115 +65,100 @@ parallelism.
 
 \HC[All]{couramment utilisé ? ``opinionated out-of-the-box''}
 
-\kolla is one of the most popular project for deploying OpenStack in production.
-It relies on \ansible to deploy OpenStack's modules as \docker containers, and
-will be considered as our reference in the rest of this section. It is highly
-opinionated out-of-the-box, allowing operators to quickly deploy a basic
-OpenStack instance, but enables complete customization for advanced
-administrators. As a consequence, the use-case described in this section
-corresponds to the default \kolla deployment, which provides the essential
-mechanisms to operate an infrastructure with OpenStack.
+\kolla is one of the most popular tool for deploying OpenStack in
+production.  It relies on \ansible to deploy OpenStack's modules as
+\docker containers, and will be considered as our reference in the
+rest of this section. It is highly opinionated out-of-the-box,
+allowing operators to quickly deploy a basic OpenStack instance, but
+enables complete customization for advanced administrators. As a
+consequence, the use-case described in this section corresponds to the
+default \kolla deployment, which provides the essential mechanisms to
+operate an infrastructure with OpenStack.
 %
-To compare the performance of \kolla and \mad, we have defined $11$ \mad
-components based on the \ansible roles defined in \kolla's playbooks. Their
+To compare the performance of \kolla and \mad, we have defined $11$
+\mad components based on the \ansible roles defined in \kolla's
+playbooks (\ie \ansible sequence of components to comission). Their
 names are built for most of them on the OpenStack project they deploy.
-\Cref{tab:os} lists these components and indicates which aspect of the Cloud
-management they are in charge of. Furthermore, some \mad metrics are displayed
-(\ie the number of places, transitions and ports).
+\Cref{tab:os} lists these components and indicates which aspect of the
+Cloud management they are in charge of. Furthermore, some \mad metrics
+are displayed (\ie the number of places, transitions and ports).
 %
 In this table, when the number of transitions is greater than the
 number of places plus one, it means that \mad can be leveraged to
-express parallel transitions.  Also, the more ports, the more \mad
-have to coordinate interplays during the commissioning. As depicted in
+express parallel transitions. Also, the more ports, the more \mad have
+to coordinate interplays during the commissioning. As depicted in
 \cref{tab:os}, Nova, Glance, Neutron and MariaDB are components of
 particular interests since they contain more transitions and ports
 than the others.
 
-\begin{figure}
+\begin{figure*}
   \begin{center}
-    \includegraphics[width=0.5\textwidth]{./images/full.pdf}
+    \includegraphics[width=0.7\textwidth]{./images/full.pdf}
     \caption{Simplified \mad assembly of the \kolla-based OpenStack deployment
     containing $11$ components. Connections between data ports are not depicted.
     Red components are detailed in \cref{fig:sub}.}
     \label{fig:full}
   \end{center}
-\end{figure}
-% TODO: Refaire cette figure en SVG pour la faire tenir sur une colonne avec
-% police du papier pour que ce soit lisible
+\end{figure*}
 
+\HC[Helene]{put in a paragraph specific to separation of concerns}
 \Cref{fig:full} depicts the use-case from the operator viewpoint (\ie
 at the level of the \mad assembly). For the sake of simplicity and
 readability, the connections between data ports are not
 represented. This figure helps to understand the high-level of
 interplays between components. For instance, Neutron, Glance and Nova
 require Keystone, while Keystone requires itself a database (\ie
-MariaDB) for its commissioning process.
-%MariaDB relies itself on HAProxy for being reachable through a virtual IP address.
-Regarding the separation of concerns, the operator does not need to
-understand component internals. She just needs to compose the desired
-component by listing them and connecting their compatible ports. As a
-consequence, a component can be replaced by another one if they expose
-the same interfaces. For instance the operator could replace MariaDB
-with MySQL: another component which also implements a database by
-exposing the same ports.
-% at least the same ports that are used by MariaDB
+MariaDB) for its commissioning process. Regarding the separation of
+concerns, the operator does not need to understand component
+internals. She just needs to compose the desired component by listing
+them and connecting their compatible ports. As a consequence, a
+component can be replaced by another one if they expose the same
+interfaces. For instance the operator could replace MariaDB with
+MySQL: another component which also implements a database by exposing
+the same ports.
 
 \begin{figure*}[t]
   \begin{center}
     \includegraphics[width=0.8\textwidth]{./images/sub.pdf}
     \caption{A detailed sub-part of the previous component assembly to deploy
-    OpenStack. The three colored components of \cref{fig:full} are detailed by
-    using \mad. Black, green, blue and red tokens represent different scenarios
-    during the deployment process.}
+    OpenStack.}
     \label{fig:sub}
   \end{center}
 \end{figure*}
-%TODO: Il manque les tokens de couleur dont la caption fait référence
 %TODO: J'aurais peut être représenté Keystone à la place de MariaDB
 %   1. Est-ce utile de dire que mariadb ici est différent de mariadb avant et
 %   pas risqué pour embrouiller le message ?
 %   2. Register est une transition liée à Keystone qui est très intéressante
 %   quand on examine Nova (transition indépendante des autres)
 
-We now study our use-case from the developer viewpoint, focusing on the three
-colored components from \cref{fig:full}: MariaDB, Nova and Glance.
-\Cref{fig:sub} depicts the internals and interplays of these components.
-%
-% First, the MariaDB component showed in this figure is different from the one
-% depicted in \cref{fig:example}. The component here has additional content: (i)
-% the transition \emph{register} that relies on the Common component; (ii) the
-% transition \emph{check} that relies on HAProxy (in our use-case, MariaDB is
-% reachable from HAProxy's virtual IP address). This illustrates that according to
-% the type of deployment the developer or the operator aims at performing, the
-% component internals may need to be modified.  Thus, it shows that being able to
-% customize a component internals may be needed to improve both the expressiveness
-% and efficiency of a deployment.
-% TODO: récupérer de Middlware, je ne suis pas sûr que l'on garde en fonction du
-% discours du papier
+We now study our use-case from the developer viewpoint, focusing on
+the three colored components from \cref{fig:full}: MariaDB, Nova and
+Glance.  \Cref{fig:sub} depicts the internals and interplays of these
+components.
+
 The dependencies previously observed at the assembly level are more
-detailed at the developer level.
-First, if we isolate Nova and Glance for instance, while \cref{fig:full} let us
-think that Glance must be deployed before Nova, it is clear here that once Nova
-obtains Glance's IP address (provided by the first place in Glance), both
-components can be deployed in parallel. This shows how \mad can be leveraged for
-\emph{inter-comp} and \emph{inter-tasks} parallelism.
-%TODO: à voir si c'est pas redondant avec ce qui a été dit dans la présentation mad
-Second, as we discussed before, it seemed in \cref{fig:full} that
-MariaDB must be deployed before Keystone, and Keystone before
+detailed at the developer level. First, if we isolate Nova and Glance
+for instance, while \cref{fig:full} let us think that Glance must be
+deployed before Nova, it is clear here that once Nova obtains Glance's
+IP address (provided by the first place in Glance), both components
+can be deployed in parallel. This shows how \mad can be leveraged for
+\emph{inter-comp} and \emph{inter-comp-tasks} parallelism.  Second, as we
+discussed before, it seemed in \cref{fig:full} that MariaDB must be
+deployed before Keystone, and Keystone before
 Neutron/Glance/Nova. However, with the \mad representation depicted in
-\cref{fig:sub}, we understand that only the \emph{register} transition of Glance
-and Nova requires the service catalog Keystone to be available (\ie to register
-themselves in the catalog). We can see on the figure that other tasks can be
-executed in parallel while \emph{register} waits for Keystone (\eg for Nova,
-this transition is independent for all the other ones). Similarly,
-\cref{fig:sub} depicts for each component many parallel transitions showing how
-\mad can be leveraged for \emph{intra-tasks} parallelism in this use-case.
+\cref{fig:sub}, we understand that only the \emph{register} transition
+of Glance and Nova requires the service catalog Keystone to be
+available (\ie to register themselves in the catalog). We can see on
+the figure that other tasks can be executed in parallel while
+\emph{register} waits for Keystone (\eg for Nova, this transition is
+independent for all the other ones). Similarly, \cref{fig:sub} depicts
+for each component many parallel transitions showing how \mad can be
+leveraged for \emph{intra-comp-tasks} parallelism in this use-case.
 
 %------------------------------------
 \subsection{Experimental Setup and Parameters}
 % ------------------------------------
 
-% Ici on décrit nos paramètres et le testbed
 This section defines first the experimental setup: (i) how modules are
 distributed among nodes (\ie servers or machines) and (ii) the testbed
 characteristics. Then we describe the different parameters used during
@@ -230,36 +216,41 @@ to the number of places, transitions and ports. It is also important
 to understand that we re-use the \ansible files already provided by
 \kolla by splitting them into component transitions. By using \mad to
 coordinate \ansible execution, it is possible for us to provide a way
-to fairly compare these solutions.  The first assembly, called \ansass
-matches the \kolla-ansible commissioning process. Each component is
-triggered sequentially, in the same way and order as \ansible triggers
-sequentially the roles defined in \kolla. Since there is simply a
-sequential coordination between components, their internals are
-composed of two states connected by a single transition which performs
-all the commissioning tasks, such as in \kolla (\ie no
-\emph{intra-tasks} parallelism). Each time a component is deployed, it
-activates the commissioning process of the next one (\ie no
-\emph{inter-comp} and \emph{inter-tasks} parallelism). This assembly
-features the first level of parallelism which is managed by \ansible
-when tasks are mapped to multiple nodes, \ie \emph{SIMH} parallelism.
-%The assembly is similar to the one presented in Figure\ref{fig:benchA}.
+to fairly compare these solutions. Moreover, by using splited \kolla
+roles the \emph{SIMH} parallelism level is handled by \ansible in the
+three assemblies.
+
+The first assembly, called \ansass matches the \kolla-ansible
+commissioning process. Each component is triggered sequentially, in
+the same way and order as \ansible triggers sequentially the roles
+defined in \kolla. Since there is simply a sequential coordination
+between components, their internals are composed of two states
+connected by a single transition which performs all the commissioning
+tasks, such as in \kolla (\ie no \emph{intra-comp-tasks}
+parallelism). Each time a component is deployed, it activates the
+commissioning process of the next one (\ie no \emph{inter-comp} and
+\emph{inter-comp-tasks} parallelism). This assembly features the first
+level of parallelism which is managed by \ansible when tasks are
+mapped to multiple nodes, \ie \emph{SIMH} parallelism.
 %
+
 The second assembly, called \aeoass is equivalent to an \aeolus
 commissioning of OpenStack. It provides parallelism at both the
-\emph{inter-comp} and \emph{inter-tasks} levels in addition to
-\emph{SIMH}, and no parallelism at \emph{intra-taks}
-level. Coordination is driven by component's ports.  In this assembly,
-most components are built with two sequential transitions.  When the
-assembly is initiated, the first transition of those components are
-triggered, while the second one is conditioned by a dependency from
-another component.
+\emph{inter-comp} and \emph{inter-comp-tasks} levels in addition to
+\emph{SIMH}, and no \emph{intra-comp-tasks} parallelism. Coordination
+is driven by component's ports. In this assembly, most components are
+built with two sequential transitions. When the assembly is
+initiated, the first transition of those components are triggered,
+while the second one is conditioned by a dependency from another
+component.
 %
+
 The third assembly, called \madass, leverages our contribution to
 commission OpenStack. It corresponds to the one we previously
 described when presenting the use-case. All the components have their
 own internals definition, based on our understanding of the OpenStack
 commissioning process. As depicted previously in \cref{tab:os}, most
-components are built on multiple states and transitions. This assembly
+components are built on multiple places and transitions. This assembly
 relies on \mad to handle the four parallelism levels.
 
 \begin{table}
@@ -273,20 +264,22 @@ relies on \mad to handle the four parallelism levels.
 
 %-------
 \paragraph{Docker container registry}
-Finally, since \kolla relies on \docker containers, fetching \docker images has a
-significant impact on our results: images have to be downloaded, before being
-decompressed. To be as neutral as possible we have conducted experiments with
-three different modes for handling those images: (1) \emph{cached}, in this mode,
-images are previously placed on OpenStack nodes, so fetching \docker images has
-no impact on our results; (2) \emph{local} where images are previously
-downloaded on a new dedicated node of the cluster, from which images can be
-loaded (\ie a local \docker registry); (3) \emph{remote} in which images are
-fetched from an Internet repository (\ie the DockerHub registry).
-\Cref{tab:images} gives for each OpenStack node (\ie Compute, Network and
-Control) the number of \docker images to download and their compressed size.
-As depicted in this table, more than $10$GB must be downloaded in our use-case.
-Furthermore, the control node has to download almost twice as much data than the
-other nodes.
+Finally, since \kolla relies on \docker containers, fetching \docker
+images has a significant impact on our results: images have to be
+downloaded, before being decompressed. To be as neutral as possible we
+have conducted experiments with three different modes for handling
+those images: (1) \emph{cached} mode, where images are previously
+placed on OpenStack nodes, so fetching \docker images has no impact on
+the results; (2) \emph{local} mode, where images are previously
+downloaded on a new dedicated node of the cluster, from which images
+can be loaded (\ie a local \docker registry); (3) \emph{remote} mode,
+in which images are fetched from an Internet repository (\ie the
+DockerHub registry). \Cref{tab:images} gives for each OpenStack node
+(\ie Compute, Network and Control) the number of \docker images to
+download and their compressed size.  As depicted in this table, more
+than $10$GB must be downloaded in our use-case.  Furthermore, the
+control node has to download almost twice as much data than the other
+nodes.
 
 %------------------------------------
 \subsection{Results}
@@ -400,7 +393,7 @@ better in \cref{fig:openstack_results}).
 As expected, the time required to commission these assemblies reflects
 the level of parallelism they handle. Since \ansass is limited to the
 first parallelism level, its commissioning time is longer than
-\aeoass. By featuring \emph{inter-comp} and \emph{inter-tasks}
+\aeoass. By featuring \emph{inter-comp} and \emph{inter-comp-tasks}
 parallelism, the latter outperforms the former from $26$\% (\nova,
 \emph{cached}) to $50$\% (\ecotype, \emph{remote}). Leveraging
 intra-component parallelism enables \madass to outperform \ansass~from
@@ -431,7 +424,7 @@ Neutron are particularly long to commission. \aeoass and \madass
 faster the process by combining (i) splitting the transition of
 components into smaller ones and (ii) managing more or less
 coordination between them (depending on the ability to express
-\emph{inter-comp}, \emph{inter-tasks} and \emph{intra-tasks}
+\emph{inter-comp}, \emph{inter-comp-tasks} and \emph{intra-comp-tasks}
 parallelism).
 %
 \Cref{fig:gantt_aeolus} illustrates that the components we highlighted
@@ -443,7 +436,7 @@ minutes to $4.49$ minutes.
 % TODO be more precise regarding time
 %
 Finally, \cref{fig:gantt_madeus} clearly shows how \mad leverages the third
-level of parallelism (\ie \emph{intra-tasks} parallelism) by displaying multiple
+level of parallelism (\ie \emph{intra-comp-tasks} parallelism) by displaying multiple
 transitions executed in parallel. For instance, transitions \emph{pull} and
 \emph{config} of the Nova component (depicted in yellow), are performed
 simultaneously which is not possible with \ansible or \aeolus. Hence the
