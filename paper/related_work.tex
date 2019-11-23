@@ -93,6 +93,48 @@ possible level would be SIMH, while with inter-components dependencies
 or \emph{inter-comp-tasks} dependencies more parallelism can be
 handled between components of different types.
 
+\begin{figure*}[t!]
+  \begin{center}
+    \subfloat[SIMH]{
+      \fcolorbox{black!20}{white}{
+        \begin{minipage}[c][7.5cm][c]{0.43\linewidth}%
+          \centering
+          \scalebox{0.43}{\input{./figures/simh.tex}}
+        \end{minipage}
+      }\label{fig:simh}
+    }
+    \subfloat[inter-comp]{
+      \fcolorbox{black!20}{white}{
+        \begin{minipage}[c][7.5cm][c]{0.43\linewidth}%
+          \centering
+          \scalebox{0.43}{\input{./figures/inter-comp.tex}}
+        \end{minipage}
+      } \label{fig:inter-comp}
+    }
+    \\
+
+    \subfloat[inter-comp-tasks]{
+      \fcolorbox{black!20}{white}{
+        \begin{minipage}[c][5cm][c]{0.43\linewidth}%
+          \centering
+          \scalebox{0.46}{\input{./figures/inter-comp-tasks.tex}}
+        \end{minipage}
+      }\label{fig:inter-comp-tasks}
+    }
+    \subfloat[intra-comp-tasks]{
+      \fcolorbox{black!20}{white}{
+        \begin{minipage}[c][5cm][c]{0.43\linewidth}%
+          \centering
+          \scalebox{0.48}{\input{./figures/intra-comp-tasks.tex}}
+        \end{minipage}
+      } \label{fig:intra-comp-tasks}
+    }
+    \caption{Examples to illustrate the four parallelism levels
+      described in this section}
+    \label{fig:par}
+  \end{center}
+\end{figure*}
+
 \HC[Helene]{Add figures to explain the four parallelism levels}
 
 One can note that presented metrics for both SE and parallelism are
