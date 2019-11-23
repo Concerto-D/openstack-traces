@@ -89,15 +89,40 @@ compare the related work:
 One can note that the level of parallelism offered by a given tool is
 directly correlated to the type of dependencies that can be declared
 by users. For instance, without any dependency mechanisms the best
-possible level would be SIMH, while with inter-components dependencies
-or \emph{inter-comp-tasks} dependencies more parallelism can be
+possible level would be SIMH, while for \emph{inter-comp} dependencies
+or \emph{inter-comp-tasks} dependencies more parallelism could be
 handled between components of different types.
+
+Figure~\ref{fig:parlevels} illustates the four above parallelism levels
+through one example. In this example three components or modules are
+depicted. The component $C$ is deployed on two hosts while components
+$A$ and $B$ are deployed on a single host. Moreover, components $A$
+and $B$ need to be coordinated while the component $C$ is independent
+from both $A$ and $B$. First, in Figure~\ref{fig:simh} is displayed
+the \emph{SIMH} level where parallelism can be introduced for the
+component $C$. Second, Figure~\ref{fig:inter-comp} illustrates the
+\emph{inter-comp} parallelism level. Indeed as $C$ is independent from
+$B$ both component commissionings can be performed
+simultaneously. However, as component $B$ depends from component $A$,
+and as the dependencies are only available at the level of components,
+their commissionings still have to be performed one after the
+other. Third, Figure~\ref{fig:inter-comp-tasks} shows the
+\emph{inter-comp-tasks} parallelism level, where dependencies can be
+defined at the finer level of the tasks. In this case, commissionings
+of components $A$ and $B$ can be started in parallel until they reach
+their dependencies. Thus, component $B$ has to wait for the component
+$A$ to perform needed tasks before continuing its
+commissioning. Finally, Figure~\ref{fig:intra-comp-tasks} illustrates
+the \emph{intra-comp-tasks} parallelism level where some tasks inside
+each component can be performed in parallel. One can note that the
+highest is the number of supported parallelism levels, the shortest is
+the commissioning (represented by the height of the figures).
 
 \begin{figure*}[t!]
   \begin{center}
     \subfloat[SIMH]{
       \fcolorbox{black!20}{white}{
-        \begin{minipage}[c][7.5cm][c]{0.43\linewidth}%
+        \begin{minipage}[c][7.5cm][c]{0.45\linewidth}%
           \centering
           \scalebox{0.43}{\input{./figures/simh.tex}}
         \end{minipage}
@@ -105,9 +130,9 @@ handled between components of different types.
     }
     \subfloat[inter-comp]{
       \fcolorbox{black!20}{white}{
-        \begin{minipage}[c][7.5cm][c]{0.43\linewidth}%
+        \begin{minipage}[c][7.5cm][c]{0.45\linewidth}%
           \centering
-          \scalebox{0.43}{\input{./figures/inter-comp.tex}}
+          \scalebox{0.47}{\input{./figures/inter-comp.tex}}
         \end{minipage}
       } \label{fig:inter-comp}
     }
@@ -115,27 +140,25 @@ handled between components of different types.
 
     \subfloat[inter-comp-tasks]{
       \fcolorbox{black!20}{white}{
-        \begin{minipage}[c][5cm][c]{0.43\linewidth}%
+        \begin{minipage}[c][5cm][c]{0.45\linewidth}%
           \centering
-          \scalebox{0.46}{\input{./figures/inter-comp-tasks.tex}}
+          \scalebox{0.47}{\input{./figures/inter-comp-tasks.tex}}
         \end{minipage}
       }\label{fig:inter-comp-tasks}
     }
     \subfloat[intra-comp-tasks]{
       \fcolorbox{black!20}{white}{
-        \begin{minipage}[c][5cm][c]{0.43\linewidth}%
+        \begin{minipage}[c][5cm][c]{0.45\linewidth}%
           \centering
-          \scalebox{0.48}{\input{./figures/intra-comp-tasks.tex}}
+          \scalebox{0.47}{\input{./figures/intra-comp-tasks.tex}}
         \end{minipage}
       } \label{fig:intra-comp-tasks}
     }
     \caption{Examples to illustrate the four parallelism levels
-      described in this section}
-    \label{fig:par}
+      considered in this paper}
+    \label{fig:parlevels}
   \end{center}
 \end{figure*}
-
-\HC[Helene]{Add figures to explain the four parallelism levels}
 
 One can note that presented metrics for both SE and parallelism are
 procedural-oriented as they consider \emph{tasks} and not
