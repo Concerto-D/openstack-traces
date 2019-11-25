@@ -1,0 +1,184 @@
+{
+	"remote_hosts": [
+		{
+			"address": "ecotype-27.nantes.grid5000.fr",
+			"ip": "172.16.193.27"
+		},
+		{
+			"address": "ecotype-30.nantes.grid5000.fr",
+			"ip": "172.16.193.30"
+		},
+		{
+			"address": "ecotype-5.nantes.grid5000.fr",
+			"ip": "172.16.193.5"
+		},
+		{
+			"address": "ecotype-8.nantes.grid5000.fr",
+			"ip": "172.16.193.8"
+		},
+		{
+			"address": "ecotype-3.nantes.grid5000.fr",
+			"ip": "172.16.193.3"
+		},
+		{
+			"address": "ecotype-26.nantes.grid5000.fr",
+			"ip": "172.16.193.26"
+		},
+		{
+			"address": "ecotype-47.nantes.grid5000.fr",
+			"ip": "172.16.193.47"
+		},
+		{
+			"address": "ecotype-43.nantes.grid5000.fr",
+			"ip": "172.16.193.43"
+		},
+		{
+			"address": "ecotype-36.nantes.grid5000.fr",
+			"ip": "172.16.193.36"
+		},
+		{
+			"address": "ecotype-16.nantes.grid5000.fr",
+			"ip": "172.16.193.16"
+		},
+		{
+			"address": "ecotype-38.nantes.grid5000.fr",
+			"ip": "172.16.193.38"
+		},
+		{
+			"address": "ecotype-31.nantes.grid5000.fr",
+			"ip": "172.16.193.31"
+		},
+		{
+			"address": "ecotype-37.nantes.grid5000.fr",
+			"ip": "172.16.193.37"
+		},
+		{
+			"address": "ecotype-15.nantes.grid5000.fr",
+			"ip": "172.16.193.15"
+		},
+		{
+			"address": "ecotype-22.nantes.grid5000.fr",
+			"ip": "172.16.193.22"
+		},
+		{
+			"address": "ecotype-45.nantes.grid5000.fr",
+			"ip": "172.16.193.45"
+		},
+		{
+			"address": "ecotype-24.nantes.grid5000.fr",
+			"ip": "172.16.193.24"
+		},
+		{
+			"address": "ecotype-7.nantes.grid5000.fr",
+			"ip": "172.16.193.7"
+		},
+		{
+			"address": "ecotype-35.nantes.grid5000.fr",
+			"ip": "172.16.193.35"
+		},
+		{
+			"address": "ecotype-13.nantes.grid5000.fr",
+			"ip": "172.16.193.13"
+		},
+		{
+			"address": "ecotype-41.nantes.grid5000.fr",
+			"ip": "172.16.193.41"
+		},
+		{
+			"address": "ecotype-28.nantes.grid5000.fr",
+			"ip": "172.16.193.28"
+		},
+		{
+			"address": "ecotype-40.nantes.grid5000.fr",
+			"ip": "172.16.193.40"
+		},
+		{
+			"address": "ecotype-33.nantes.grid5000.fr",
+			"ip": "172.16.193.33"
+		},
+		{
+			"address": "ecotype-44.nantes.grid5000.fr",
+			"ip": "172.16.193.44"
+		},
+		{
+			"address": "ecotype-23.nantes.grid5000.fr",
+			"ip": "172.16.193.23"
+		},
+		{
+			"address": "ecotype-29.nantes.grid5000.fr",
+			"ip": "172.16.193.29"
+		},
+		{
+			"address": "ecotype-39.nantes.grid5000.fr",
+			"ip": "172.16.193.39"
+		},
+		{
+			"address": "ecotype-34.nantes.grid5000.fr",
+			"ip": "172.16.193.34"
+		},
+		{
+			"address": "ecotype-19.nantes.grid5000.fr",
+			"ip": "172.16.193.19"
+		},
+		{
+			"address": "ecotype-25.nantes.grid5000.fr",
+			"ip": "172.16.193.25"
+		},
+		{
+			"address": "ecotype-20.nantes.grid5000.fr",
+			"ip": "172.16.193.20"
+		},
+		{
+			"address": "ecotype-12.nantes.grid5000.fr",
+			"ip": "172.16.193.12"
+		},
+		{
+			"address": "ecotype-48.nantes.grid5000.fr",
+			"ip": "172.16.193.48"
+		},
+		{
+			"address": "ecotype-46.nantes.grid5000.fr",
+			"ip": "172.16.193.46"
+		},
+		{
+			"address": "ecotype-14.nantes.grid5000.fr",
+			"ip": "172.16.193.14"
+		},
+		{
+			"address": "ecotype-6.nantes.grid5000.fr",
+			"ip": "172.16.193.6"
+		},
+		{
+			"address": "ecotype-42.nantes.grid5000.fr",
+			"ip": "172.16.193.42"
+		},
+		{
+			"address": "ecotype-32.nantes.grid5000.fr",
+			"ip": "172.16.193.32"
+		},
+		{
+			"address": "ecotype-4.nantes.grid5000.fr",
+			"ip": "172.16.193.4"
+		}
+	],
+	"concerto_host": {
+		"address": "ecotype-9.nantes.grid5000.fr",
+		"ip": "172.16.193.9"
+	},
+	"list_nb_components": [
+		1,
+		5,
+		10,
+		15,
+		20,
+		40
+	],
+	"list_nb_parallel_transitions": [
+		1,
+		5,
+		10,
+		20
+	],
+	"sleep_time": 5,
+	"nb_repeats": 10
+}
