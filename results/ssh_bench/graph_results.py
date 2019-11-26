@@ -13,119 +13,180 @@ def cli():
 
 
 @cli.command(help="Create graphs from results for ssh benchmarks")
-@click.option("-p", "--path",
+@click.option("-drp", "--dryrun_path",
               type=click.Path(exists=True, file_okay=False),
               required=True,
-              help="Path to the results directory")
+              help="Path to the results directory for the dry-run part")
+@click.option("-sshp", "--ssh_path",
+              type=click.Path(exists=True, file_okay=False),
+              required=True,
+              help="Path to the results directory for the ssh part.")
 @click.option("-exp",
               type=click.Choice(['parallel', 'sequential'], case_sensitive=False),
               required=True,
               help="Whether the benchmark is parallel or sequential")
-@click.option("--title", "-t",
-              required=True,
-              help="Title of the graph to be plotted")
-def analyze(path, exp, title):
+def analyze(dryrun_path, ssh_path, exp):
     """Analyze the results and produce graphs for it"""
     # From the path we get the files we need
-    config_file = path + "/concerto_config.json"
-    result_file = path + "/times.json"
+    dry_run_config_file = dryrun_path + "/concerto_config.json"
+    dry_run_result_file = dryrun_path + "/times.json"
+    ssh_config_file = ssh_path + "/concerto_config.json"
+    ssh_result_file = ssh_path + "/times.json"
+
     is_parallel = exp == 'parallel'
-    # First, we recover configuration details from the configjson file
-    with open(config_file, "r") as conf:
+    # get the configuration details from the dry run config
+    with open(dry_run_config_file, "r") as conf:
         config = json.load(conf)
         nb_repeats = config["nb_repeats"]
         if config["sleep_time"] is not None:
             sleep_time = config["sleep_time"]
-            title += " with sleep time of {sleep} seconds".format(sleep=sleep_time)
         if is_parallel:
             list_nb_components = config["list_nb_components"]
             list_nb_parallel_transitions = config["list_nb_parallel_transitions"]
         else:
             list_chain_length = config["list_chain_length"]
-    # Then we get the results
-    with open(result_file, "r") as result:
-        results = json.load(result)
+    # get the config data from the  ssh config
+    with open(ssh_config_file, "r") as conf:
+        ssh_config = json.load(conf)
+        nb_repeats = config["nb_repeats"]
+        if ssh_config["sleep_time"] is not None:
+            sleep_time = ssh_config["sleep_time"]
         if is_parallel:
-            # We work to make the graph for one parallel transition, several components
-            fig = graph_for_1par_xcomp(results, list_nb_components, title)
-            fig.show()
-            # TODO: deal with orca installation
-            # export_png(fig, "1par_XComp.png")
-            fig2 = graph_for_1comp_xpar(results, list_nb_parallel_transitions, title)
-            # Next we work on making the graph for X parallel transition, 1 component
-            fig2.show()
-        # for the sequential
+            list_nb_components = ssh_config["list_nb_components"]
+            list_nb_parallel_transitions = ssh_config["list_nb_parallel_transitions"]
         else:
-            fig = figure_dry_run_seq(results, list_chain_length, title)
-            fig.show()
+            list_chain_length = config["list_chain_length"]
+
+    figures = []
+    # for the parallel results
+    if is_parallel:
+        # first we load up the dry run results in a trace
+        trace_data_1par = []
+        trace_data_1comp = []
+        # we build the traces for both parallel experiments in dry run
+        with open(dry_run_result_file, "r") as result:
+            results = json.load(result)
+            trace_data_par = graph_for_1par_xcomp(results, list_nb_components, "dryrun")
+            trace_data_1par.extend(trace_data_par)
+            trace_data_comp = graph_for_1comp_xpar(results, list_nb_parallel_transitions, "dryrun")
+            trace_data_1comp.extend(trace_data_comp)
+        # we build the traces for both parallel experiments with ssh
+        with open(ssh_result_file, "r") as result:
+            results = json.load(result)
+            trace_data_par = graph_for_1par_xcomp(results, list_nb_components, None)
+            trace_data_1par.extend(trace_data_par)
+            trace_data_comp = graph_for_1comp_xpar(results, list_nb_parallel_transitions, None)
+            trace_data_1comp.extend(trace_data_comp)
+
+        # now that we have the traces we build the figures
+        one_par_fig = create_figure(trace_data_1par, "Components", "Time", False)
+        one_comp_fig = create_figure(trace_data_1comp, "Transitions", "Time", False)
+        figures.append(one_par_fig)
+        figures.append(one_comp_fig)
+    else:
+        trace_data = []
+        with open(dry_run_result_file, "r") as result:
+            results = json.load(result)
+            trace_data.extend(trace_data_for_seq(results, list_chain_length, "dryrun"))
+        with open(ssh_result_file, "r") as result:
+            results = json.load(result)
+            trace_data.extend(trace_data_for_seq(results, list_chain_length, None))
+        fig = create_figure(trace_data, "Components", "Time", False)
+        figures.append(fig)
+    # display the figures
+    i = 0
+    for fig in figures:
+        i += 1
+        export_svg(fig, "{id}".format(id=str(i)))
 
 
-def graph_for_1comp_xpar(results, list_nb_parallel_transitions, title):
+def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
+    """Produces trace data (an array of traces)
+    from data of a parallel assembly, specifically for 1 component X parallel transitions"""
     results_one_comp = []
     # We get all results for the 1 component
     for transition in list_nb_parallel_transitions:
         results_one_comp.append(results[str(transition)]["1"])
-    max_times = []
-    min_times = []
-    averages = []
-    for transition in range(len(results_one_comp)):
-        runs = results_one_comp[transition]["runs"]
-        avg = results_one_comp[transition]["average"]
-        min_time = min(runs)
-        min_times.append(min_time)
-        max_time = max(runs)
-        max_times.append(max_time)
-        averages.append(avg)
-    min_trace = create_trace(list_nb_parallel_transitions, min_times, "scatter", "Min values")
-    max_trace = create_trace(list_nb_parallel_transitions, max_times, "scatter", "Max values")
-    avg_trace = create_trace(list_nb_parallel_transitions, averages, "scatter", "Average")
-    trace_data = [min_trace, max_trace, avg_trace]
-    fig = create_figure(trace_data, "Parallel Transitions", "Time", title, False)
-    return fig
-
-
-def graph_for_1par_xcomp(results, list_nb_components, title):
-    results_one_tr = results["1"]
-    max_times = []
-    min_times = []
     averages = []
     stds = []
     ideals = []
-    avg_time_for_one_comp = results["1"]["average"]
+    for transition in range(len(results_one_comp)):
+        avg = results_one_comp[transition]["average"]
+        std = results_one_comp[transition]["std"]
+        averages.append(avg)
+        stds.append(std)
+        ideals.append(5)
+    if exp_type is "dryrun":
+        exp = "dry-run"
+    else:
+        exp = "ssh-connections"
+    avg_trace = create_trace(list_nb_parallel_transitions, averages, exp, stds)
+    ideal_trace = create_trace(list_nb_parallel_transitions, ideals, "ideal", None)
+
+    if exp_type is "dryrun":
+        trace_data = [avg_trace, ideal_trace]
+    else:
+        trace_data = [avg_trace]
+    return trace_data
+
+
+def graph_for_1par_xcomp(results, list_nb_components, exp_data):
+    """Produces trace data (an array of traces)
+    from data of a parallel assembly, specifically for 1 parallel transition X components"""
+    results_one_tr = results["1"]
+    averages = []
+    stds = []
+    ideals = []
+    avg_time_for_one_comp = results["1"]["1"]["average"]
     for comp in results_one_tr:
-        runs = results_one_tr[comp]["runs"]
         avg = results_one_tr[comp]["average"]
         averages.append(avg)
-        stds.append(results_one_tr[comp]["average"])
-        ideals.append(avg_time_for_one_comp * int(comp))
-    avg_trace = create_trace(list_nb_components, averages, "scatter", "Experimental", stds)
-    ideal_trace = create_trace(list_nb_components, ideals, "scatter", "Theoretical", None)
-    trace_data = [avg_trace, ideal_trace]
-    fig = create_figure(trace_data, "Components", "Time", title, False)
-    return fig
+        stds.append(results_one_tr[comp]["std"])
+        # in theory if all components have one transition of 5 seconds, they should all finish in 5 sec or so
+        ideals.append(avg_time_for_one_comp)
+    if exp_data is "dryrun":
+        exp = "dry-run"
+        ideal_trace = create_trace(list_nb_components, ideals, "ideal", None)
+    else:
+        exp = "ssh-connections"
+    avg_trace = create_trace(list_nb_components, averages, exp, stds)
+
+    if exp_data is "dryrun":
+        trace_data = [avg_trace, ideal_trace]
+    else:
+        trace_data = [avg_trace]
+    return trace_data
 
 
-def figure_dry_run_seq(results, list_chain_length, title):
+def trace_data_for_seq(results, list_chain_length, exp_data):
+    """Produces trace data (an array of traces) for a plot.ly figure
+    from data of a sequential assembly"""
     averages = []
     ideals = []
     avg_time_for_one_comp = results["1"]["average"]
     stds = []
     for chain_length in list_chain_length:
         chain = str(chain_length)
-        runs = results[chain]["runs"]
         avg = results[chain]["average"]
         averages.append(avg)
         ideals.append(avg_time_for_one_comp * chain_length)
         stds.append(results[chain]["std"])
 
-    avg_trace = create_trace(list_chain_length, averages, "scatter", "Experimental", stds)
-    ideal_trace = create_trace(list_chain_length, ideals, "scatter", "Theoretical", None)
-    trace_data = [avg_trace, ideal_trace]
-    fig = create_figure(trace_data, "Components", "Time", title, False)
-    return fig
+    if exp_data is "dryrun":
+        exp = "dry-run"
+        ideal_trace = create_trace(list_chain_length, ideals, "ideal " + exp, None)
+    else:
+        exp = "ssh-connections"
+    avg_trace = create_trace(list_chain_length, averages, exp, stds)
+    if exp_data is "dryrun":
+        trace_data = [avg_trace, ideal_trace]
+    else:
+        trace_data = [avg_trace]
+    return trace_data
 
 
-def create_trace(x_values, y_values, trace_type, title, stds):
+def create_trace(x_values, y_values, title, stds):
+    """Creates a trace out of data """
     if stds is not None:
         trace = go.Scatter(
             x=x_values,
@@ -149,29 +210,34 @@ def create_trace(x_values, y_values, trace_type, title, stds):
     return trace
 
 
-def create_figure(fig_data, x_name, y_name, title, category):
+def create_figure(fig_data, x_name, y_name, category):
+    """"Creates a figure from the traces, with a legend on the graph, no title"""
     if category:
         fig_type = "category"
     else:
         fig_type = "linear"
     fig_layout = {
-        "title": title,
         "xaxis": {
             "title": x_name,
             "type": fig_type
         },
         "yaxis": {
             "title": y_name
+        },
+        "legend": {
+            "x": 0.05,
+            "y": 1,
+            "bgcolor": "rgba(0, 0, 0, 0)"
         }
     }
     figure = go.Figure(data=fig_data, layout=fig_layout)
     return figure
 
 
-def export_png(figure, file_name):
+def export_svg(figure, file_name):
     if not os.path.exists("img"):
         os.mkdir("img")
-    figure.write_image(file_name)
+    figure.write_image(file_name + ".svg")
 
 
 if __name__ == '__main__':
