@@ -225,7 +225,7 @@ def create_figure(fig_data, x_name, y_name, category):
             "title": y_name
         },
         "legend": {
-            "x": 0.05,
+            "x": 0.02,
             "y": 1,
             "bgcolor": "rgba(0, 0, 0, 0)"
         }
@@ -235,6 +235,8 @@ def create_figure(fig_data, x_name, y_name, category):
 
 
 def export_svg(figure, file_name):
+    """Exports the plot to a svg image, requires orca installation
+     see https://plot.ly/python/static-image-export/ """
     if not os.path.exists("img"):
         os.mkdir("img")
     figure.write_image(file_name + ".svg")
