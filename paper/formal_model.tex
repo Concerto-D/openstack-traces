@@ -145,7 +145,7 @@ D_{p}\rightarrow T_{data}$ returns the data type of a given data port.
   the group, the port is active:
   $\left(p,g\right)\,:\,p\in S_{p},\,g\in G$. Third, we denote
   $B_{D_{u}}$ the set of pairs that maps one data use port to one
-  internal transitions in $\Theta$, indicating that this transition
+  internal transition in $\Theta$, indicating that this transition
   uses the data associated to this port:
   $\left(d,\theta\right)\,:\,d\in D_{u},\,\theta\in\Theta$. Finally,
   we denote $B_{D_{p}}$ the set of pairs that maps one data provide
@@ -264,14 +264,14 @@ A group is said to be enabled if it contains at least one token (otherwise
 it is disabled). A service-provide port is said to be enabled if all the groups it
 is bound to are enabled (otherwise it is disabled). A service connection is said to
 be enabled if its provide port is enabled (otherwise it is disabled).
-Figure~\ref{fig:enabled_service} gives an example of enabled service connection,
-while Figure~\ref{fig:disabled_service} gives an example of disabled service connection.
+Figure~\ref{fig:enabled_service} gives an example of an enabled service connection,
+while Figure~\ref{fig:disabled_service} gives an example of a disabled service connection.
 
 A data-provide port is said to be enabled if it holds a value (otherwise it is disabled).
 A data connection is said to be enabled if its provide port is enabled (otherwise it is
 disabled).
-Figure~\ref{fig:enabled_data} gives an example of enabled data connection,
-while Figure~\ref{fig:disabled_data} gives an example of disabled data connection.
+Figure~\ref{fig:enabled_data} gives an example of an enabled data connection,
+while Figure~\ref{fig:disabled_data} gives an example of a disabled data connection.
     
 In this paper, we present four rules to operate the \mad model. We
 leave for future work the extension of these rules to support errors

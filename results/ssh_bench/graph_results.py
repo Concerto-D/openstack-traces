@@ -55,7 +55,7 @@ def analyze(dryrun_path, ssh_path, exp):
             list_nb_components = ssh_config["list_nb_components"]
             list_nb_parallel_transitions = ssh_config["list_nb_parallel_transitions"]
         else:
-            list_chain_length = config["list_chain_length"]
+            list_chain_length = ssh_config["list_chain_length"]
 
     figures = []
     # for the parallel results

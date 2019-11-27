@@ -12,7 +12,6 @@ Madeus is a model that relies on the description of an \emph{internal-net} (life
 
 The aim is to evaluate Madeus independently of any specific transitions which is why these experiments are called \emph{dry-runs}. It means the transitions do not contain any action which allows to measure the overhead caused by Madeus.
 
-
 % figures to add for assemblies
 %Sequential
 
@@ -24,7 +23,7 @@ The aim is to evaluate Madeus independently of any specific transitions which is
   \end{center}
 \end{figure}
 
-The first benchmark is made with a sequential assembly written in Madeus, depicted in Figure~\ref{fig:seq}
+Three benchmarks are the base of this evaluation. The first benchmark is made with a sequential assembly written in Madeus, depicted in Figure~\ref{fig:seq}
 and made of a chain of components: one \emph{provider} component made of a transition and two places, the final one providing a service, and \emph{N user-provider} components that are also composed of a transition and two places, but where the transition uses the provide port of the preceeding component. The components are connected and this results in a sequential execution.
 
 A dry-run version of this assembly is built containing transitions that do nothing besides wait for a fixed amount of time. As it is a sequential assembly, the execution time should be increasing with the number of \emph{N} components.
@@ -45,12 +44,11 @@ Their aim is to illustrate the performances of Madeus regardless of the componen
 The first assembly evaluates the parallelism at the component level, when components are deployed simultaneously and the second one evaluates the parallelism at the transition level, when transitions are performed simultaneously.
 The second and third benchmarks are made to evaluate the performances with parallelism both at the component level and at the transition level.
 
-They use the same assembly that is composed of an initial \emph{provider} component and \emph{N parallel components} connected to the provider. Each component contains a first transition that uses the service provided by the provider component and \emph{T parallel transitions}. For the benchmark about component level parallelism, the number of components varies from 1 to 50 components and a fixed 1 transition, while for the benchmark about transition level parallelism, the number of transitions varies from 1 to 20 %link to pictures
+They use the same assembly that is composed of an initial \emph{provider} component and \emph{N parallel components} connected to the provider. Each component contains a first transition that uses the service provided by the provider component and \emph{T parallel transitions}. For the benchmark about component level parallelism, the number of components varies from 1 to 40 components and a fixed 1 transition, while for the benchmark about transition level parallelism, thoe number of transitions varies from 1 to 20 %link to pictures
 
-Each benchmark was run ten times with a sleep time value of 5 seconds to have a coherent scale of results.
+Each benchmark was run for ten iterations with a sleep time value of 5 seconds to have a coherent scale of results.
 
 % Parallel no ssh part
-
 
 % Parallel SSH part
 
@@ -59,15 +57,29 @@ Each benchmark was run ten times with a sleep time value of 5 seconds to have a 
 %Results
 
 \begin{figure}[h]
-  \begin{center}
+  \begin{center} 
     \includegraphics[width=0.5\textwidth]{./images/evaluations_dryrun_seq.png}
-    \caption{Results of the sequential benchmark}
+    \caption{Results of the sequential benchmark on dryrun}
     \label{fig:dryrunseq}
   \end{center}
 \end{figure}
 
+\begin{figure}[h]
+  \begin{center} 
+    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_component.pdf}
+    \caption{Results of the parallel assembly benchmark with varying component number}
+    \label{fig:dryrunseq}
+  \end{center}
+\end{figure}
+\begin{figure}[h]
+  \begin{center} 
+    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_transitions.pdf}
+    \caption{Results of the parallel assembly benchmark with varying parallel transition number}
+    \label{fig:dryrunseq}
+  \end{center}
+\end{figure}
 
-
+This all helps us see that the overhead from the ssh connections is important.
 \subsection{Performance model precision}
 
 \HC[All]{a voir}

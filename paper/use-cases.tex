@@ -1,10 +1,10 @@
 
 \graphicspath{{images/}}
 
-In this section is presented an evaluation of \mad on a real
-case-study, the commissioning of OpenStack. As in the previous
+In this section an evaluation of \mad on a real
+case-study is presented, the commissioning of OpenStack. As in the previous
 section, all results presented below can be reproduced by following
-the lab on the following publictly available repository:
+the lab on the following publicly available repository:
 \url{https://gitlab.inria.fr/VeRDi-project/madeus-journal}. First this
 lab offers the possibility to reproduce the figures presented in this
 section from the raw data obtained in our experiments on
@@ -29,7 +29,7 @@ OpenStack is a large distributed software system that brings together
 almost $100$ software projects. Each project is in charge of a
 specific aspect of the infrastructure management (\eg provision
 virtual machines, provide them with storage, interconnect them through
-networks), and their cooperation is the key to provide the features
+networks), and their cooperation is the key to providing the features
 required by Cloud management.
 %
 Those projects are themselves composed of several software modules
@@ -181,11 +181,11 @@ fetched by nodes.
 %-------
 \paragraph{Node roles and module distribution}
 Each of the $11$ components defined earlier in \kolla is in charge of
-a OpenStack project. As we said previously, each OpenStack project
+an OpenStack project. As we said previously, each OpenStack project
 contains multiples software modules. Hence, each component actually
 deploys different modules ($36$ in total). A basic multi-node \kolla
 deployment targets three nodes. First, the \emph{Control} node, which
-hosts control services, APIs and databases, commissions $16$
+hosts control services, APIs and databases, commissioning $16$
 services. The second one is the \emph{Network} node that hosts network
 agents and HAProxy, and contains $11$ services. Finally, the
 \emph{Compute} node, in charge of compute services and VMs placement,
@@ -225,10 +225,10 @@ Our performance evaluation compares three different assemblies that
 are designed to capture the behavior of \ansible, \aeolus and \mad. To
 that end, the component internals for each assembly vary with regards
 to the number of places, transitions and ports. It is also important
-to understand that we re-use the \ansible files already provided by
+to understand that we re-used the \ansible files already provided by
 \kolla by splitting them into component transitions. By using \mad to
 coordinate \ansible execution, it is possible for us to provide a way
-to fairly compare these solutions. Moreover, by using splited \kolla
+to fairly compare these solutions. Moreover, by using splitted \kolla
 roles the \emph{SIMH} parallelism level is handled by \ansible in the
 three assemblies.
 
@@ -336,9 +336,9 @@ In these different studies, we will refer to
 \cref{fig:ecotype,fig:nova} which respectively show our results on
 \ecotype and \nova clusters. The upper part displays the recorded
 times to commission OpenStack as a function of the three different
-studied assemblies. For a better understanding of the comparison, the
-value of each result is written on top of bars, while the ratio
-compared to \ansass, our reference, is displayed below bars' edges.
+assemblies studied. For a better understanding of the comparison, the
+value of each result is written on top of the bars, while the ratio
+compared to \ansass, our reference, is displayed below the bars' edges.
 Furthermore, for each assembly on the X-axis, the results for the
 three \docker registry settings are displayed with different colors:
 blue, red and green respectively for \emph{remote}, \emph{local} and
