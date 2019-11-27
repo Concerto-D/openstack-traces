@@ -44,7 +44,7 @@ Their aim is to illustrate the performances of Madeus regardless of the componen
 The first assembly evaluates the parallelism at the component level, when components are deployed simultaneously and the second one evaluates the parallelism at the transition level, when transitions are performed simultaneously.
 The second and third benchmarks are made to evaluate the performances with parallelism both at the component level and at the transition level.
 
-They use the same assembly that is composed of an initial \emph{provider} component and \emph{N parallel components} connected to the provider. Each component contains a first transition that uses the service provided by the provider component and \emph{T parallel transitions}. For the benchmark about component level parallelism, the number of components varies from 1 to 40 components and a fixed 1 transition, while for the benchmark about transition level parallelism, thoe number of transitions varies from 1 to 20 %link to pictures
+They use the same assembly that is composed of an initial \emph{provider} component and \emph{N parallel components} connected to the provider. Each component contains a first transition that uses the service provided by the provider component and \emph{T parallel transitions}. For the benchmark about component level parallelism, the number of components varies from 1 to 40 components and a fixed transition, while for the benchmark about transition level parallelism, the number of transitions varies from 1 to 20 %link to pictures
 
 Each benchmark was run for ten iterations with a sleep time value of 5 seconds to have a coherent scale of results.
 
@@ -58,8 +58,8 @@ Each benchmark was run for ten iterations with a sleep time value of 5 seconds t
 
 \begin{figure}[h]
   \begin{center} 
-    \includegraphics[width=0.5\textwidth]{./images/evaluations_dryrun_seq.png}
-    \caption{Results of the sequential benchmark on dryrun}
+    \includegraphics[width=0.5\textwidth]{./images/evaluations_sequential.pdf}
+    \caption{Results of the sequential benchmark.}
     \label{fig:dryrunseq}
   \end{center}
 \end{figure}
