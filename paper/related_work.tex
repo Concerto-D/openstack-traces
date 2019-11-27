@@ -24,11 +24,11 @@
 % 3. formalism
 % - formal model
 
-Before introducing the related work of this paper, some analysis
+Before introducing the related works of this paper, some analysis
 metrics need to be introduced. These metrics are divided in three
 sets: software engineering (SE) metrics, metrics related to the
-parallelism level of commissionings, and metrics related to formal
-aspects of commissionings. For each metric four levels will be
+parallelism level of commissioning, and metrics related to formal
+aspects of commissioning. For each metric four levels will be
 considered and presented in Table~\ref{tab:comparison}: (1) supported,
 denoted with \checkmark, that counts for 3 points in the score; (2)
 partially supported, denoted (\checkmark), that counts for 2 points;
@@ -38,7 +38,7 @@ code manually the given metric, and that counts 1 point; and finally
 
 \paragraph{Software engineering}
 As introduced in the previous section, when automating distributed
-software commissionings one important aspect is to promote software
+software commissioning one important aspect is to promote software
 engineering properties. Indeed, when different actors are involved in
 a same given goal, software engineering techniques can help improving
 separation of concerns (\ie code reuse, maintainability
@@ -46,11 +46,11 @@ etc.). Separation of concerns means that each actor is responsible for
 her own specialism, \ie her own expertise domain. Such separation of
 concerns is improved as soon as a modular or component-based approach
 is adopted, \ie each actor could be responsible for one
-component. Furthermore, component-based architectures are also equiped
-with composition mechanisms that ease the interactions between the
+component. Furthermore, component-based architectures are also equipped
+with composition mechanisms that facilitate the interactions between the
 different entities implemented by different actors. One additional
 actor may also enter the picture to design this composition. We define
-three SE metrics to compare the related work:
+three SE metrics to compare the related works:
 \begin{itemize}
 \item \emph{component}: if the work (tool, framework or scientific
   contribution) offers a component-oriented (\eg services, modules)
@@ -58,11 +58,11 @@ three SE metrics to compare the related work:
 \item \emph{tasks}: if the work (tool, framework or scientific
   contribution) offers a way to divide the commissioning of each
   component in sub-elements that we call \emph{tasks} and that promote
-  even more a well structured procedural design;
+  an better structured procedural design;
 \item \emph{separation of concerns}: if the work (tool, framework or
   scientific contribution) offers a way to build distributed software
   commissionings by composing each commissioning of individual
-  components and while not needing to know their internal behaviors.
+  components while not needing to know their internal behaviors.
 \end{itemize}
 
 \paragraph{Parallelism level}
@@ -75,10 +75,10 @@ compare the related work:
 \item \emph{SIMH}: if the work offers a transparent way to perform the
   same instruction or set of instructions on multiple hosts
   simultaneously, meaning that there are no dependencies between the
-  instructions to perform on the different hosts;
+  instructions to be performed on the different hosts;
   \item \emph{inter-comp}: if the work offers a transparent way to
     simultaneously execute the commissionings of multiple components
-    if no dependency exists between those components;
+    when no dependency exists between those components;
   \item \emph{inter-comp-tasks}: if the work offers a transparent way to
     simultaneously execute the commissioning tasks of multiple
     components until a dependency between multiple tasks is reached;
@@ -93,22 +93,22 @@ possible level would be SIMH, while for \emph{inter-comp} dependencies
 or \emph{inter-comp-tasks} dependencies more parallelism could be
 handled between components of different types.
 
-Figure~\ref{fig:parlevels} illustates the four above parallelism levels
+Figure~\ref{fig:parlevels} illustrates the four above parallelism levels
 through one example. In this example three components or modules are
 depicted. The component $C$ is deployed on two hosts while components
 $A$ and $B$ are deployed on a single host. Moreover, components $A$
 and $B$ need to be coordinated while the component $C$ is independent
-from both $A$ and $B$. First, in Figure~\ref{fig:simh} is displayed
+from both $A$ and $B$. First, Figure~\ref{fig:simh} displays
 the \emph{SIMH} level where parallelism can be introduced for the
 component $C$. Second, Figure~\ref{fig:inter-comp} illustrates the
 \emph{inter-comp} parallelism level. Indeed as $C$ is independent from
 $B$ both component commissionings can be performed
 simultaneously. However, as component $B$ depends from component $A$,
-and as the dependencies are only available at the level of components,
-their commissionings still have to be performed one after the
+and as the dependencies are only available at the component level,
+their commissioning still has to be performed one after the
 other. Third, Figure~\ref{fig:inter-comp-tasks} shows the
 \emph{inter-comp-tasks} parallelism level, where dependencies can be
-defined at the finer level of the tasks. In this case, commissionings
+defined at the finer level of the tasks. In this case, commissioning
 of components $A$ and $B$ can be started in parallel until they reach
 their dependencies. Thus, component $B$ has to wait for the component
 $A$ to perform needed tasks before continuing its
@@ -163,7 +163,7 @@ the commissioning (represented by the height of the figures).
 One can note that presented metrics for both SE and parallelism are
 procedural-oriented as they consider \emph{tasks} and not
 \emph{resources}, thus excluding \puppet or \salt for instance. While
-being an approach with great advantages, declarative approaches are
+it is an approach with great advantages, declarative approaches are
 not considered in this paper.
 
 \paragraph{Formalism}
@@ -182,7 +182,7 @@ commissionings by model checking~\cite{coullon:hal-02323641}.
 % ----------------------------
 
 Among the plethora of distributed software commissioning solutions, we
-have selected a subpart of them for a deeper comparison. According to
+have selected a subset of them for a deeper comparison. According to
 the classification of Section~\ref{sec:context}, we have selected: two
 \emph{coding} or scripting solutions, \shell and \fractal; three
 procedural-oriented solutions of the \emph{software configuration}
@@ -206,7 +206,7 @@ the background (\eg using the control operator \& in \bash) and
 synchronisation commands like \emph{wait}. On the other hand, as the
 system grows, any custom script becomes error-prone, unpredictable,
 hard to understand and to maintain. \shell scripts lack of software
-engineering aspects and there is no framework to express modules nor
+engineering aspects and there is no framework to express modules or
 tasks and their dependencies thus making separation of concerns a very
 tricky work. In Table~\ref{tab:comparison} we indicate that each
 metric introduced could potentially be implemented manually by using
@@ -222,12 +222,12 @@ software codes~\cite{Szyperski:2002:CSB:515228}. A component-based
 application is composed of a set of component instances connected
 together. Such composition of components is called an
 \emph{assembly}. A component is a black box that implements an
-independent functionality of an application, and which interacts with
+independent functionality of an application, and that interacts with
 other components through well defined interfaces, called \emph{ports}.
 Ports are used to decouple the component internals from its
 interface. For instance, a port can be used to declare that the
 component either provides a service ---in this case the port is
-attached to an internal method--- or use a service from another
+attached to an internal method--- or uses a service from another
 component. Many component models focus on the implementation of the
 functionalities and
 interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigot:inria-00388508,Coullon2017}
@@ -265,7 +265,7 @@ a file). While there is no notion of component ports, it is possible
 to express dependencies between components to initiate automatic
 coordination. For instance, when the operator triggers the action
 "install" on a component, the same action is triggered recursively to
-its dependencies. As theyr are not entirely controllable by the user,
+its dependencies. As they are not entirely controllable by the user,
 metrics \emph{tasks}, \emph{SIMH} and \emph{inter-comp} are considered
 as partially supported by \deployware. Finally, as \deployware is
 based on \fractal and as a formal effort have been done on \fractal,
@@ -273,34 +273,34 @@ the formal aspect of \deployware is considered partially supported.
 
 % Ansible
 \paragraph{Ansible}
-For the DevOps that are used to shell-scripts, \ansible has become a
+For the DevOps who are used to shell scripts, \ansible has become a
 popular configuration management tool since it relies on a simple
 syntax written in YAML and does not require agents on administrated
-servers. Tasks are indeed managed using only \textsc{SSH} and
+servers. Tasks are managed using only \textsc{SSH} and
 \textsc{Python} which are commonly installed on every Linux
-distributions.  In comparison, similar tools like \chef, \puppet or
+distribution.  In comparison, similar tools like \chef, \puppet or
 \cfengine not only require at least a slight understanding of Ruby or
 a custom language to get started, but they are built on an agent-based
-architecture and requires prior agent commissioning on remote hosts.
+architecture and require prior agent commissioning on remote hosts.
 \ansible features software engineering aspects like separation of
 concerns by defining the notion of \emph{roles} which can be seen as
-software components.  Each role contains a set of files that describe
+software components.  Each role contains a set of files that each describe
 a sequence of tasks. To define a composition, a specific file called
 an \ansible \emph{playbook} is used for mapping the desired roles to
 the groups of nodes they will be applied to. Those groups of nodes are
 defined in a separate file called the \emph{inventory}. When \ansible
 is triggered, roles and their related tasks are sequentially executed
 to the associated groups of nodes. While tasks declarations are indeed
-manages sequentially, each task is executed in parallel when mapped to
+managed sequentially, each task is executed in parallel when mapped to
 multiple remote hosts thus leading to the \emph{SIMH} metric.
 Typically, an operator who wants to commission an \apache web server
 and a \mysql database would download two roles from Ansible Galaxy and
-register them in an playbook. Since \ansible triggers roles in a
+register them in a playbook. Since \ansible triggers roles in a
 sequential manner, if the operator is not aware that the database must
 be commissioned before the web server, she could make a mistake in the
 order of the roles she declared. This aspect makes the
 \emph{separation of concerns} metric only partially
-supported. Finally, as one of the possible type of tasks in \ansible
+supported. Finally, as one of the possible types of tasks in \ansible
 is the execution of a \shell command, any script could be executed as
 a task thus making possible to handle manually the \emph{intra-comp-tasks}
 parallelism level.
@@ -325,7 +325,7 @@ Canonical has developed their own software commissioning solution:
 \juju (\url{https://jujucharms.com/}) which aims at commissioning any
 kind of application on top of different cloud providers (\eg AWS,
 OpenStack), and on multiple types of resources (container, VM or
-bare-metal). Its concepts are close to component models. Software
+bare-metal). Its concepts are close to those of component models. Software
 modules are packaged as \juju \emph{charms} which describe the
 software commissioning steps through a set of scripts called
 \emph{hooks}. Operators define their composition in a specific file
@@ -333,8 +333,8 @@ called \emph{bundle} in which they declare the desired charms with
 their \emph{relations}. A relation is an element declared between two
 charms and used for component synchronization (by triggering hooks)
 and data sharing at runtime, similarly to component ports. As the
-concepts behind \juju are very close to the one of \aeolus the same
-metrics are available except the formal aspect.
+concepts behind \juju are very close to those of \aeolus the same
+metrics are available barring the formal aspect.
 % good soc, download charms and run juju deploy
 
 \paragraph{TOSCA}
@@ -347,19 +347,19 @@ their components and their deployment artifacts, using standard
 languages (\ie XML, YAML). A TOSCA description (or template)
 corresponds to a graph where nodes represent TOSCA resources
 (e.g. software components, virtual machines, physical servers), and
-where edges represent the relations between those nodes. Artifacts (of
+where edges represent the relations between these nodes. Artifacts (of
 any type: scripts, executable etc.) can be added to TOSCA descriptions
 in a CSAR (Cloud Service ARchive) to detail commissioning steps. Those
 commissioning steps can thus be customized by the developper but there
 is no model and guarantees associated to them. Thus \emph{tasks} and
-\emph{intra-comp-tasks} metrics could handled manually by the user. As
+\emph{intra-comp-tasks} metrics could be handled manually by the user. As
 there is no way to declare dependencies between artifacts of
 components the \emph{inter-taks} metric is not supported, however,
 relations between components make both \emph{SIMH} and
 \emph{inter-comp} metrics theoretically available in \tosca. No
-information have been found on the complete support of these metrics
+information has been found on the complete support of these metrics
 in \tosca implementations~\cite{cloudify:web,opentosca:web}. Finally,
-come efforst have been done to formally define the \tosca
+some efforts have been done to formally define the \tosca
 standard~\cite{tosca:web}.
 
 % Kubernetes
@@ -367,12 +367,12 @@ standard~\cite{tosca:web}.
 Initiated by Google, \kubernetes (K8S) is a popular framework to
 commission distributed software in the form of micro-services that are
 packaged as a hierarchy of Docker containers and \emph{pods}. A
-software component in \kubernetes is thus defined as Docker
+software component in \kubernetes is thus defined as a Docker
 container. Such components have no port to manage coordination, and
-its internals is fixed since containers can only be started and
+their internals are fixed since containers can only be started and
 stopped. As a consequence, the commissioning process is
 error-prone. For instance, a web server can be started before the
-required database and thus fails. For this reason, the metric
+required database and thus will fail. For this reason, the metric
 \emph{inter-comp} is considered as partially supported.
 % depend_on exists but limited to "container is started"
 % synchronization is possible but must be managed by internal script and not managed by k8s
@@ -402,7 +402,7 @@ compared according to software engineering metrics, parallelism
 metrics and one metric regarding the formal definition of the
 considered solution. Table~\ref{tab:comparison} resumes this
 comparison and raises a few key points that we discuss in the
-following.
+following section.
 
 As usual when working on programming languages, the existing
 tools illustrate the difficult trade-off between flexibility and
@@ -415,7 +415,7 @@ difficult and error prone. On the other hand, some existing solutions
 such as \deployware and \juju restrict the internal commissioning
 behavior of components to a fix set of actions (\eg install,
 configure, start). Such choice has the advantage of guaranteeing the
-full control of the automated parallelism level but also restrict
+full control of the automated parallelism level but also restricts
 potential optimizations due to the specificity of each component and
 the interactions between components and their tasks.
 
@@ -426,7 +426,7 @@ and enhance its separation of concerns, while introducing an
 additional way to model the internal commissioning behavior of each
 component through tasks. It seems that \aeolus offers a good trade-off
 between flexibility and automation. However, while offering the best
-combination of metrics, \aeolus partially handle separation of
+combination of metrics, \aeolus handles only partially the separation of
 concerns between components.
 
 Furthermore, one can note that no existing solution offers a full

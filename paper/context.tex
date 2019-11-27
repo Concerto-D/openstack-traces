@@ -7,12 +7,13 @@
 \subsection{Distributed software commissioning}
 
 A distributed software is a software designed in a modular fashion
-where each module, or component, or service, is responsible for a
+where each module, component, or service is responsible for a
+% un or en trop (au milieu)?
 specific part of the overall objective, and collaborates at runtime
 with other components that are potentially hosted on distant nodes
 (\ie machines) in the network. In the rest of this paper we will
-preferably use the generic term \emph{component} to design
-indiferently a module or a service.
+use the generic term \emph{component} to refer to
+indifferently a module or a service.
 %
 The commissioning procedure of a distributed software is the procedure
 responsible for leading the set of components in a valid running state
@@ -21,8 +22,8 @@ interactions. Thus, distributed software commissioning is somewhere in
 between the components development (functional part) and the running
 distributed software on the infrastructure (management part). As a
 result, the particularity of a distributed software commissioning is
-to need information both from the components behaviors and from the
-underlying infrastructure on which each components will be executed.
+that it needs information both from the components behaviors and from the
+underlying infrastructure on which each component will be executed.
 % who are the actors of commissionings?
 For this reason multiple human actors are often involved in the
 commissioning procedure: developers and system administrators or
@@ -35,16 +36,16 @@ First, the code of each component is written by a given
 interfaces could be \texttt{start}, \texttt{stop} or \texttt{update},
 for instance. Most of the time such control interfaces take part in
 the component commissioning. However, they are not sufficient as they
-only serve the component level, not the infrastructure level. Thus, in
-addition \emph{configuration files} are often used as
+only serve the component level, not the infrastructure level. Thus,
+\emph{configuration files} are often used additionally as
 \emph{infrastructure interfaces} to get information from system
 administrators or operators that cannot be known in advance when
-writing the functional code of the component. Third, components often
+writing the functional code of the component. Thirdly, components often
 require a set of packages or libraries to be installed on the host
 operating system to work properly. Those requirements are directly
 related to the \emph{infrastructure management} as some of them may
 already be installed on machines. In the end, the overall
-commissioning procedure of a single software component is complex as
+commissioning procedure of a single software component is complex because
 it juggles with the control interfaces, infrastructure interfaces and
 infrastructure management information. In other words, the
 commissioning procedure of a single component is a \emph{coordination
@@ -55,11 +56,11 @@ documentations\footnote{apache red hat}.
 When considering a complete distributed software composed of a set of
 components, the picture becomes even more complex as it is needed to
 coordinate the commissioning procedure of all the components together
-with their associated interactions. For instance, when installing the
-very basic Apache/MariaDB an additional documentation to combine the
-Apache component with the MariaDB component is needed\footnote{red
-  hat}. Another example could be the commissioning of Spark on top of
-Yarn\footnote{spark on Yarn}.
+with their associated interactions. For instance, when installing a
+very basic Apache/MariaDB system an additional documentation is
+required\footnote{red hat} to combine the Apache component with the
+MariaDB component. Another example could be the commissioning of Spark
+on top of Yarn\footnote{spark on Yarn}.
 
 \HC[Dim]{ce listing ne va sans doute pas ici (trop tôt ou top détaillé) mais je le laisse}
 Many interesting challenges arise from the DevOps community and from
@@ -87,15 +88,19 @@ paper are the following:
 % - generic solution that could use or not provisioning tools
 % - scripting/IaC but keep Kubernetes and Juju
 
-Four classes of tools and languages can be considered to automate and
-enhance software engineering properties of commissioning procedures.
+Four classes of tools and languages can be considered regarding
+automating and enhancing software engineering properties
+of commissioning procedures.
+\CS[HC]{on améliore les propriétés d'ingénierie logicielle ? Je pensais
+  que c'était les garantir, et du coup enforce pas enhance}
+
 
 \paragraph{Scripting/coding languages}
-First, one usual way of automating commissioning procedures is to use
+First, a common way of automating commissioning procedures is to use
 \emph{scripting languages} such as \shell or \ruby for instance. Such
 languages are very flexible and well known by system administrators
 and operators but suffer from many limitations, particularly from a
-software engineering viewpoint. In particular, they are not well
+software engineering standpoint. In particular, they are not well
 suited to deal with separation of concerns, composition and complex
 coordination mechanisms.
 
@@ -111,11 +116,11 @@ these tools is to enhance the productivity when defining components or
 services commissionings and the coordination of their tasks. Most of
 the time these tools add an abstraction on top of scripting languages
 to hide some of their technical details (\eg SSH connections). These
-tools use different methods to acheive their goal. For instance,
+tools use different methods to achieve their goals. For instance,
 Ansible adopts a procedural imperative style in \texttt{yaml} as a
 series of tasks to execute, while Puppet adopts a declarative approach
 in \texttt{Python} by combining different instances of resources (\ie
-service, packages etc.). In a declarative approach the user describes
+services, packages, etc.). In a declarative approach the user describes
 what is needed not how to get it which is left to the tool
 developers. Such approach enhances productivity but reduces
 flexibility for the user.
@@ -127,15 +132,15 @@ designed to be able to handle complex distributed infrastructures
 composed of multiple clusters and multiple machines shared between
 users. Managing such infrastructure is very difficult and error prone
 as each application and each user may possibly need different
-requirements, different operating systems, different versions of
-packages etc. Virtualization has partly been introduced to enhance
-infrastructure management (in addition to enhancing portability of
-applications, isolation between users etc.). This kind of tools, that
-counts \docker~\cite{docker:web}, \terraform~\cite{terraform:web},
+requirements, different operating systems, different package versions,
+etc. Virtualization has partly been introduced to enhance
+infrastructure management (in addition to improving portability of
+applications, isolation between users etc.). This type of tools, that
+includes \docker~\cite{docker:web}, \terraform~\cite{terraform:web},
 \juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or
-\heat~\cite{heat:web} for instance, use virtualization mechanisms (\eg
+\heat~\cite{heat:web} for instance, uses virtualization mechanisms (\eg
 virtual machines, containers) to reduce the commissioning process to a
-set of commands to deploy a virtual resource (by using an image) on a
+set of commands allowing to deploy a virtual resource (by using an image) on a
 physical machine. This technique potentially reduces the complexity of
 the commissioning procedures if the needed image is already available,
 otherwise the initial commissioning commands and coordination have to
@@ -147,9 +152,9 @@ standard~\cite{tosca:web}, and its
 implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can
 be classified as a descriptive provisioning tool. More precisely
 \tosca is presented as a Cloud Modeling Language (CML). By using
-\tosca a set cloud-based services is modeled as a graph where each
-node represents one component of the application and each edge
-represents the relationship among components. \tosca enables the
+\tosca a set of cloud-based services is modeled as a graph where each
+node represents a component of the application and each edge
+represents the relationship between components. \tosca enables the
 portability and automated management across cloud platforms and
 infrastructures. In \tosca commissioning actions are scripts
 encapsulated in \emph{artifacts}.
@@ -159,16 +164,16 @@ Finally, some recent tools go further by offering an
 \emph{orchestration} level to handle shared clusters of machines
 running many services simultaneously to orchestrate. In such case
 being able to deploy or install distributed software is only a part of
-the problem as services also need to be restarted in case of fault, or
+the problem as services also need to be restarted in case of failure, or
 to be scaled in case of overload etc. The famous
-\kubernetes~\cite{kubernetes:web} enter in this class as well as
+\kubernetes~\cite{kubernetes:web} enters in this category as well as
 \dockerswarm~\cite{dockerswarm:web}. If these tools are above the
-scope of this paper, a subpart of their architecture handles
-distributed software commissionings. For instance \kubernetes relies
+scope of this paper, a subdivision of their architecture handles
+distributed software commissioning. For instance \kubernetes relies
 on \docker for commissionings.
 
 In pratice, these tools are often combined by system administrators
-and operators to acheive both distributed software commissioning and
+and operators to achieve both distributed software commissioning and
 infrastructure management.
 
 \begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
@@ -204,12 +209,12 @@ though does not consider the problem as a whole.
 First, the commissioning procedure of complex distributed software
 such as OpenStack (Section~\ref{sec:use-cases}) can take from 15
 minutes to more than one hour to finish, thus gaining in speed is
-significant. Second, a system administrator do not perform the
+significant. Second, a system administrator does not perform the
 commissioning process only once. When new machines or new clusters are
-installed in her infrastructure, or when updates are needed
+installed in their infrastructure, or when updates are needed
 commissioning procedures need to be executed again. Third, when
-designing software commissioning, errors may often occur leading to
-re-execution of the procedures multiple times.
+designing software commissioning, errors may often occur leading to the
+re-execution of the procedure multiple times.
 % reconfiguration
 In addition to this, having an efficient commissioning procedure is a
 first step toward efficient reconfigurations of dynamic software
@@ -228,7 +233,7 @@ Many different techniques could be studied to improve the efficiency
 of distributed software commissionings. A few of them are given below:
 \begin{itemize}
 \item by using optimized and adapted system commands in commissioning
-  scripts and program (\eg \texttt{rsync} instead of many
+  scripts and programs (\eg \texttt{rsync} instead of many
   \texttt{scp});
 \item by working on the optimization of a given system command (\eg
   \nix package manager instead of \texttt{apt-get});
@@ -245,7 +250,7 @@ of distributed software commissionings. A few of them are given below:
   title=Scope,fonttitle=\bfseries,
   boxed title style={size=small,colframe=black!60,boxrule=0.2mm},
   boxrule=0.2mm]
-  The scope of this paper is to study how to enhance the last point of
-  the above items, \ie offering more parallelism in procedural
+  The scope of this paper is to study how to improve the last point of
+  the above items, \ie offer more parallelism in procedural
   commissioning tools and languages.
 \end{tcolorbox}
