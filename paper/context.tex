@@ -6,26 +6,27 @@
 %--------
 \subsection{Distributed software commissioning}
 
-A distributed software is a software designed in a modular fashion
+% correction: software is uncountable
+Distributed software is software designed in a modular fashion
 where each module, component, or service is responsible for a
 % un or en trop (au milieu)?
 specific part of the overall objective, and collaborates at runtime
 with other components that are potentially hosted on distant nodes
 (\ie machines) in the network. In the rest of this paper we will
-use the generic term \emph{component} to refer to
-indifferently a module or a service.
+use the generic term \emph{component} to refer
+indifferently to a module or a service.
 %
 The commissioning procedure of a distributed software is the procedure
-responsible for leading the set of components in a valid running state
-while guaranteeing their correct configurations and
-interactions. Thus, distributed software commissioning is somewhere in
-between the components development (functional part) and the running
+responsible for leading the set of components to a valid running state
+while guaranteeing correct configurations and
+interactions. Thus, distributed software commissioning is somewhere
+between the components' development (functional part) and the running
 distributed software on the infrastructure (management part). As a
 result, the particularity of a distributed software commissioning is
 that it needs information both from the components behaviors and from the
 underlying infrastructure on which each component will be executed.
 % who are the actors of commissionings?
-For this reason multiple human actors are often involved in the
+For this reason, multiple human actors are often involved in the
 commissioning procedure: developers and system administrators or
 operators. This frontier is often called the DevOps domain where the
 commissioning fits in.
@@ -51,13 +52,15 @@ infrastructure management information. In other words, the
 commissioning procedure of a single component is a \emph{coordination
   program} between different DevOps interfaces. Most of the time
 commissioning procedures are explained in \texttt{README} files, or in
-documentations\footnote{apache red hat}.
+documentation\footnote{apache red hat}.
+
+% correction: documentations (plural) is very uncommon, the uncountable form is preferred
 
 When considering a complete distributed software composed of a set of
 components, the picture becomes even more complex as it is needed to
 coordinate the commissioning procedure of all the components together
 with their associated interactions. For instance, when installing a
-very basic Apache/MariaDB system an additional documentation is
+very basic Apache/MariaDB system, an additional documentation is
 required\footnote{red hat} to combine the Apache component with the
 MariaDB component. Another example could be the commissioning of Spark
 on top of Yarn\footnote{spark on Yarn}.
@@ -114,15 +117,15 @@ DevOps tools such as \ansible~\cite{ansible:web},
 \aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of
 these tools is to enhance the productivity when defining components or
 services commissionings and the coordination of their tasks. Most of
-the time these tools add an abstraction on top of scripting languages
+the time these tools add an abstraction layer on top of scripting languages
 to hide some of their technical details (\eg SSH connections). These
 tools use different methods to achieve their goals. For instance,
-Ansible adopts a procedural imperative style in \texttt{yaml} as a
+Ansible adopts a procedural imperative style in YAML as a
 series of tasks to execute, while Puppet adopts a declarative approach
-in \texttt{Python} by combining different instances of resources (\ie
+in Python by combining different instances of resources (\ie
 services, packages, etc.). In a declarative approach the user describes
-what is needed not how to get it which is left to the tool
-developers. Such approach enhances productivity but reduces
+what is needed rather than how to get it, which is left to the tool
+developers. Such an approach enhances productivity but reduces
 flexibility for the user.
 
 \paragraph{Infrastructure definition tools}
@@ -135,7 +138,7 @@ as each application and each user may possibly need different
 requirements, different operating systems, different package versions,
 etc. Virtualization has partly been introduced to enhance
 infrastructure management (in addition to improving portability of
-applications, isolation between users etc.). This type of tools, that
+applications, isolation between users, etc.). This type of tools, that
 includes \docker~\cite{docker:web}, \terraform~\cite{terraform:web},
 \juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or
 \heat~\cite{heat:web} for instance, uses virtualization mechanisms (\eg
@@ -150,27 +153,27 @@ given virtualization technique (\eg \docker, \cloudformation and
 Cloud infrastructures (\eg \terraform, \juju). The \tosca
 standard~\cite{tosca:web}, and its
 implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can
-be classified as a descriptive provisioning tool. More precisely
+be classified as a descriptive provisioning tool. More precisely,
 \tosca is presented as a Cloud Modeling Language (CML). By using
-\tosca a set of cloud-based services is modeled as a graph where each
+\tosca, a set of cloud-based services is modeled as a graph where each
 node represents a component of the application and each edge
-represents the relationship between components. \tosca enables the
+represents the relationship between components. \tosca allows for
 portability and automated management across cloud platforms and
-infrastructures. In \tosca commissioning actions are scripts
+infrastructures. In \tosca, commissioning actions are scripts
 encapsulated in \emph{artifacts}.
 
 \paragraph{Orchestration tools}
 Finally, some recent tools go further by offering an
 \emph{orchestration} level to handle shared clusters of machines
-running many services simultaneously to orchestrate. In such case
-being able to deploy or install distributed software is only a part of
-the problem as services also need to be restarted in case of failure, or
-to be scaled in case of overload etc. The famous
-\kubernetes~\cite{kubernetes:web} enters in this category as well as
-\dockerswarm~\cite{dockerswarm:web}. If these tools are above the
+running many services simultaneously to orchestrate. In this case,
+being able to deploy or install distributed software is only part of
+the problem, as services also need to be restarted in case of failure, or
+to be scaled in case of overload, etc. The famous
+\kubernetes~\cite{kubernetes:web} enters in this category, as well as
+\dockerswarm~\cite{dockerswarm:web}. If these tools are outside the
 scope of this paper, a subdivision of their architecture handles
 distributed software commissioning. For instance \kubernetes relies
-on \docker for commissionings.
+on \docker for commissioning.
 
 In pratice, these tools are often combined by system administrators
 and operators to achieve both distributed software commissioning and
@@ -203,17 +206,17 @@ infrastructure management.
 % 5. scope of the paper = parallelism
 
 Improving the efficiency of distributed software commissioning may
-seem useless as such procedure is executed once and forall. This claim
-though does not consider the problem as a whole.
+seem useless as this procedure is executed once and for all. However, this claim
+does not consider the problem as a whole.
 %
 First, the commissioning procedure of complex distributed software
 such as OpenStack (Section~\ref{sec:use-cases}) can take from 15
 minutes to more than one hour to finish, thus gaining in speed is
 significant. Second, a system administrator does not perform the
 commissioning process only once. When new machines or new clusters are
-installed in their infrastructure, or when updates are needed
+installed in their infrastructure, or when updates are needed,
 commissioning procedures need to be executed again. Third, when
-designing software commissioning, errors may often occur leading to the
+designing software commissioning, errors may often occur, leading to the
 re-execution of the procedure multiple times.
 % reconfiguration
 In addition to this, having an efficient commissioning procedure is a
@@ -221,27 +224,27 @@ first step toward efficient reconfigurations of dynamic software
 systems (\eg self-adaptive systems) and dynamic infrastructures (\eg
 edge computing) where disruption time of services must be minimized.
 % experiments and continuous integration
-Furthermore, and as explained in the introduction, there are two
+Furthermore, as explained in the introduction, there are two
 specific contexts where distributed software commissionings are
 extensively executed: research or industry \emph{experiments} and
 \emph{continuous integration} of distributed software systems. For
-instance, by exploring the traces of the OpenStack CI platform we have
+instance, by exploring the traces of the OpenStack CI platform, we have
 observed that the OpenStack commissioning is called around 6,000 times
 in 24 hours.
 
 Many different techniques could be studied to improve the efficiency
 of distributed software commissionings. A few of them are given below:
 \begin{itemize}
-\item by using optimized and adapted system commands in commissioning
+\item using optimized and adapted system commands in commissioning
   scripts and programs (\eg \texttt{rsync} instead of many
   \texttt{scp});
-\item by working on the optimization of a given system command (\eg
+\item working on the optimization of a given system command (\eg
   \nix package manager instead of \texttt{apt-get});
-\item if using virtual images or container images, by improving the
+\item if using virtual images or container images, improving the
   boot time of hypervisors~\cite{nguyen:hal-02172288};
-\item if using \docker images, by optimizing the placement of image
+\item if using \docker images, optimizing the placement of image
   layers on the network~\cite{darrous:hal-01745405};
-\item by exposing more parallelism in commissioning
+\item exposing more parallelism in commissioning
   languages~\cite{dicosmo:hal-01233489}.
 \end{itemize}
 
@@ -251,6 +254,6 @@ of distributed software commissionings. A few of them are given below:
   boxed title style={size=small,colframe=black!60,boxrule=0.2mm},
   boxrule=0.2mm]
   The scope of this paper is to study how to improve the last point of
-  the above items, \ie offer more parallelism in procedural
+  the items above, \ie offer more parallelism in procedural
   commissioning tools and languages.
 \end{tcolorbox}

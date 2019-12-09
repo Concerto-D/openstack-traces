@@ -528,14 +528,18 @@ when parallelizing of \texttt{pull} transitions is higher for
 of parallelizing data transfers in container-based commissionings when
 the network bandwidth can support it.
 
+\SR{``hardware configuration'' est un peu ambigu au vu de l'usage du mot
+configuration ailleurs dans le papier. Je suggère ``superior hardware
+capabilities'', or parler plus précisément de la capacité d'exécution parallèle.}
+
 Finally, one can note that the global commissioning time for OpenStack
 is lower on \ecotype than on \nova. This is due to a better hardware
 configuration for the former, regarding CPU, RAM and network, as
 detailed in \cref{tab:g5k}. Indeed as \mad introduces more parallelism
-in the commissioning procedure of OpenStack, the better is the
-configuration of the cluster, the better is the performance. Our claim
-is that the physical nodes on which are installed complex distributed
-software systems often have a very good hardware configuration and
+in the commissioning procedure of OpenStack, the better the
+configuration of the cluster, the better the performance. Our claim
+is that the physical nodes on which complex distributed
+software systems are installed often have a very good hardware configuration and
 that exposing more parallelism in the commissioning process is another
 way to exploit their high performance.
 
