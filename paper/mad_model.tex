@@ -24,7 +24,7 @@
 procedures. Usually, component models are used to write
 distributed software in a modular fashion while having guarantees on
 its composition, thus improving separation of concerns between
-developers, easing the way for re-use of existing pieces of code and
+developers, easing the reusability of existing pieces of code and
 enhancing flexibility and maintainability of code. \mad makes use of
 these properties for the design of distributed software commissionings
 instead of code design.
@@ -43,7 +43,7 @@ ports. Four types of ports, working in pairs, are available in \mad:
 service-provide and service-use, data-provide and data-use ports. By
 using ports, each component type can be defined independently and
 component instances can be connected later by another developer, thus
-improving the separation of concerns and the re-use of commissioning
+improving the separation of concerns and the reusability of commissioning
 procedures. A service-provide port is bound to a group of places that
 represents the milestones where the service is offered. A data-provide
 port is bound to a single place where a value is assigned to the
@@ -178,14 +178,14 @@ prototype and a concrete syntax.
 
 The concrete syntax of \mad has been implemented in Python. \mad is a
 simple declarative language that follows the model previously
-presented to define, first, component types, and second, assemblies of
+presented to define component types and assemblies of
 components. Listing~\ref{codemdb} shows the declaration of the MariaDB
 component type of Figure~\ref{fig:example}. Lines 3 to 8 declare
 the places of the component type. A place is
 identified by a unique \texttt{string}. Lines 9 to 15
 declare the transitions of the component type. A transition is
 identified by a unique key (a \texttt{string}), and is associated
-through a dictionnary with a source and a destination place. Moreover,
+through a dictionary with a source and a destination place. Moreover,
 each transition is associated with a function to call to perform
 corresponding actions. For instance, the function \texttt{f\_pull} of
 transition \texttt{pull} is declared on line 20, and provides the code
@@ -204,7 +204,7 @@ in Figure~\ref{fig:example}), and one data-provide port, namely
 
 Similarly, Listing~\ref{codeapache} shows the declaration of the
 Apache component of Figure~\ref{fig:example} which has one less place
-and one less transition compared to MariaDB. Furthermore, the Apache
+and one less transition compared to the MariaDB component. Furthermore, the Apache
 component type contains one service-use port and one data-use port
 (lines 18 to 21).
 
@@ -299,7 +299,7 @@ has been able to move from its initial place to its output transition
 \texttt{provision}, then to execute the action associated to this
 transition, to finally reach its second place. One can note that in
 this place MariaDB provides data that corresponds to the IP adress
-previously got from the \texttt{provision} transition. As soon as this
+previously received from the \texttt{provision} transition. As soon as this
 second place is reached, the associated connection is activated and the
 data is considered available. On the other hand, the initial token
 of Apache has been duplicated in three tokens, one for each output
