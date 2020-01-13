@@ -8,19 +8,16 @@ into four different parts: \emph{places}, \emph{transitions}, \emph{ports} and
 
 \paragraph{Places}{
 
-A component in \mad is first defined by a set of \emph{places} denoted
-$\Pi$. A component is also defined by two sets of
-\emph{docks}. A dock is represented by a small square and is attached to a
-place. It is used to handle synchronization of parallel branches. The
+A component in \mad is first defined by a set of \emph{places}, denoted
+$\Pi$, and two sets of \emph{docks}.  It is used to handle synchronization of parallel branches. The
 first set concerns input docks. It is denoted $\Delta_{i}$
 (displayed below the place they are attached to). The second set is
 denoted $\Delta_{o}$. It contains output docks (displayed above
 the place they are attached to).
 The function $place\,:\,\Delta_{o}\cup\Delta_{i}\rightarrow\Pi$
-returns the place a dock is attached to. Functions
-$dock_i\,:\,\Pi\rightarrow \mathcal{P}(\Delta_{i})$ and
-$dock_o\,:\,\Pi\rightarrow \mathcal{P}(\Delta_{o})$ respectively
-return the subset of $\Delta_i$ and $\Delta_o$ attached to a place
+maps docks to the place to which they are attached. Conversely, we denote by
+$dock_i(\pi) \subseteq \mathcal{P}(\Delta_o)$ (respectively $dock_i \subseteq \mathcal{P}(\Delta_i)$)
+the subset of output (respectively input) docks attached to a place
 $\pi\in\Pi$. Places can be part of one or multiple groups which are
 subsets of $\Pi$. The set of groups is denoted $G$. Last, $I \subseteq \Pi$ is the
 non-empty set of initial places of the component.
@@ -41,8 +38,6 @@ non-empty set of initial places of the component.
       $\Delta_{i}$ & set of input docks of a component\\
       $\Delta_{o}$ & set of output docks of a component\\
       $place$ & function mapping a dock to its place\\
-      $dock_{i}$ & function mapping a place to its input docks\\
-      $dock_{o}$ & function mapping a place to its output docks\\
       $G$ & set of groups of places\\
       $I$ & subset of places holding a token at initialization\\
       \hline
@@ -52,7 +47,6 @@ non-empty set of initial places of the component.
       $\Theta$ & finite set of transitions\\
       $A$ & finite set of actions\\
       $action$ & function mapping a transition to its corresponding action\\
-      $done$ & function indicating if the action of the transition has finished\\
       \hline
       \hline
       & \emph{Ports}\\
@@ -85,29 +79,21 @@ non-empty set of initial places of the component.
       \hline
       & \emph{Semantics}\\
       \hline
-      $mk$ & function indicating if an element holds a token\\
-      $val_{A,D_p}$ & returns the value given by an action to a data-provide port\\
-      $val$ & function mapping a data provide port to its current value\\
+      $\mk$ & subset of elements that hold a token\\
+      $\val$ & valuation function of data provide ports\\
+      $\exec$ & set of ongoing actions \\
       \hline
     \end{tabular}
   }
-  \caption{Notations of the \mad formal model}
+  \caption{Defining element of the \mad formal model}
   \label{tab:not}
 \end{table}
 %-----
 A component is also defined by a set of \emph{transitions} denoted
-$\Theta$. A transition $\theta \in \Theta$ is a pair containing one
-source dock and one destination dock: $\theta =
-\left(s,d\right)\,:\,s\in\Delta_{o},\,d\in\Delta_{i}$. 
-%\CP{d=i $=>$ i is not defined! $d\in\Delta_i$ tout simplement, non ?}.
-%
-Each transition is associated to an \emph{action}. The set of actions is
-denoted $A$ and the function $action\,:\,\Theta\rightarrow A$ gives the action
-associated to a given transition. Finally, the function
-$done\,:\,A\rightarrow\mathbb{B}$, where $\mathbb{B}=\left\{
-\text{true},\text{false}\right\}$ indicates whether the action of a
-transition has finished.
-  
+$\Theta$. A transition $\theta \in \Theta$ is a triple
+$\left(s, \alpha, d\right)$ with $s\in\Delta_{o}$ an output dock,
+$d\in\Delta_{i}$ an input dock, and $\alpha \in A$ the action
+associated to the transition, taken from the set of actions $A$.
 }
 
 \paragraph{Ports}{
@@ -128,7 +114,7 @@ $D_{u}$, and the set of data-provide ports is denoted
 $D_{p}$. Each data port is associated to a type in $T_{data}$,
 and the set of possible data values is denoted
 by $\mathbb{D}$. Finally, the function $type_{d}\,:\,D_{u}\cup
-D_{p}\rightarrow T_{data}$ returns the data type of a given data port.
+D_{p}\rightarrow T_{data}$ maps data ports to their data type.
   
 }
 
@@ -183,29 +169,20 @@ are defined as follows:
 %--------------------------
 
 At each moment in the execution of a \mad deployment assembly
-$(C, L_S, L_D)$, we define two functions giving the current
-configuration of this assembly. First, the marking function is defined
-to evaluate if one element of any component holds a token:
-$mk\,:\,\Pi^{*}\cup\Delta_{i}^{*}\cup\Delta_{o}^{*}\cup\Theta^{*}\rightarrow\mathbb{B}$
-where $\mathbb{B}=\left\{ \text{true},\text{false}\right\}$. By
-construction, an element can either hold one or zero tokens, the
-formal proof of this being left as future work.
+$(C, L_S, L_D)$, the \emph{configuration} of this assembly is defined by a
+tuple $\langle \mk, \val, \exec \rangle$, where
 
-Second, we define the function
-$val\,:\,D_{P}^{*}\rightarrow \mathbb{D}\cup\left\{ \text{null}\right\}$
-that returns the current value associated to a data provide port.
-
-We call a \emph{configuration} the tuple $\left\langle mk,val\right\rangle$,
-where $mk$ indicates where tokens are located and $val$ indicates the
-current value of any data provide port.
-At initialization the configuration is defined as follows:
 \begin{itemize}
-\item $mk\left(x\right)=\begin{cases}
-\text{true} & \text{if }x\in I^{*}\\
-\text{false} & \text{if } x\in\left(\Pi^{*}\setminus I^*\right)\cup\Delta_{i}^{*}\cup\Delta_{o}^{*}\cup\Theta^{*}
-\end{cases}$
-\item $val\left(d\right)=\text{null}\quad\forall d \in D^*_{p}$
+  \item the marking $\mk \subseteq \Pi^{*} \cup
+    \Delta_{i}^{*}\cup\Delta_{o}^{*}\cup\Theta^{*}$ denotes the
+    elements that hold a token;
+  \item the function $val\,:\,D_{P}^{*}\rightarrow \mathbb{D}\cup\left\{ \text{null}\right\}$
+    denotes the current value associated to each data provide port;
+  \item the set $\exec \subseteq A$ denotes the actions that are being executed.
 \end{itemize}
+
+The initial configuration of an assemble is given by $\langle I, v,
+\emptyset\rangle$, where $v(x) = null$ for any $x$.
 
 \noindent\textbf{Notations.}
 \begin{itemize}
@@ -324,7 +301,7 @@ $val_{A,D_p}$. Figure~\ref{fig:r2} illustrates this rule.
   
 }
 
-\paragraph{Input docks to place}{
+\paragraph{Reaching place}{
 
 The third rule of \mad is formally defined by
 Inference rule~(\ref{eq:r3}). To move tokens from input docks of a place to
@@ -347,7 +324,7 @@ place as illustrated in Figure~\ref{fig:r3}.
 \end{minipage}
 \end{figure}
 
-\paragraph{Place to output docks}{
+\paragraph{Leaving place}{
 
 The fourth rule of \mad is formally defined by
 Inference rule~(\ref{eq:r4}). To move a token from a place to its output
@@ -367,24 +344,24 @@ Figure~\ref{fig:r4} in a simplified manner.
 \begin{figure*}[tp]
 %
 \begin{equation}
-\cfrac{\theta =\left(s,d\right) \in \Theta^*,s \in \Delta_o^*,d \in \Delta_i^*\qquad mk\left(s\right)\qquad\forall p \in S_{u}\cup D_{u},\left(p,\theta\right)\in B_{S_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,\text{is\_ready}(p)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[s\coloneqq\text{false}\right]\left[\theta\coloneqq\text{true}\right],val\right\rangle }
+  \cfrac{\theta = \left(s,\alpha,d\right) \in \Theta^*\qquad s \in \mk\qquad\forall \left(p,\theta\right)\in B_{S_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,ready(p)}
+        {\langle \mk, \val ,\exec \rangle \rightarrow \langle (\mk \setminus \{ s \}) \cup \{\theta\},\val,\exec \cup \{ \alpha \}\rangle }
 \label{eq:r1}
 \end{equation}
 %
 \begin{align*}
-  \text{where: }\text{is\_ready}(p) = &\, \exists u\in S_u\cup D_u,\,(u,p)\in L_{S}\cup L_D\land \text{is\_conn\_enabled}\left((u,p)\right) \\
-  \text{is\_conn\_enabled}\left((u,p)\right) = &\, \begin{cases}
-\forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,\text{is\_group\_enabled}\left(g,mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
-val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
+  \text{where: }ready(p) \equiv &\, \exists (u,p) \in L_{S}\cup L_D : enabled_c\left((u,p)\right) \\
+  enabled_c\left((u,p)\right) \equiv &\, \begin{cases}
+\forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,enabled_g\left(g,\mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
+\val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
 \end{cases} \\
-\text{is\_group\_enabled}\left(g,mk\right) = & \left(\exists\,\pi\in g:\,mk\left(\pi\right)\right)\\
- & \, \lor\left(\exists\,\delta\in\Delta_{o}^{*}\cup\Delta_{i}^{*}:\,mk\left(\delta\right)\land \left(\exists(s,d)\in\Theta^{*}:\,\left(\delta=s\lor \delta=d\right)\land \text{is\_in\_group}\left((s,d),g\right)\right)\right)\\
- & \, \lor\left(\exists\,\theta\in\Theta^{*}:\,mk\left(\theta\right)\land \text{is\_in\_group}\left(\theta,g\right)\right) \\
-\text{is\_in\_group}\left((s,d),g\right) = & place\left(s\right)\in g\land place\left(d\right)\in g
+enabled_g\left(g,\mk\right) \equiv & \left(\exists\,\pi\in g : \pi \in \mk\right)\\
+ & \, \lor\left(\exists \theta = (s,\alpha,d)\in\Theta^{*}:\,\left(\theta \in \mk \lor s \in \mk \lor d \in \mk\right)\land place\left(s\right)\in g\land place\left(d\right)\in g\right)
 \end{align*}
 %
 \begin{equation}
-\cfrac{\theta=\left(s,d\right) \in \Theta^*\qquad mk\left(\theta\right)\qquad done\left(action\left(\theta\right)\right)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[\theta\coloneqq\text{false}\right]\left[d\coloneqq\text{true}\right],val\left[\forall p\in D_P^*,\text{dest}(p)\,:\, p\coloneqq val_{A,D_p}(action(\theta),p)\right]\right\rangle}
+  \cfrac{\theta=\left(s,\alpha,d\right) \in \Theta^*\qquad \theta \in \mk\qquad \alpha \not\in \exec}
+        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle ((\mk \setminus \{ \theta \}) \cup \{ d \},\val\left[\forall p\in D_P^*,\text{dest}(p)\,:\, p\coloneqq \val_{A,D_p}(\alpha,p)\right],\exec\right\rangle}
 \label{eq:r2}
 \end{equation}
 %
@@ -393,19 +370,21 @@ val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
 \end{equation*}
 %
 \begin{equation}
-\cfrac{\pi\in\Pi^*\qquad D_i=dock_i(\pi)\qquad\forall\delta\in D_i\,mk\left(\delta\right)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[\forall\delta\in D_i\,:\,\delta\coloneqq\text{false}\right]\left[\pi\coloneqq\text{true}\right],val\right\rangle }
+  \cfrac{\pi\in\Pi^*\qquad D_i=dock_i(\pi)\qquad D_i \subseteq  \mk}
+        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle (\mk \setminus D_i) \cup \{ \pi \},\val,\exec\right\rangle }
 \label{eq:r3}
 \end{equation}
 %
 \begin{equation}
-\cfrac{\pi\in\Pi^{*}\qquad D_o=dock_o(\pi)\qquad mk\left(\pi\right)\qquad \forall g\in G,\pi\in g:\,\text{can\_leave}\left(\pi,D_o,g\right)}{\left\langle mk,val\right\rangle \rightarrow\left\langle mk\left[\forall\delta\in D_o\,:\,\delta\coloneqq\text{true}\right]\left[\pi\coloneqq\text{false}\right],val\right\rangle }
+  \cfrac{\pi\in\Pi^{*}\qquad D_o=dock_o(\pi)\qquad \pi \in \mk\qquad \forall g\in G,\pi\in g:\,\text{can\_leave}\left(\pi,D_o,g\right)}
+        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle (\mk \setminus \{ \pi \}) \cup D_o,\val,\exec\right\rangle }
 \label{eq:r4}
 \end{equation}
 %
 \begin{align*}
 \text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,\text{is\_used}(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
-\text{is\_used}\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land mk\left(\theta\right) \\
-\text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,mk\right)\land\lnot \text{is\_group\_enabled} \left(g,mk\left[\pi\coloneqq \text{false}\right]\left[\forall d\in D_o \,:\,d\coloneqq \text{true}\right]\right)\right) \\
+\text{is\_used}\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land \theta \in \mk \\
+\text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,\mk\right)\land\lnot \text{is\_group\_enabled} \left(g,(\mk \setminus \{ \pi \}) \cup D_o\right)\right) \\
 \end{align*}
 %
 \caption{The four operational semantics rules of \mad.}

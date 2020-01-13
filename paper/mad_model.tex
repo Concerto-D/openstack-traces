@@ -67,8 +67,9 @@ commissioning procedures for complex distributed software systems.
     \includegraphics[width=0.7\linewidth]{./images/apachebdd.pdf}
   \end{center}
   \caption{Example of a commissioning assembly with two components
-    Apache and MariaDB. Places are represented by circles, transitions
-    by arrows between places, service ports by small black circles and
+    Apache and MariaDB. Places are represented by circles, with attached
+    docks represented by small squares. Transitions are represented
+    by arrows between the docks, and service ports by small black circles and
     semi-circles, data ports by outgoing or incoming arrows from
     components. Two initial red tokens are placed in each initial
     place of components in this example.}
@@ -255,7 +256,7 @@ synchronization of transitions.
   contains a token and when all use ports of a transition have their
   associated connections activated, the token is moved from the source
   dock to the transition, which is not considered atomic as it is
-  associated with an action function.
+  associated with an action.
 \item \emph{Ending a transition}: when a transition holds a token and
   when the action associated to the transition is terminated, the
   token is moved from the transition to its destination dock.
