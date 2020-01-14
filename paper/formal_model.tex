@@ -2,25 +2,26 @@
 \subsection{Component}
 %--------------------------
 
-Formally in \mad, a component is defined as a tuple that can be divided
-into four different parts: \emph{places}, \emph{transitions}, \emph{ports} and
-\emph{bindings}.
+Internally, a \mad component is comprised of a set of \emph{places}
+linked by \emph{transitions}. The outside interface of components is
+provided by their \emph{ports}, which can be bound to the internal
+elements.
 
-\paragraph{Places}{
+\paragraph{Places and transitions}{
 
-A component in \mad is first defined by a set of \emph{places}, denoted
-$\Pi$, and two sets of \emph{docks}.  It is used to handle synchronization of parallel branches. The
-first set concerns input docks. It is denoted $\Delta_{i}$
-(displayed below the place they are attached to). The second set is
-denoted $\Delta_{o}$. It contains output docks (displayed above
-the place they are attached to).
-The function $place\,:\,\Delta_{o}\cup\Delta_{i}\rightarrow\Pi$
-maps docks to the place to which they are attached. Conversely, we denote by
-$dock_i(\pi) \subseteq \mathcal{P}(\Delta_o)$ (respectively $dock_i \subseteq \mathcal{P}(\Delta_i)$)
-the subset of output (respectively input) docks attached to a place
-$\pi\in\Pi$. Places can be part of one or multiple groups which are
-subsets of $\Pi$. The set of groups is denoted $G$. Last, $I \subseteq \Pi$ is the
-non-empty set of initial places of the component.
+A component in \mad is first defined by a set of \emph{places},
+denoted $\Pi$. In order to define transitions and handle their
+synchronization, we also introduce the notion of \emph{docks}, each
+dock being attached to one place. The docks are divided between
+\emph{input} and \emph{output} docks. The set of input (respectively
+output) docks is denoted $\Delta_i$ (respectively $\Delta_o$), and we
+use the notations $\Delta_i (\pi)$ and $\Delta_o (\pi)$ to denote the
+set of input and output docks attached to a given
+place $\pi$. Conversely, we denote by $\Pi(d)$ the single place to
+which an input or output dock is attached. Places can be part of one
+or multiple groups which are subsets of $\Pi$. The set of groups is
+denoted $G$. Last, $I \subseteq \Pi$ is the non-empty set of initial
+places of the component.
 
 }
 
@@ -37,7 +38,6 @@ non-empty set of initial places of the component.
       $\Pi$ & set of places of a component\\
       $\Delta_{i}$ & set of input docks of a component\\
       $\Delta_{o}$ & set of output docks of a component\\
-      $place$ & function mapping a dock to its place\\
       $G$ & set of groups of places\\
       $I$ & subset of places holding a token at initialization\\
       \hline
@@ -46,7 +46,6 @@ non-empty set of initial places of the component.
       \hline
       $\Theta$ & finite set of transitions\\
       $A$ & finite set of actions\\
-      $action$ & function mapping a transition to its corresponding action\\
       \hline
       \hline
       & \emph{Ports}\\
@@ -252,26 +251,22 @@ as long as it is locked.
     
 In this paper, we present four rules to operate the \mad model. We
 leave for future work the extension of these rules to support errors
-and reconfigurations. The rules are formally defined in
-Figure \ref{fig:rules}.
+and reconfigurations. The rules are given in Figure \ref{fig:rules}.
 
 \paragraph{Firing transition}{
 
-The first rule of \mad is formally defined by
-Inference rule~(\ref{eq:r1}). The upper part of the rule indicates the
-hypotheses needed to fire a transition, \ie starting a transition,
-and the lower part indicates the conclusion of the rule, \ie the configuration
-changes. To fire a transition, the source dock of the transition
-$\theta$ needs a token, and for any port bound to the transition
-$\theta$ the connection of this port must be enabled.
-The upper part of Figure~\ref{fig:r1} illustrates the
-hypotheses and the lower part the conclusion of the rule.
+The rule $\firetrans$ corresponds to the firing of a transition
+$\theta = (s, \alpha, d)$. To be applicable, the output dock $s$ must
+hold a token, and any port bound to $\theta$ must be provided. The
+conclusion of the rule illustrates that the token is transfered from
+the input dock to the transition itself, and the action $\alpha$ is
+executed.
 
 \begin{figure}[t]
 \begin{center}
   \includegraphics[width=0.55\columnwidth]{./images/firing.pdf}
 \end{center}
-\caption{Illustration of the rule of Inference rule~(\ref{eq:r1}) to fire transitions.}
+\caption{Illustration of the rule $\firetrans$.}
 \label{fig:r1}
 \end{figure}
 
@@ -279,23 +274,21 @@ hypotheses and the lower part the conclusion of the rule.
 
 \paragraph{Ending transition}{
 
-The second rule of \mad is formally defined by
-Inference rule~(\ref{eq:r2}). To end a transition $\theta$, a token has to
-be present on the transition and the action performed by the
-transition must be terminated. When ending a transition, the token
-is moved from this transition to its destination dock. Note that the ports bound
-to the transition cannot be disconnected before applying this rule. Moreover, if
-the place to which the destination dock is attached is bound to
-data-provide ports, their values are replaced by those computed by the action.
-For this reason, the rule uses the function
-$val_{A,D_p}$. Figure~\ref{fig:r2} illustrates this rule.
+The rule $\leavetrans$ formally describes the end of a transition
+$\theta = (s, \alpha, d)$. It requires that $\theta$ holds a
+token. When ending a transition, the token is moved from $\theta$ to
+the input dock $d$ and the action $\alpha$ is marked as
+complete. Moreover, if the place to which the destination dock is
+attached is bound to data-provide ports, their values are replaced by
+those computed by the action.  For this reason, the rule uses the
+function $val_{A,D_p}$. Figure~\ref{fig:r2} illustrates this rule.
 %\MC{Expliquer pourquoi les ports ne peuvent pas etre deconnectes ?}
 
 \begin{figure}[t]
 \begin{center}
   \includegraphics[width=0.55\columnwidth]{./images/ending_transition.pdf}
 \end{center}
-\caption{Illustration of the rule of Inference rule~(\ref{eq:r2}) to end transitions.}
+\caption{Illustration of the rule $\leavetrans$.}
 \label{fig:r2}
 \end{figure}
   
@@ -303,90 +296,94 @@ $val_{A,D_p}$. Figure~\ref{fig:r2} illustrates this rule.
 
 \paragraph{Reaching place}{
 
-The third rule of \mad is formally defined by
-Inference rule~(\ref{eq:r3}). To move tokens from input docks of a place to
-this place, all input docks must hold a token. The conclusion is to remove
-all the tokens within the docks and to add one token inside the
-place as illustrated in Figure~\ref{fig:r3}.
+The rule $\reachplace$ describes the activation of a place $\pi$. It
+requires that all the input docks connected to the place hold a
+token. In the conclusion, those tokens are removed from the docks, and
+one token is placed on $\pi$, as illustrated in Figure~\ref{fig:r3}.
 
 \begin{figure}[t]
 
 \begin{minipage}[h]{0.45\columnwidth}%
   \centering
   \includegraphics[width=0.65\columnwidth]{./images/inputdocks_to_place.pdf}
-  \captionof{figure}{\label{fig:r3}Illustration of the rule of Inference rule~(\ref{eq:r3}) to move tokens from input docks to a place.}
+  \captionof{figure}{\label{fig:r3}Illustration of the rule of $\reachplace$.}
 \end{minipage}
 \hfill
 \begin{minipage}[h]{0.45\columnwidth}%
   \centering
   \includegraphics[width=0.65\columnwidth]{./images/place_to_outputdocks.pdf}
-  \captionof{figure}{\label{fig:r4}Illustration of the rule of Inference rule~(\ref{eq:r4}) to move tokens from place to output docks.}
+  \captionof{figure}{\label{fig:r4}Illustration of the rule $\leaveplace$.}
 \end{minipage}
 \end{figure}
 
 \paragraph{Leaving place}{
 
-The fourth rule of \mad is formally defined by Inference
-rule~(\ref{eq:r4}). To move a token from a place to its output docks,
-the place must hold a token. Additionally, if the place is part of a
-group bound to a locked provide port, the token must not be the only
-one in the group, as moving it would cause the locked port to become
-disabled. Otherwise, the token can be removed from the place, and a
-token added to each output dock attached to this place. This rule is
-illustrated in Figure~\ref{fig:r4} (the port is assumed not to be
-locked).
+The rule $\leaveplace$ defines the conditions to move a token from a
+place $\pi$ to its output docks. If the place is part of a group bound
+to a locked provide port, the token must not be the only one in the
+group, as moving it would cause the locked port to become
+disabled. Otherwise, the token can be removed from $\pi$, and a token
+added to each output dock attached to $\pi$. This rule is illustrated
+in Figure~\ref{fig:r4} (the place is assumed not to bound to any
+locked port).
 
 }
 
 %------------
 \begin{figure*}[tp]
-%
-\begin{equation}
-  \cfrac{\theta = \left(s,\alpha,d\right) \in \Theta^*\qquad s \in \mk\qquad\forall \left(p,\theta\right)\in B_{S_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,ready(p)}
-        {\langle \mk, \val ,\exec \rangle \rightarrow \langle (\mk \setminus \{ s \}) \cup \{\theta\},\val,\exec \cup \{ \alpha \}\rangle }
-\label{eq:r1}
-\end{equation}
-%
-\begin{align*}
-  \text{where: }ready(p) \equiv &\, \exists (u,p) \in L_{S}\cup L_D : enabled_c\left((u,p)\right) \\
-  enabled_c\left((u,p)\right) \equiv &\, \begin{cases}
-\forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,enabled_g\left(g,\mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
-\val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
-\end{cases} \\
-enabled_g\left(g,\mk\right) \equiv & \left(\exists\,\pi\in g : \pi \in \mk\right)\\
- & \, \lor\left(\exists \theta = (s,\alpha,d)\in\Theta^{*}:\,\left(\theta \in \mk \lor s \in \mk \lor d \in \mk\right)\land place\left(s\right)\in g\land place\left(d\right)\in g\right)
-\end{align*}
-%
-\begin{equation}
-  \cfrac{\theta=\left(s,\alpha,d\right) \in \Theta^*\qquad \theta \in \mk\qquad \alpha \not\in \exec}
-        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle ((\mk \setminus \{ \theta \}) \cup \{ d \},\val\left[\forall p\in D_P^*,\text{dest}(p)\,:\, p\coloneqq \val_{A,D_p}(\alpha,p)\right],\exec\right\rangle}
-\label{eq:r2}
-\end{equation}
-%
-\begin{equation*}
-  \text{where: }\text{dest}(p) = \left(p,g\right)\in B_{D_{p}}^*,place(d)\in g
-\end{equation*}
-%
-\begin{equation}
-  \cfrac{\pi\in\Pi^*\qquad D_i=dock_i(\pi)\qquad D_i \subseteq  \mk}
-        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle (\mk \setminus D_i) \cup \{ \pi \},\val,\exec\right\rangle }
-\label{eq:r3}
-\end{equation}
-%
-\begin{equation}
-  \cfrac{\pi\in\Pi^{*}\qquad D_o=dock_o(\pi)\qquad \pi \in \mk\qquad \forall g\in G,\pi\in g:\,\text{can\_leave}\left(\pi,D_o,g\right)}
-        {\left\langle \mk,\val,\exec\right\rangle \rightarrow\left\langle (\mk \setminus \{ \pi \}) \cup D_o,\val,\exec\right\rangle }
-\label{eq:r4}
-\end{equation}
-%
-\begin{align*}
-\text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,locked(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
-locked\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land \theta \in \mk \\
-\text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,\mk\right)\land\lnot \text{is\_group\_enabled} \left(g,(\mk \setminus \{ \pi \}) \cup D_o\right)\right) \\
-\end{align*}
-%
-\caption{The four operational semantics rules of \mad.}
-\label{fig:rules}
+  %
+  \begin{prooftree}
+    \AxiomC{$\theta = \left(s,\alpha,d\right) \in \Theta^*$}
+    \AxiomC{$s \in \mk$}
+    \AxiomC{$\forall \left(p,\theta\right)\in B_{S_{u}}^{*}\cup B_{D_{U}}^{*}\,:\,ready(p)$}
+    \RightLabel{$\firetrans$}
+    \TrinaryInfC{$\langle \mk, \val ,\exec \rangle \rightarrow \langle (\mk \setminus \{ s \}) \cup \{\theta\},\val,\exec \cup \{ \alpha \}\rangle$}
+  \end{prooftree}
+  %
+  \begin{align*}
+    \text{where: }ready(p) \equiv &\, \exists (u,p) \in L_{S}\cup L_D : enabled_c\left((u,p)\right) \\
+    enabled_c\left((u,p)\right) \equiv &\, \begin{cases}
+      \forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,enabled_g\left(g,\mk\right) & \text{if }\left(u,p\right)\in L_{S}\\
+      \val\left(p\right)\neq\text{null} & \text{if }\left(u,p\right)\in L_D
+    \end{cases} \\
+    enabled_g\left(g,\mk\right) \equiv & \left(\exists\,\pi\in g : \pi \in \mk\right)\\
+    & \, \lor\left(\exists \theta = (s,\alpha,d)\in\Theta^{*}:\,\left(\theta \in \mk \lor s \in \mk \lor d \in \mk\right)\land \Pi(s)\in g \land \Pi(d)\in g\right)
+  \end{align*}
+  
+  \begin{prooftree}
+    \AxiomC{$\theta=\left(s,\alpha,d\right) \in \Theta^*$}
+    \AxiomC{$\theta \in \mk$}
+    \RightLabel{$\leavetrans$}
+    \BinaryInfC{$\langle \mk,\val,\exec \rangle \rightarrow \langle ((\mk \setminus \{ \theta \}) \cup \{ d \},\val\left[\forall p\in D_P^*,\text{dest}(p)\,:\, p\coloneqq \val_{A,D_p}(\alpha,p)\right],\exec \setminus \{ \alpha \} \rangle$}
+  \end{prooftree}
+  %
+  \begin{equation*}
+    \text{where: }\text{dest}(p) = \left(p,g\right)\in B_{D_{p}}^*,\Pi(d)\in g
+  \end{equation*}
+  
+  \begin{prooftree}
+    \AxiomC{$\pi\in\Pi^*$}
+    \AxiomC{$\Delta_i(\pi) \subseteq  \mk$}
+    \RightLabel{$\reachplace$}
+    \BinaryInfC{$\langle \mk,\val,\exec \rangle \rightarrow \langle (\mk \setminus \Delta_i(\pi)) \cup \{ \pi \},\val,\exec\rangle$}
+  \end{prooftree}
+  
+  \begin{prooftree}
+    \AxiomC{$\pi\in\Pi^{*}$}
+    \AxiomC{$\pi \in \mk$}
+    \AxiomC{$\forall g\in G, \pi\in g:\,\text{can\_leave}(\pi, \Delta_o(\pi) ,g)$}
+    \RightLabel{$\leaveplace$}
+    \TrinaryInfC{$\langle \mk,\val,\exec \rangle \rightarrow \langle (\mk \setminus \{ \pi \}) \cup \Delta_o(\pi),\val,\exec\rangle$}
+  \end{prooftree}
+  %
+  \begin{align*}
+    \text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,locked(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
+    locked\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land \theta \in \mk \\
+    \text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,\mk\right)\land\lnot \text{is\_group\_enabled} \left(g,(\mk \setminus \{ \pi \}) \cup D_o\right)\right) \\
+  \end{align*}
+  %
+  \caption{The operational semantics of \mad.}
+  \label{fig:rules}
 \end{figure*}
 %------------
 
