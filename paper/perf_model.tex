@@ -87,24 +87,24 @@ $V$ and $Ass$ in the following.
 \subsection{Vertices}
 %--------------------------------------
 
-For each place, we associate two vertices: one representing the place
+For each place, we introduce two vertices: one representing the place
 itself and one representing the event of a token leaving the place.
 \[
 V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{place},v_\pi^\text{leav}\right\} 
 \]
 
-For each transition, we associate two vertices: one representing the
+For each transition, we introduce two vertices: one representing the
 beginning of the transition and one representing its end.
 \[
 V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{beg},v_\theta^\text{end}\right\} 
 \]
 
-For each data-provide port we associate one vertex representing its activation.
+For each data-provide port we introduce one vertex representing its activation.
 \[
 V_{D_p}=\bigcup_{p\in\left(D_p\right)^*}\left\{ v_p^\text{start}\right\} 
 \]
 
-For each service-provide port we associate two vertices: one representing
+For each service-provide port we introduce two vertices: one representing
 its activation and one its deactivation.
 \[
 V_{S_p}=\bigcup_{p\in\left(S_p\right)^*}\left\{ v_p^\text{start},v_p^\text{stop}\right\} 
@@ -127,11 +127,10 @@ practice, the weight of all of the arcs except those corresponding to the
 transitions is 0. The weights of the latter are the execution times of the
 transitions.
 
-For each place $\pi$ we associate one arc going from $v_\pi^\text{place}$ to
+For each place $\pi$ we introduce one arc going from $v_\pi^\text{place}$ to
 $v_\pi^\text{leav}$. This represents the fact that a token may leave $\pi$
 only after it has entered it.
-Figure~\ref{fig:place_graph} depicts the transformation of one place
-\emph{running} to a dependency graph.
+Figure~\ref{fig:place_graph} depicts the dependency graph corresponding to a place.
 \[
 A_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ \left(v_\pi^\text{place},v_\pi^\text{leav},0\right)\right\} 
 \]
@@ -139,16 +138,16 @@ A_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ \left(v_\pi^\text{place},v_\pi^\text{leav},
 %%%%%%%%%%%%%%%
 \input{figures/placetodag.tex}
 
-For each transition $\theta$ going from $\pi_s$ to $\pi_d$, we associate
+For each transition $\theta$ going from $\pi_s$ to $\pi_d$, we introduce
 three arcs. The first between $v_\theta^\text{beg}$ and $v_\theta^\text{end}$
 represents the fact that the end of $\theta$ happens at the time of the
 start of $\theta$ plus its duration. The second between $v_{\pi_{s}}^\text{leav}$
 and $v_\theta^\text{beg}$ represents the fact that $\theta$ may only
-happen after a token leaved $\pi_s$. The third one between $v_\theta^\text{end}$ and
+happen after a token has left $\pi_s$. The third one between $v_\theta^\text{end}$ and
 $v_{\pi_{d}}^\text{place}$ represents the fact that a token may enter $\pi_d$ only
 after $\theta$ has finished.
-Figure~\ref{fig:transition_graph} depicts the transformation of three
-transitions \emph{t1}, \emph{t2} and \emph{t3} to a dependency graph.
+Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to three
+transitions \emph{t1}, \emph{t2} and \emph{t3}.
 \begin{align*}
 A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta^*} & \left\{ \left(v_\theta^\text{beg},v_\theta^\text{end},time^*\left(\theta\right)\right),\right.\\
  & \left(v_{\pi_{s}}^\text{leav},v_\theta^\text{beg},0\right),\left. \left(v_\theta^\text{end},v_{\pi_{d}}^\text{place},0\right)\right\}
@@ -157,18 +156,27 @@ A_{\Theta}=\bigcup_{\theta=\left(\pi_{s},\pi_{d}\right)\in\Theta^*} & \left\{ \l
 %%%%%%%%%%%%%%%
 \input{figures/transtodag.tex}
 
-For each data-provide port $p$, we associate (a) for each binding between
-$p$ and a place $\pi$ one arc going from $v_\pi^\text{place}$ to
-$v_p^\text{start}$, and (b) for each connection connecting $p$
-to a data-use port $u$, for each binding between $u$ and a transition
-$\theta$ one arc going from $v_p^\text{start}$ to $v_\theta^\text{beg}$.
-The (a) arcs represent the fact that the data becomes
-available when a place bound to it is reached. The (b) arcs represent the
-fact that the transitions bound to a data-use port may only execute once
-the port is provided.
-Figure~\ref{fig:data_ports_graph} depicts the transformation of a
-data-provide port \emph{dp} bound to place \emph{c1p} and connected to
-data-use port \emph{du} which is bound to transition \emph{c2t}.
+%% SR: text before modification
+%% For each data-provide port $p$, we associate (a) for each binding between
+%% $p$ and a place $\pi$ one arc going from $v_\pi^\text{place}$ to
+%% $v_p^\text{start}$, and (b) for each connection connecting $p$
+%% to a data-use port $u$, for each binding between $u$ and a transition
+%% $\theta$ one arc going from $v_p^\text{start}$ to $v_\theta^\text{beg}$.
+
+For each data-provide port $p$ and each binding between $p$ and a
+place $\pi$, we introduce one arc going from $v_\pi^\text{place}$ to
+$v_p^\text{start}$. This represents the availability of the data after
+a place bound to the port has been reached.
+
+Additionally, for each data-provide port $p$ and each transition
+$\theta$ such that $p$ is connected to a data-use port that is bound
+to $\theta$, we introduce one arc going from $v_p^\text{start}$ to
+$v_\theta^\text{beg}$.  This represents the activation of the transitions
+bound to a data-use port after it is provided.
+
+Figure~\ref{fig:data_ports_graph} depicts the dependency graph corresponding to a
+data-provide port \emph{dp} bound to a place \emph{c1p} and connected to
+a data-use port \emph{du} which is bound to a transition \emph{c2t}.
 \begin{align*}
 A_{D}=\bigcup_{p\in D_p}
 & \left(\bigcup_{\pi,\,\left(p,\pi\right)\in B_{D_{p}}^*}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right. \\
@@ -179,20 +187,41 @@ A_{D}=\bigcup_{p\in D_p}
 %%%%%%%%%%%%%%%
 \input{figures/dataporttodag.tex}
 
-For each service-provide port $p$, we associate (a) for each binding between
-$p$ and a group $g$ one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$
-for each $\pi$ in $g_{in}(g)$ and one arc going from $v_p^\text{stop}$ to
-$v_\pi^\text{leav}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
-connection connecting $p$ to a service-use port $u$, for each binding between
-$u$ and a transition $\theta$ one arc going from $v_p^\text{start}$ to
-$v_\theta^\text{beg}$ and one arc going from $v_\theta^\text{end}$ to
-$v_p^\text{stop}$.
-The (a) arcs represent the fact that the service becomes available when all
-groups bound to it have a token, and each of them can be deactivated only when
-the provide port is not used anymore. The (b) arcs represent the
-fact that the transitions bound to a service-use port may only execute once
-the port is provided, and do not use the port anymore once they are over.
-Figure~\ref{fig:service_ports_graph} depicts the transformation of a
+%% SR: text before modification (see below) 
+%% For each service-provide port $p$, we associate (a) for each binding between
+%% $p$ and a group $g$ one arc going from $v_\pi^\text{place}$ to $v_p^\text{start}$
+%% for each $\pi$ in $g_{in}(g)$ and one arc going from $v_p^\text{stop}$ to
+%% $v_\pi^\text{leav}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
+%% connection connecting $p$ to a service-use port $u$, for each binding between
+%% $u$ and a transition $\theta$ one arc going from $v_p^\text{start}$ to
+%% $v_\theta^\text{beg}$ and one arc going from $v_\theta^\text{end}$ to
+%% $v_p^\text{stop}$.
+%% The (a) arcs represent the fact that the service becomes available when all
+%% groups bound to it have a token, and each of them can be deactivated only when
+%% the provide port is not used anymore. The (b) arcs represent the
+%% fact that the transitions bound to a service-use port may only execute once
+%% the port is provided, and do not use the port anymore once they are over.
+
+For each service-provide port $p$, each groupd $g$ bound to $p$ and
+each place $\pi$ in $g_{in}(g)$, we introduce one arc from
+$v_\pi^\text{place}$ to $v_p^\text{start}$, representing the
+availability of the service once all groups bound to it hold a token.
+
+Conversely, for each each service-provide port $p$, each group $g$
+bound to $p$ and each place $\pi$ in $g_{out}(g)$, we introduce one
+arc from $v_p^\text{stop}$ to $v_\pi^\text{leav}$, in order to
+represent the fact that the group $g$ may not be disabled while the
+port is busy.
+
+Lastly, for each service-provide port $p$ and each transition $\theta$
+such that $p$ is connected to a service-use port bound to $\theta$, we
+introduce one arc from $v_p^\text{start}$ to $v_\theta^\text{beg}$ and
+one arc going from $v_\theta^\text{end}$ to $v_p^\text{stop}$. They
+represent the activation of the transitions bound to a service-use
+port after it has been provided, and the release of the port after the
+transition is over.
+
+Figure~\ref{fig:service_ports_graph} depicts the dependency graph corresponding to a
 service-provide port \emph{sp} bound to a group with \emph{c1p1} as entrance
 place and \emph{c1p2} as exit place, and connected to service-use port
 \emph{su} which is bound to transition \emph{c2t}.
@@ -211,7 +240,7 @@ A_{S}=\bigcup_{p\in S_p}
 For each initial place $\pi$ we associate one arc going from $v^\text{source}$
  to $v_\pi^\text{place}$, representing the fact that a token is placed in each
  initial place at the very beginning.
-Figure~\ref{fig:source_sink_graph} depicts the transformation of two initial
+Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
 places \emph{c1p1} and \emph{c2p2}.
 \[
 A_{I}=\bigcup_{\pi\in I^*}\left\{ \left(v^\text{source},v_\pi^\text{place},0\right)\right\} 
@@ -225,7 +254,7 @@ Then, for each final place $\pi$ we associate one arc going from
 $v_\pi^\text{place}$ to $v^\text{sink}$, representing the fact that the
 commissionning is over only after all components have reached their final places
 (\ie when no more transition can be executed).
-Figure~\ref{fig:source_sink_graph} depicts the transformation of three final
+Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to three final
 places \emph{c1p2}, \emph{c2p2} and \emph{c2p3}.
 \[
 A_F=\bigcup_{\pi\in F^*}\left\{ v_\pi^\text{place},v^\text{sink},0\right\} 
