@@ -9,6 +9,126 @@
 % - performance model
 
 %----------------------------
+\subsection{Automation of distributed software commissioning}
+%----------------------------
+% 1. scripting
+% 2. infrastructure as code
+% 3. provisioning tools
+% 4. orchestration tools
+% 5. scope of the paper
+% - software commissioning of a single distributed software
+% - generic solution that could use or not provisioning tools
+% - scripting/IaC but keep Kubernetes and Juju
+
+Four classes of tools and languages can be considered regarding
+automating and enhancing software engineering properties
+of commissioning procedures.
+
+\paragraph{Scripting/coding languages}
+First, a common way of automating commissioning procedures is to use
+\emph{scripting languages} such as \shell or \ruby for instance. Such
+languages are very flexible and well known by system administrators
+and operators but suffer from many limitations, particularly from a
+software engineering standpoint. In particular, they are not well
+suited to deal with separation of concerns, composition and complex
+coordination mechanisms.
+
+\paragraph{Software configuration tools}
+A second class of languages and tools is called \emph{software
+  configuration tools}. This class contains the set of quite recent
+DevOps tools such as \ansible~\cite{ansible:web},
+\puppet~\cite{puppet:web}, \chef~\cite{chef:web},
+\salt~\cite{salt:web}, as well as some academic contributions
+\deployware~\cite{flissi2008ccgrid},
+\aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of
+these tools is to enhance the productivity when defining components or
+services commissionings and the coordination of their tasks. Most of
+the time these tools add an abstraction layer on top of scripting languages
+to hide some of their technical details (\eg SSH connections). These
+tools use different methods to achieve their goals. For instance,
+Ansible adopts a procedural imperative style in YAML as a
+series of tasks to execute, while Puppet adopts a declarative approach
+in Python by combining different instances of resources (\ie
+services, packages, etc.). In a declarative approach the user describes
+what is needed rather than how to get it, which is left to the tool
+developers. Such an approach enhances productivity but reduces
+flexibility for the user.
+
+\paragraph{Infrastructure definition tools}
+Some tools, that are sometimes called \emph{infrastructure definition
+  tools}~\cite{}, or \emph{provisioning tools}, have been specifically
+designed to be able to handle complex distributed infrastructures
+composed of multiple clusters and multiple machines shared between
+users. Managing such infrastructure is very difficult and error prone
+as each application and each user may possibly need different
+requirements, different operating systems, different package versions,
+etc. Virtualization has partly been introduced to enhance
+infrastructure management (in addition to improving portability of
+applications, isolation between users, etc.). This type of tools, that
+includes \docker~\cite{docker:web}, \terraform~\cite{terraform:web},
+\juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or
+\heat~\cite{heat:web} for instance, uses virtualization mechanisms (\eg
+virtual machines, containers) to reduce the commissioning process to a
+set of commands allowing to deploy a virtual resource (by using an image) on a
+physical machine. This technique potentially reduces the complexity of
+the commissioning procedures if the needed image is already available,
+otherwise the initial commissioning commands and coordination have to
+be done to create the image. Some of these tools are specific to a
+given virtualization technique (\eg \docker, \cloudformation and
+\heat), while others offer \emph{providers} for different kinds of
+Cloud infrastructures (\eg \terraform, \juju). The \tosca
+standard~\cite{tosca:web}, and its
+implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can
+be classified as a descriptive provisioning tool. More precisely,
+\tosca is presented as a Cloud Modeling Language (CML).
+%By using
+%\tosca, a set of cloud-based services is modeled as a graph where each
+%node represents a component of the application and each edge
+%represents the relationship between components. \tosca allows for
+%portability and automated management across cloud platforms and
+%infrastructures. In \tosca, commissioning actions are scripts
+%encapsulated in \emph{artifacts}.
+
+\paragraph{Orchestration tools}
+Finally, some recent tools go further by offering an
+\emph{orchestration} level to handle shared clusters of machines
+running many services simultaneously to orchestrate. In this case,
+being able to deploy or install distributed software is only part of
+the problem, as services also need to be restarted in case of failure, or
+to be scaled in case of overload, etc. The famous
+\kubernetes~\cite{kubernetes:web} enters in this category, as well as
+\dockerswarm~\cite{dockerswarm:web}. If these tools are outside the
+scope of this paper, a subdivision of their architecture handles
+distributed software commissioning. For instance \kubernetes relies
+on \docker for commissioning.
+
+In pratice, these tools are often combined by system administrators
+and operators to achieve both distributed software commissioning and
+infrastructure management.
+
+\begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
+  colback=black!5!white,colframe=black!30,colbacktitle=black!60,
+  title=Contribution,fonttitle=\bfseries,
+  boxed title style={size=small,colframe=black!60,boxrule=0.2mm},
+  boxrule=0.2mm]
+  The contribution of this paper, \ie the Madeus model, specifically
+  focuses on enhancing the procedural-oriented \emph{software
+    configuration tools} by improving separation of concerns,
+  composition and efficiency.
+\end{tcolorbox}
+
+Among the plethora of distributed software commissioning solutions, we
+have selected a subset of them for a deeper comparison. We have
+selected: two \emph{coding} or scripting solutions, \shell and
+\fractal; three procedural-oriented solutions of the \emph{software
+  configuration} class, \ansible, \deployware and \aeolus; two
+solutions of the \emph{infrastructure definition} class, \juju and
+\tosca; and finally one \emph{orchestration} solution, \kubernetes. In
+this selection we have deliberately selected both production tools and
+academic contributions. Moreover, we have selected production tools
+with a significant opensource community.
+
+%----------------------------
 \subsection{Related work metrics}
 %----------------------------
 % 1. software engineering
@@ -180,18 +300,6 @@ commissionings by model checking~\cite{coullon:hal-02323641}.
 %----------------------------
 \subsection{Description and comparison of the related work}
 % ----------------------------
-
-Among the plethora of distributed software commissioning solutions, we
-have selected a subset of them for a deeper comparison. According to
-the classification of Section~\ref{sec:context}, we have selected: two
-\emph{coding} or scripting solutions, \shell and \fractal; three
-procedural-oriented solutions of the \emph{software configuration}
-class, \ansible, \deployware and \aeolus; two solutions of the
-\emph{infrastructure definition} class, \juju and \tosca; and finally
-one \emph{orchestration} solution, \kubernetes. In this selection we
-have deliberately selected both production tools and
-academic contributions. Moreover, we have selected production tools
-with a significant opensource community.
 
 % Shell-scripts
 \paragraph{Shell scripts}
