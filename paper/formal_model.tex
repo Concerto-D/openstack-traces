@@ -120,25 +120,23 @@ D_{p}\rightarrow T_{data}$ maps data ports to their data type.
 
 \paragraph{Bindings}{
 
-  In a \mad component, places, groups of places and transitions can be
-  bound to ports through \emph{bindings}. There are four sets of
-  bindings.  First, we denote $B_{S_{u}}$ the set of pairs that maps
-  one use port to one internal transitions in $\Theta$, indicating
-  that this transition uses the service associated to this port:
-  $\left(p,\theta\right)\,:\,p\in S_{u},\,\theta\in\Theta$. Second, we
-  denote $B_{S_{p}}$ the set of pairs that maps one provide port to
-  one group of places, indicating that if at least one token exists in
-  the group, the port is active:
-  $\left(p,g\right)\,:\,p\in S_{p},\,g\in G$. Third, we denote
-  $B_{D_{u}}$ the set of pairs that maps one data use port to one
-  internal transition in $\Theta$, indicating that this transition
-  uses the data associated to this port:
-  $\left(d,\theta\right)\,:\,d\in D_{u},\,\theta\in\Theta$. Finally,
-  we denote $B_{D_{p}}$ the set of pairs that maps one data provide
-  port to one place, indicating that the data associated to this port
-  is available if a token is or has been in the place:
-  $\left(d,\pi\right)\,:\,d\in D_{p},\,\pi\in \Pi$. One can note that
-  multiple pairs can be defined for the same port.}
+  Within a \mad component, places, groups of places and transitions
+  can be bound to ports. There are four types of bindings.  First, we
+  denote by $B_{S_{u}} \subseteq S_u \times \Theta$ the binding
+  relation between use ports and transitions of the component. A
+  transition can be fired only if its bound ports are enabled. Second,
+  we denote by $B_{S_{p}} \subseteq S_p \times G$ the binding relation
+  between provide ports and groups of places. A provide port is
+  enabled only when all the group to which it is bound hold at least
+  one token. Third, we denote by $B_{D_{u}} \subseteq D_u \times
+  \Theta$ the binding relation between data use ports and transitions
+  of the component, indicating that transition uses the data
+  associated with the bound ports. Finally, we denote by $B_{D_{p}}
+  \subseteq D_p \times \pi$ the binding relation between data provide
+  ports and places place, indicating that the data associated to a
+  port is available only if the places to which it is bound hold (or
+  have held) a token. Note that there is no restriction on the number
+  of bindings for each port.}
 
 %--------------------------
 \subsection{Assembly}
@@ -234,21 +232,23 @@ The initial configuration of an assemble is given by $\langle I, v,
 \label{fig:disabled_data}
 \end{figure}
 
+A group is enabled if it contains at least one token, and a
+service-provide port is enabled if all the groups it is bound to are
+enabled. A service connection is enabled if its provide port is
+enabled. A group, port, or connection that is not enabled is said to
+be disabled. Figure~\ref{fig:enabled_service} gives an example of an
+enabled service connection, while Figure~\ref{fig:disabled_service}
+gives an example of a disabled service connection.
 
+A data-provide port is enabled if it holds a value, and a data
+connection is enabled if its provide port is enabled disabled).
+Figure~\ref{fig:enabled_data} gives an example of an enabled data
+connection, while Figure~\ref{fig:disabled_data} gives an example of a
+disabled data connection.
 
-
-A group is said to be enabled if it contains at least one token (otherwise
-it is disabled). A service-provide port is said to be enabled if all the groups it
-is bound to are enabled (otherwise it is disabled). A service connection is said to
-be enabled if its provide port is enabled (otherwise it is disabled).
-Figure~\ref{fig:enabled_service} gives an example of an enabled service connection,
-while Figure~\ref{fig:disabled_service} gives an example of a disabled service connection.
-
-A data-provide port is said to be enabled if it holds a value (otherwise it is disabled).
-A data connection is said to be enabled if its provide port is enabled (otherwise it is
-disabled).
-Figure~\ref{fig:enabled_data} gives an example of an enabled data connection,
-while Figure~\ref{fig:disabled_data} gives an example of a disabled data connection.
+A provide port is said to be locked if it is connected to a use port
+bound to a transition holding a token. A port cannot becomes disabled
+as long as it is locked.
     
 In this paper, we present four rules to operate the \mad model. We
 leave for future work the extension of these rules to support errors
@@ -326,17 +326,15 @@ place as illustrated in Figure~\ref{fig:r3}.
 
 \paragraph{Leaving place}{
 
-The fourth rule of \mad is formally defined by
-Inference rule~(\ref{eq:r4}). To move a token from a place to its output
-docks, a token needs to be present onto the place. Also, if the place
-is part of a group which is itself bound to a used provide port,
-applying the rule must not make the last token of the group leave,
-otherwise this provide port becomes inactive. A provide port is said
-to be used if it is connected to a use port bound to a transition
-holding a token.  If these conditions are met, the token can be
-removed from the place, and a token is added onto each output dock
-attached to this place. This rule is illustrated in
-Figure~\ref{fig:r4} in a simplified manner.
+The fourth rule of \mad is formally defined by Inference
+rule~(\ref{eq:r4}). To move a token from a place to its output docks,
+the place must hold a token. Additionally, if the place is part of a
+group bound to a locked provide port, the token must not be the only
+one in the group, as moving it would cause the locked port to become
+disabled. Otherwise, the token can be removed from the place, and a
+token added to each output dock attached to this place. This rule is
+illustrated in Figure~\ref{fig:r4} (the port is assumed not to be
+locked).
 
 }
 
@@ -382,8 +380,8 @@ enabled_g\left(g,\mk\right) \equiv & \left(\exists\,\pi\in g : \pi \in \mk\right
 \end{equation}
 %
 \begin{align*}
-\text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,\text{is\_used}(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
-\text{is\_used}\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land \theta \in \mk \\
+\text{where: }\text{can\_leave}\left(\pi,D_o,g\right) = & \left(\exists p,(p,g)\in B_{S_p}:\,locked(p)\right)\implies \lnot \text{last\_token\_leaves} \left(\pi,D_o,g\right) \\
+locked\left(p\right) = & \exists u\in S_{u}^{*},\theta\in\Theta^{*}:~\left(p,u\right)\in L_S\land \left(u,\theta\right)\in B_{S_u}^{*}\land \theta \in \mk \\
 \text{last\_token\_leaves}\left(\pi,D_o,g\right) = & \left(\text{is\_group\_enabled}\left(g,\mk\right)\land\lnot \text{is\_group\_enabled} \left(g,(\mk \setminus \{ \pi \}) \cup D_o\right)\right) \\
 \end{align*}
 %
