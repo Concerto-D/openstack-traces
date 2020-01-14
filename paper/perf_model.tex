@@ -1,7 +1,13 @@
-In this section, we present \mad' performance model. Its goal is,
-given a \mad assembly to be executed and the execution time of all the
-transitions of all the components in the assembly, to estimate the total
-execution time of the commissionning.
+In this section, we present \mad' performance model. Its goal is to
+estimate the total execution time of the commissionning of a
+given \mad assembly. In order to do this, we need an estimation of the
+execution time of all the transitions in the assembly, given as a
+function $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$.  While computing
+precise execution times of transitions can be difficult and has been
+the subject of many studies such as analytical model~\cite{} or
+statistical studies~\cite{}, we find that for our application,
+estimates are sufficient as long as they preserve the relative
+difference between different transitions.
 %
 Intuitively, we automatically deduce the execution flow of a \mad
 assembly based on \mad' formal semantics. This is done by generating a
@@ -41,15 +47,6 @@ Hence, $\Theta$ is a multiset which elements are pairs of places.
 %We
 %can obtain the place corresponding to each dock by using the $place$
 %function of the component.
-
-In order to estimate the total commissionning time, we need to know
-the execution time of each individual transition. In the following, we
-consider the function $time\,:\,\Theta\rightarrow\mathbb{R}^{+}$
-associating an execution time to each transition (taken as input). We
-are aware that finding precise execution times of transitions is
-difficult and the subject of many studies such as analytical
-model~\cite{} or statistical studies~\cite{}. This point is left as
-future work.
 
 We also consider the following two functions:
 \begin{itemize}
