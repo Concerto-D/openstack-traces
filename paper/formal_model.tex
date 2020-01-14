@@ -26,8 +26,8 @@ places of the component.
 The set of transitions of a component is denoted
 $\Theta$. A transition $\theta \in \Theta$ is a triple
 $\left(s, \alpha, d\right)$ with $s\in\Delta_{o}$ an output dock,
-$d\in\Delta_{i}$ an input dock, and $\alpha \in A$ the action
-associated to the transition, taken from the set of actions $A$.
+$d\in\Delta_{i}$ an input dock, and $\alpha \in \actions$ the action
+associated to the transition, taken from the set of actions $\actions$.
 }
 
 \begin{table}[tp]
@@ -46,8 +46,8 @@ associated to the transition, taken from the set of actions $A$.
       \hline
       & \emph{Transitions}\\
       \hline
-      $\Theta$ & finite set of transitions\\
-      $A$ & finite set of actions\\
+      $\Theta$ & set of transitions\\
+      $\actions$ & set of actions\\
       \hline
       \hline
       & \emph{Ports}\\
@@ -147,7 +147,7 @@ in that state forever.
 An \emph{assembly} of components represents the instantiation of
 components as defined in the previous section, and their connections
 through their ports. In \mad, an assembly is defined as a pair $(C,
-L)$, where $C$ is a finite set of components, and $L \subseteq S_u^*
+L)$, where $C$ is a set of components, and $L \subseteq S_u^*
 \times S_p^*$ is the set of connections (links) between use ports and
 provide ports. For all the components $c_1,\dots,c_n \in C$, we denote
 with a star any union of the corresponding sets, for instance
