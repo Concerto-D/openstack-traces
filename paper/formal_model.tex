@@ -17,7 +17,7 @@ dock being attached to one place. The docks are divided between
 output) docks is denoted $\Delta_i$ (respectively $\Delta_o$), and we
 use the notations $\Delta_i (\pi)$ and $\Delta_o (\pi)$ to denote the
 set of input and output docks attached to a given place
-$\pi$. Conversely, we denote by $\Pi(d)$ the single place to which an
+$\pi$. Conversely, we denote by $\pi(d)$ the single place to which an
 input or output dock $d$ is attached. Last, $I \subseteq \Pi$ is the
 non-empty set of initial places of the component.
 %%Places can be part of one or multiple groups which are subsets of
@@ -106,8 +106,11 @@ S_u \times \Theta$. On the other hand, a provide port may be bound to
 sets of place. A provide port becomes enabled if all the sets of
 places to which it is bound include at least one place that has been
 reached. This binding relation is denoted $B_{S_{p}} \subseteq S_p
-\times \mathcal{P}(G)$. Note that once a port is enabled, it remains
-in that state forever.
+\times \mathcal{P}(G)$. Intuitively, bindings allow the modeling of
+conjunctions (all sets of places must be reached) and disjunctions
+(one set of place is reached if at least one of its place is reached)
+of constraints to control the enabling of provide ports. Note that
+once a port is enabled, it remains in that state forever.
 
 %% SR remove the distinctinction between data and "regular" ports, all 
 
@@ -320,7 +323,7 @@ Figure~\ref{fig:r4}.
   %%   \text{where: }provided(p) \equiv &\, \exists u \, (u,p) \in L \land enabled_c\left((u,p)\right) \\
   %%   enabled_c\left((u,p)\right) \equiv &\, \forall g\in G,\left(p,g\right)\in B_{S_{p}}\,:\,enabled_g\left(g,\mk\right) & \text{if }\left(u,p\right)\in L\\
   %%   enabled_g\left(g,\mk\right) \equiv & \left(\exists\,\pi\in g : \pi \in \mk\right)\\
-  %%   & \, \lor\left(\exists \theta = (s,\alpha,d)\in\Theta^{*}:\,\left(\theta \in \mk \lor s \in \mk \lor d \in \mk\right)\land \Pi(s)\in g \land \Pi(d)\in g\right)
+  %%   & \, \lor\left(\exists \theta = (s,\alpha,d)\in\Theta^{*}:\,\left(\theta \in \mk \lor s \in \mk \lor d \in \mk\right)\land \pi(s)\in g \land \pi(d)\in g\right)
   %% \end{align*}
   
   \begin{prooftree}
