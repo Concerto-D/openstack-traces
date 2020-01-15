@@ -18,10 +18,10 @@ output) docks is denoted $\Delta_i$ (respectively $\Delta_o$), and we
 use the notations $\Delta_i (\pi)$ and $\Delta_o (\pi)$ to denote the
 set of input and output docks attached to a given place
 $\pi$. Conversely, we denote by $\Pi(d)$ the single place to which an
-input or output dock is attached. Places can be part of one or
-multiple groups which are subsets of $\Pi$. The set of groups is
-denoted $G$. Last, $I \subseteq \Pi$ is the non-empty set of initial
-places of the component.
+input or output dock $d$ is attached. Last, $I \subseteq \Pi$ is the
+non-empty set of initial places of the component.
+%%Places can be part of one or multiple groups which are subsets of
+%%$\Pi$. The set of groups is denoted $G$.
 
 The set of transitions of a component is denoted
 $\Theta$. A transition $\theta \in \Theta$ is a triple
@@ -81,7 +81,7 @@ associated to the transition, taken from the set of actions $\actions$.
       & \emph{Semantics}\\
       \hline
       $\mk$ & subset of elements holding a token\\
-      $\reached$ & subset of places that ave been reached\\
+      $\reached$ & subset of places that have been reached\\
       $\exec$ & set of ongoing actions\\
       \hline
     \end{tabular}
@@ -100,7 +100,7 @@ discipline is a way to distinguish categories of services or data that
 ports may use or provide.
 
 A use port may be bound to transitions, indicating that those
-transitions may be fired only if the port is connected to an enabled
+transitions can be fired only if the port is connected to an enabled
 provide-port. This binding relation is denoted $B_{S_{u}} \subseteq
 S_u \times \Theta$. On the other hand, a provide port may be bound to
 sets of place. A provide port becomes enabled if all the sets of
