@@ -1,13 +1,21 @@
-This section evaluates the performance of Madeus with empty
-transitions.  Madeus is a model that relies on the description of an
-\emph{internal-net} (life-cycle) for each software component of that
-will be deployed. It is a low-level model, therefore the developer is
-responsible for the choices of actions performed in the transitions.
+\HC[Maverick]{Il faudrait rappeler des détails sur l'implémentation du
+prototype notamment sur la gestion du parallélisme en python}
 
-The aim is to evaluate Madeus independently of any specific
-transitions which is why these experiments are called
-\emph{dry-runs}. It means the transitions do not contain any action
-which allows to measure the overhead caused by Madeus.
+Madeus is a model that relies on the description of a control
+component for each software module of that will be deployed. It is a
+low-level model, therefore the developer is responsible for the
+choices of actions performed in the transitions.  This section
+evaluates the performance of Madeus' prototype with empty transitions
+in order to evaluate the \mad prototype independently of any specific
+transitions. This is why these experiments are called
+\emph{dry-runs}. It means the transitions do not contain any code or
+command for which the execution time is unknown or imprecise, thus
+allowing to measure the overhead caused by the prototype only. In
+addition to this, the experiments presented in this section are
+compared to the theoretical performance computed by the prediction
+model detailed in Section~\ref{sec:perf_model}. By doing so we both
+validate the theoretical performance model compared to the reality,
+and the expected performance of the prototype on the set of use-cases.
 
 % figures to add for assemblies
 %Sequential
@@ -15,65 +23,63 @@ which allows to measure the overhead caused by Madeus.
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=0.4\textwidth]{./images/seq.pdf}
-    \caption{The sequential assembly for the Madeus benchmark, with N components.}
+    \caption{The \mad sequential assembly of Benchmark (A), with N components.}
     \label{fig:seq}
   \end{center}
 \end{figure}
 
-Three benchmarks compose this evaluation. The first benchmark is made
-with a sequential assembly written in Madeus, depicted in
-Figure~\ref{fig:seq} and made of a chain of components: one
-\emph{provider} component made of a transition and two places, the
-final one providing a service, and \emph{N user-provider} components
-that are also composed of a transition and two places, but where the
-transition uses the provide port of the preceeding component. The
-components are connected and this results in a sequential execution.
-
-A dry-run version of this assembly is built containing transitions
-that do nothing besides wait for a fixed amount of time. As it is a
-sequential assembly, the execution time should be increasing with the
-number of \emph{N} components.
+Three benchmarks compose this evaluation and are illustrated in
+Figures~\ref{fig:seq} and~\ref{fig:par}.
+% first
+The first benchmark, denoted (A), models a sequential \mad assembly,
+depicted in Figure~\ref{fig:seq}. It is composed of one
+\emph{provider} component made of a transition and two places, and
+$N+1$ \emph{user-provider} components that are also composed of a
+transition and two places, but where the transition uses the provide
+port of the preceeding component. The components are connected in
+chain thus resulting in a sequential execution.
+%The dry-run version of
+%this assembly consists in transitions that do nothing besides wait for
+%a fixed amount of time.
+%The second version of this assembly features a transition that calls
+%an ssh connection and waits for a fixed amount of time, similar as for
+%the dry-run version, before finishing.
 
 \begin{figure}[h]
   \begin{center}
     \includegraphics[width=0.4\textwidth]{./images/par.pdf}
-    \caption{The parallel assembly for the Madeus benchmark, with N parallel components, and T parallel transitions.}
+    \caption{The \mad parallel assembly of Benchmark (B) and (C), with N parallel components, and T parallel transitions.}
     \label{fig:par}
   \end{center}
 \end{figure}
 
-The second version of this assembly features a transition that calls
-an ssh connection and waits for a fixed amount of time, similar as for
-the dry-run version, before finishing.
+%second
+The two other benchmarks model \mad parallel assemblies and are
+depicted in Figure~\ref{fig:par}. The first assembly, denoted (B)
+evaluates the parallelism at the component level, called
+\emph{inter-comp} and \emph{inter-comp-tasks} previously in this
+paper. The second one, denoted (C), models the parallelism at the
+transition level, \ie \emph{intra-comp-tasks}, when transitions are
+performed simultaneously.
+%
+Both benchmarks use the same assembly that is composed of an initial
+\emph{provider} component and $N$ parallel components connected to the
+provider. Each component contains a first transition that uses the
+service provided by the provider component and $T$ parallel
+transitions. For Benchmark (B), the number of components varies from 1
+to 40 components with a single transition per component $T=1$. For
+Benchmark (C), the number of component is fixed to $N=1$ and the
+number of transitions varies from 1 to 20.
 
-Two other benchmarks made with parallel assemblies written in Madeus,
-as depicted in Figure~\ref{fig:par}.  Their aim is to illustrate the
-performances of Madeus regardless of the components and the content of
-their transitions.
-
-The first assembly evaluates the parallelism at the component level,
-when components are deployed simultaneously and the second one
-evaluates the parallelism at the transition level, when transitions
-are performed simultaneously.  The second and third benchmarks are
-made to evaluate the performances with parallelism both at the
-component level and at the transition level.
-
-They use the same assembly that is composed of an initial
-\emph{provider} component and \emph{N parallel components} connected
-to the provider. Each component contains a first transition that uses
-the service provided by the provider component and \emph{T parallel
-  transitions}. For the benchmark about component level parallelism,
-the number of components varies from 1 to 40 components and a fixed
-transition, while for the benchmark about transition level
-parallelism, the number of transitions varies from 1 to
-20 %link to pictures
-
-Each benchmark was run for ten iterations with a sleep time value of 5
-seconds to have a coherent scale of results. They are both evaluated
-in \emph{dryrun} mode without any ssh connections and with \emph{ssh
-  connections} active in the assembly between components, so as to
-allow visualisation of the eventual overhead of having these ssh
-connections.
+Each measure presented in the results is an average of ten executions.
+For each transition an execution time of 5 seconds has been
+applied. This execution time is guaranteed by the call to the sleep
+function of \python. This execution time has been chosen to get a
+coherent and readable scale of results.
+%They are both evaluated in \emph{dryrun} mode without any
+%ssh connections and with \emph{ssh connections} active in the assembly
+%between components, so as to allow visualisation of the eventual
+%overhead of having these ssh connections.
 
 \begin{figure}[h]
   \begin{center} 
@@ -83,15 +89,16 @@ connections.
   \end{center}
 \end{figure}
 
-For the sequential benchmark, we calculated the ideal curve as the sum
-of all sleep times added, since they are executed sequentially from
-the component assembly. The results show a linear increase in time and
-the \emph{dryrun} curve follows the \emph{ideal} curve closely, as can
-be seen on Figure~\ref{fig:seqres}. The difference between the
-\emph{ssh-connections} curve is hard to visualise but is slightly
-higher than the \emph{ideal} and \emph{dryrun} curves, a logical
-result as the number of ssh connections grows with each component
-added, but there is always only one ssh connection at the same time.
+Figure~\ref{fig:seqres} presents the results of Benchmark (A). As (A)
+models a sequential assembly, the theoretical execution time is simply
+the sum of the execution time of each transition of each component
+($N+2$ components). The results show a linear increase in time and the
+\emph{dryrun} curve follows the \emph{ideal} curve closely.
+%The difference between the
+%\emph{ssh-connections} curve is hard to visualise but is slightly
+%higher than the \emph{ideal} and \emph{dryrun} curves, a logical
+%result as the number of ssh connections grows with each component
+%added, but there is always only one ssh connection at the same time.
 
 \begin{figure}[h]
   \begin{center} 
@@ -101,28 +108,36 @@ added, but there is always only one ssh connection at the same time.
   \end{center}
 \end{figure}
 
-For the results on the parallel assembly benchmark, we had to remove
-one outlier data point on the parallel assembly benchmark for
-component parallelism, as the first iteration of the assembly with
-just one component always had 4 seconds added to the time and we could
-not pinpoint the exact reason for that. As it did not occur for any of
-the other iterations, we did not take it into account on the curve
-drawing for our Figure~\ref{fig:parcompres}. In the results directory
-that can be found on our repository we have included the original
-times.json and the modified times.json files to keep the original
-results intact.
+% attention à comprendre si c'est systématique !
+%For the results on the parallel assembly benchmark, we had to remove
+%one outlier data point on the parallel assembly benchmark for
+%component parallelism, as the first iteration of the assembly with
+%just one component always had 4 seconds added to the time and we could
+%not pinpoint the exact reason for that. As it did not occur for any of
+%the other iterations, we did not take it into account on the curve
+%drawing for our Figure~\ref{fig:parcompres}. In the results directory
+%that can be found on our repository we have included the original
+%times.json and the modified times.json files to keep the original
+%results intact.
 
-The ideal curve for the parallel assembly benchmark has been
-calculated with the \emph{sleep time} value on its own, if all the
-components are parallelized, they all start their transition at the
-same time and it should take only the \emph{sleep time} to be
-finished. In \emph{dryrun} our experimental benchmark is only very
-slightly above the ideal curve, which shows that Madeus does not add
-significant overhead to the process when there are more
-components. The \emph{ssh connection} curve allows us to see that
-there is steady increase of time, adding almost 3 seconds to the
-assembly deployment when reaching 40 parallel components. This show
-that the overhead added by the SSH connections is not null.
+\HC[Charlène]{qu'est-ce qui a été exécuté exactement pour que ça soit
+  5s le résultat ? ça ne colle pas à la figure de l'assemblage qui
+  devrait donner 15s - faut-il refaire la figure ?}
+Figure~\ref{fig:parcompres} depicts the results of Benchmark (B).  The
+ideal theoretical performance for this benchmark is a constant equal
+to the sleep duration time of transitions, \ie $5$ seconds. Indeed as
+components are not connected together through ports they are deployed
+simultaneously.
+%value as components are commissioned in parallel. In \emph{dryrun}
+%our experimental benchmark
+One can note that the results observed with the \mad prototype is only
+very slightly above the ideal constant result, which shows that the
+prototype does not add significant overhead to the process even for a
+large number of parallel components.
+%The \emph{ssh connection} curve allows us to see
+%that there is steady increase of time, adding almost 3 seconds to the
+%assembly deployment when reaching 40 parallel components. This show
+%that the overhead added by the SSH connections is not null.
 
 \begin{figure}[h]
   \begin{center} 
@@ -132,16 +147,26 @@ that the overhead added by the SSH connections is not null.
   \end{center}
 \end{figure}
 
-The results for the parallel assembly benchmark regarding parallel
-transition variation are illustrated on Figure~\ref{fig:partrans}. The
-calculation for the ideal curve on the parallel assembly benchmark
-when varying the number of parallel transitions has been done in the
-same manner as for the parallel component variation. In \emph{dryrun}
-the benchmark results follow the ideal curve closely as well, whereas
-the \emph{ssh connections} curve has an overhead that grows as the
-number of transitions increases.
+Figure~\ref{fig:partrans} shows the results for Benchmark (C). As for
+the previous benchmark, and because transitions are executed
+simultaneously in this benchmark, the theoretical expected curve is a
+constant equal to the sleep duration time of transitions, \ie $5$
+seconds. The results follow the ideal curve closely as well for a
+large number of transitions.
 
-These results allow us to point out that \emph{Madeus} does not by
-itself add a big overhead on the deployment. They also show the
-importance of ssh connection and their impact on the deployment time.
+%calculation for the ideal curve on the parallel assembly benchmark
+%when varying the number of parallel transitions has been done in the
+%same manner as for the parallel component variation. In \emph{dryrun}
+%the benchmark results follow the ideal curve closely as well, whereas
+%the \emph{ssh connections} curve has an overhead that grows as the
+%number of transitions increases.
+
+These results allow us to point out that \mad does not by itself add a
+big overhead on the deployment. One can note though that according to
+the type of commands performed in the transitions  an additional
+overhead could be observed. For instance, .
+\HC[Helene]{est-ce que c'est utile de donner l'exemple du surcoût SSH ?}
+%They also show the
+%importance of ssh connection and their impact on the deployment time.
+
 
