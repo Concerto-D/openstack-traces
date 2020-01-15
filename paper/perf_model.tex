@@ -44,6 +44,8 @@ set of transitions $\Theta$. In the following, we consider that the
 transitions go directly from a place to
 another place instead of from an output dock to an input dock.
 Hence, $\Theta$ is a multiset which elements are pairs of places.
+\MC[Maverick,Simon]{Si on change les transitions pour qu'elles contiennent l'action,
+plus besoin de parler de multiset je pense (+TODO ce ne sont plus des paires)}
 %We
 %can obtain the place corresponding to each dock by using the $place$
 %function of the component.
@@ -89,6 +91,7 @@ itself and one representing the event of a token leaving the place.
 \[
 V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{place},v_\pi^\text{leav}\right\} 
 \]
+\MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de place}
 
 For each transition, we introduce two vertices: one representing the
 beginning of the transition and one representing its end.
