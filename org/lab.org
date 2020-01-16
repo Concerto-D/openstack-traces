@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # -*- mode: org -*-
-
 #+TITLE:  Reproducibility guide for the openstack-lab
-
 #+STARTUP: overview indent inlineimages logdrawer
 #+LANGUAGE:  en
 #+OPTIONS:   num:nil toc:t \n:nil @:t ::t |:t ^:nil -:t f:t *:t <:t
@@ -27,18 +25,76 @@
 # #+PROPERTY: header-args :eval never-export
 
 * Introduction
-This page aims to offer a practical way of reproducing the experiments presented in the paper [].
-Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]], and some SSH benchmarks.
-In this lab we go through the various steps from scratch to be able to reproduce the experiments and the 
-graphs obtained in our paper.
+This page aims to offer a practical way of reproducing the experiments presented in the paper [Enhancing Separation of Concerns and Parallelism Expressivity in Distributed Software Commissionning with Madeus].
+Our experiments are based on the deployment of [[https://www.openstack.org/][OpenStack]], and SSH benchmarks.
+This lab will allow the reproduction of the various graphs of the paper and the experiments themselves.
 
-* Open Stack Use Case
-** Requirements
+* Reproducibility
+** Open Stack Deployment Graphs
+*** Requirements
+Python 3.7+ and git are required.
+First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks][Gitlab]] repository.
+#+BEGIN_SRC sh
+git clone https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks.git
+#+END_SRC
+
+Once you have that you can set up a virtual environment:
+#+BEGIN_SRC sh
+virtualenv -p python3 venv
+source venv/bin/activate
+#+END_SRC
+
+The makefile allows for the installation of the requirements, you can use:
+#+BEGIN_SRC sh
+make install_deps
+#+END_SRC
+We use [[https://github.com/plotly/orca][Orca]] for the curve plotting.
+
+Then you need to copy the directory result from the paper that you wish to reproduce. 
+You can get these on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][repository]] in the =results= directory. There are two Open Stack deployment result directories,
+=ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments.
+
+*** Plotting the curves
+Using the following command by replacing it with the result directory allows to reproduce the graphs from our paper.
+#+BEGIN_SRC sh
+python mad-enoslib.py analyze -b result_directory
+#+END_SRC
+This command will produce several files:
+- a svg file with the histogram of deployment times such as this example
+#+NAME:   Deployment times
+[[./results_deployment_times.svg]]
+- for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:
+#+NAME: Gantt chart for an experiment
+[[./gantt.png]]
+
+** SSH Benchmark Graphs
+*** Requirements
+For the SSH benchmark result plotting we use also Python 3.7.
+The requirements are the [[https://click.palletsprojects.com/en/7.x/][click]] library, the [[https://plot.ly/python/][plotly]] library for the graph plotting and [[https://github.com/plotly/orca][orca]] to create the svgs from the plots.
+*** Plotting the curves
+To plot our graphs, we used the resulting files that are in the =results/ssh_bench/raw= directory.
+
+They are sorted by type of experiment, parallel, sequential, dry-run or with the ssh connections.
+
+To plot the graphs, we use the =graph_results.py= file is in the =results/ssh_bench= directory of the journal's repository. 
+The command =analyze= is used to create the graphs, and the options to give are the directory containing the dryrun results
+=-drp [directory]=, the directory containing the ssh results =sshp [directory]= and the type of experiment, whether
+sequential or parallel with =-exp [parallel|sequential]=
+
+#+BEGIN_SRC sh
+python3 graph_results.py analyze -drp raw/seq_no_ssh -sshp raw/seq_ssh -exp sequential
+#+END_SRC
+
+#+NAME: example of a plotted curve for parallel assembly
+[[./par_component.png]]
+
+* Repeatability
+** Open Stack Use Case
+*** Requirements
 Here are the requirements for the Open Stack Use case to run:
 - python 3.7+
 - git
-To launch experiments on a local machine:
-- [[https://www.vagrantup.com/][Vagrant]] installed with the [[https://github.com/vagrant-libvirt/vagrant-libvirt][libvirt]] plugin
+
 To launch the experiments on Grid 5000:
 - a Grid5000 account and to setting up your ssh config appropriately (see [[#g5k][Grid5000 setup]])
 
@@ -78,7 +134,7 @@ Host *.grid5000.fr
     ForwardAgent yes
 #+END_SRC
 
-** Getting the code
+*** Getting the code
 First step is recovering all the code from the public repository. It also includes the results we have obtained and used in the paper.
 It is possible to reproduce the graphs and gant charts from the results, please see the related section on [[#repro][Repoducing data plots]].
 #+NAME: Getting the lab code
@@ -91,7 +147,7 @@ cd madeus-openstack && git submodule update --init
 #+END_SRC
 This will clone the proper assembly code in the madeus-openstack directory. The original repository is visible at the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack][Madeus-openstack repository]].
 
-** Starting a virtual environment
+*** Starting a virtual environment
 It is recommended to run experiments in a virtual environment to keep your python installation clean.
 #+BEGIN_SRC sh
 virtualenv -p python3 venv
@@ -104,7 +160,7 @@ eval "$(ssh-agent -s)" && ssh-add
 #+END_SRC
 before starting the experiments to add the key to your ssh agent and not have to input the passphrase several times over the deployment.
 
-** Install the requirements in the virtual environment
+*** Install the requirements in the virtual environment
 The makefile allows for the installation of the requirements, you can use:
 #+BEGIN_SRC sh
 make install_deps
@@ -113,7 +169,7 @@ to launch the installation of the various libraries we use for these experiments
 We use  [[https://discovery.gitlabpages.inria.fr/enoslib/][EnOSlib]], that allows to organize our experiment workflow and configure our Grid5000 setup.
 We also use [[http://execo.gforge.inria.fr/doc/latest-stable/][Execo]] for the benchmark launches with the various experiment scenarios.
 We use [[https://github.com/plotly/orca][Orca]] for the curve plotting. 
-** Machine Topology used in our experiments
+*** Machine Topology used in our experiments
 To makes these experiments we have used two different topologies depending on the use of a local registry for the openstack images or a shared / remote registry.
 ***** Topology with a local registry node
 #+NAME: Topology local
@@ -159,7 +215,7 @@ To makes these experiments we have used two different topologies depending on th
 
 #+RESULTS: Topology shared
 
-** Node setup
+*** Node setup
   The details of the machine reservation on grid5000 are set in the =reservation.yaml= file where they can be updated to fit specific needs.
 #+NAME: example of reservation.yaml
 #+BEGIN_SRC yaml
@@ -217,7 +273,7 @@ We defined specific roles for our machines:
 - The *openstack* are the nodes where openstack will be deployed and in our experiment they each have one specific role (*compute*, *control* and *network*), according to openstack deployment usages
 - The *disco/registry* is the node that will hold the docker image repository, for the cases when the repository is local, as opposed to remote or cached.
   
-** Mad Workflow
+*** Mad Workflow
 A typical experiment using Mad is the sequence of several phases:
 
 - deploy :: Mad will read the configuration file, get machines from the resource provider and will prepare the next phase
@@ -226,7 +282,7 @@ A typical experiment using Mad is the sequence of several phases:
 - destroy :: Mad will release the resources.
 
 The =README.md= file contains more information about the various commands available. This document focuses on offering an easier way to reproduce the experiments presented in the paper and will not go in details over the various options. The =python mad.py= command has a =--help= flag that gives out information over the commands available.
-** Deploying Openstack on the Grid5000 nodes using kolla-ansible
+*** Deploying Openstack on the Grid5000 nodes using kolla-ansible
 The mad tool features commands to launch a deployment of openstack on g5k nodes with the use of the =deploy=, and =install-os= commands.
 #+BEGIN_SRC sh
 python mad-enoslib.py deploy --provider g5k --registry
@@ -234,14 +290,14 @@ python mad-enoslib.py install-os
 python mad-enoslib.py destroy--hard
 #+END_SRC
 The =destroy--hard= command is there to clean up the nodes once the deployment has been done.
-** Request the resources for the benchmarks
+*** Request the resources for the benchmarks
 #+BEGIN_SRC sh
 python mad-enoslib.py deploy -c reservation.yaml -p g5k --bootstrap
 #+END_SRC 
 where the =-c= option indicates our reservation file, =-p= indicates the requested provier, and the =--bootstrap= flag indicates that it will populate the inventory with the proper information about the machines reserved and transfer all necessary environment values and files to the different nodes.
 This step will issue the reservation of the machines to the chosen Grid5000 cluster, and once the machines have been deployed it will populate all the required files for kolla in a directory that will be linked symbolically to the **current** directory. These configuration files are necessary for the OpenStack deployment. 
 
-** Launch the OpenStack benchmarks
+*** Launch the OpenStack benchmarks
 Once the nodes have been reserved, to reproduce the benchmarks, you can specify which test to run by inputing it in the command as for example:
 #+BEGIN_SRC sh
 python mad-enoslib.py bench -c reservation.yaml --provider g5k --test all
@@ -295,7 +351,7 @@ tmux attach -t mad
 #+END_SRC 
 to observe the deployment process from the nodes.
 
-** Recover the benchmark results
+*** Recover the benchmark results
 To recover the results from the previously launched benchmarks, just run the following command:
 #+BEGIN_SRC sh
 python mad-enoslib.py backup 
@@ -310,34 +366,18 @@ The *restore* option of deploy allows to restore the environment configuration a
 python mad-enoslib.py deploy -c reservation.yaml -b --restore backup_dir
 #+END_SRC
 
-** Plot the data from the benchmarks results
+*** Plot the data from the benchmarks results
 Once the resulting files have been recovered through the **backup** command, the use of **analyze** will allow for the creation of time charts, by replacing =Timestamp= by the timestamp of the experiment that is the name of the backup directory just created.
 #+BEGIN_SRC sh
 python mad-enoslib.py analyze -b backups/Timestamp
 #+END_SRC
 This will go through the results and plot the charts of the experiment times.
 
-** Reproduce data plots from our results
-:PROPERTIES:
-:CUSTOM_ID: repro
-:END:
-Similarly to the data plot from the benchmark results, the command analyze will allow to recreate the graphs we have used by replacing =result_directory= with the directory containing all the resulting files:
-#+BEGIN_SRC sh
-python mad-enoslib.py analyze -b result_directory
-#+END_SRC
-This command will produce several files:
-- a svg file with the histogram of deployment times such as this example
-#+NAME:   Deployment times
-[[./results_deployment_times.svg]]
-- for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:
-#+NAME: Gantt chart for an experiment
-[[./gantt.png]]
-
-* SSH Benchmarks
-** Requirements
+** SSH Benchmarks
+*** Requirements
 Here are the requirements for the SSH benchmarks:
 - a Grid5000 account and a proper set up as described in [[#g5k][Grid5000 Setup]]
-** Accessing a Grid5000 frontend
+*** Accessing a Grid5000 frontend
 These benchmarks will be launched from a Grid5000 frontend:
 #+BEGIN_SRC sh
 ssh access.grid5000.fr
@@ -347,7 +387,7 @@ In our configuration we make reservations on the nantes site, so we will access 
 ssh nantes
 #+END_SRC
 If your Grid5000 configuration is properly setup, you should now have a shell starting with =[your_g5k_login@fnantes]=.
-** Getting the code
+*** Getting the code
 The SSH benchmarks code is contained in the journal repository:
 #+BEGIN_SRC sh
 git clone https://gitlab.inria.fr/VeRDi-project/madeus-journal.git
@@ -356,7 +396,7 @@ To launch the benchmarks, you need to have *concerto* also, that you can as befo
 #+BEGIN_SRC sh
 git clone https://gitlab.inria.fr/VeRDi-project/concerto.git
 #+END_SRC
-** Installing the requirements
+*** Installing the requirements
 We use  [[https://discovery.gitlabpages.inria.fr/enoslib/][EnOSlib]] to set up the machine reservations on grid5000 and launch the experiments
 #+BEGIN_SRC sh
 pip3 install enoslib
@@ -365,8 +405,8 @@ The concerto directory needs to be added to the python path:
 #+BEGIN_SRC sh
 cd ~/concerto && source source_dir.sh
 #+END_SRC
-** Launching the benchmarks
-*** Sequential tests
+*** Launching the benchmarks
+**** Sequential tests
 The sequential tests are defined in the =reserve_and_test.py= file in the =tests/sequential_test/= directory. 
 The configuration is in the conf.yaml file of the directory. 
 #+BEGIN_SRC yaml
@@ -393,7 +433,7 @@ g5k:
         site: nantes
 #+END_SRC
 If your want to test on other sites or with other clusters you can change the values in this file to that purpose.
-**** Resulting directory
+***** Resulting directory
 :PROPERTIES:
 :CUSTOM_ID: customdir
 :END:
@@ -412,7 +452,7 @@ To launch the experiments for sequential ssh test you can use the following comm
 #+BEGIN_SRC sh
 python3 benchmarks/sequential_test/reserve_and_test.py
 #+END_SRC
-*** Parallel tests
+**** Parallel tests
 The parallel tests are defined in the =reserve_and_test.py= file in the =test/sequential_test/= directory.
 The configuration is in the conf.yaml file of the directory
 #+BEGIN_SRC yaml
@@ -471,7 +511,7 @@ You can change the directory here should you want to.
 #+BEGIN_SRC sh
 python3 benchmarks/parallel_test/reserve_and_test.py
 #+END_SRC
-** Recover the benchmark results
+*** Recover the benchmark results
 Once the benchmarks are done, the results are in the directories previously presented in [[#customdir][Launching the benchmarks]].
 You can make an archive out of the results, for example from the `exp` directory.
 #+BEGIN_SRC sh
@@ -483,23 +523,4 @@ mv results.tar.gz ~/public
 #+END_SRC
 which will allow you to access the archive on =https://api.grid5000.fr/sid/sites/[siteUsed]/public/[grid5000Login]/=.
 
-** Reproduce the graphs
-*** Requirements
-The requirements are the [[https://click.palletsprojects.com/en/7.x/][click]] library, the [[https://plot.ly/python/][plotly]] library for the graph plotting and [[https://github.com/plotly/orca][orca]] to create the svgs from the plots.
-
-*** Plotting the curves
-To plot our graphs, we used the resulting files that are in the =results/ssh_bench/raw= directory.
-
-They are sorted by type of experiment, parallel, sequential, dry-run or with the ssh connections.
-
-To plot the graphs, we use the =graph_results.py= file is in the =results/ssh_bench= directory of the journal's repository. 
-The command =analyze= is used to create the graphs, and the options to give are the directory containing the dryrun results
-=-drp [directory]=, the directory containing the ssh results =sshp [directory]= and the type of experiment, whether
-sequential or parallel with =-exp [parallel|sequential]=
-
-#+BEGIN_SRC sh
-python3 graph_results.py analyze -drp raw/seq_no_ssh -sshp raw/seq_ssh -exp sequential
-#+END_SRC
-
-#+NAME: example of a plotted curve for parallel assembly
-[[./par_component.png]]
+*** Reproduce the graphs
