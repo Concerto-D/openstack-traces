@@ -18,8 +18,9 @@ output) docks is denoted $\Delta_i$ (respectively $\Delta_o$), and we
 use the notations $\Delta_i (\pi)$ and $\Delta_o (\pi)$ to denote the
 set of input and output docks attached to a given place
 $\pi$. Conversely, we denote by $\pi(d)$ the single place to which an
-input or output dock $d$ is attached. Last, $I \subseteq \Pi$ is the
-non-empty set of initial places of the component.
+input or output dock $d$ is attached. A place $\pi$ such that
+$\Delta_i(\pi) = \emptyset$ is said to be \emph{initial}, while if
+$\Delta_o(\pi) = \emptyset$, the place is called \emph{final}.
 %%Places can be part of one or multiple groups which are subsets of
 %%$\Pi$. The set of groups is denoted $G$.
 
@@ -41,7 +42,7 @@ associated to the transition, taken from the set of actions $\actions$.
       $\Delta_{i}$ & set of input docks of a component\\
       $\Delta_{o}$ & set of output docks of a component\\
       %$G$ & set of groups of places\\
-      $I$ & subset of places holding a token at initialization\\
+      %$I$ & subset of places holding a token at initialization\\
       \hline
       \hline
       & \emph{Transitions}\\
@@ -100,17 +101,18 @@ discipline is a way to distinguish categories of services or data that
 ports may use or provide.
 
 A use port may be bound to transitions, indicating that those
-transitions can be fired only if the port is connected to an enabled
-provide-port. This binding relation is denoted $B_{S_{u}} \subseteq
-S_u \times \Theta$. On the other hand, a provide port may be bound to
-sets of place. A provide port becomes enabled if all the sets of
-places to which it is bound include at least one place that has been
-reached. This binding relation is denoted $B_{S_{p}} \subseteq S_p
-\times \mathcal{P}(G)$. Intuitively, bindings allow the modeling of
-conjunctions (all sets of places must be reached) and disjunctions
-(one set of place is reached if at least one of its place is reached)
-of constraints to control the enabling of provide ports. Note that
-once a port is enabled, it remains in that state forever.
+transitions can be fired only if the port is \emph{provided}, \ie
+connected to an enabled provide-port. This binding relation is denoted
+$B_{S_{u}} \subseteq S_u \times \Theta$. On the other hand, a provide
+port may be bound to sets of place. A provide port becomes
+\emph{enabled} if all the sets of places to which it is bound include
+at least one place that has been reached. This binding relation is
+denoted $B_{S_{p}} \subseteq S_p \times \mathcal{P}(G)$. Intuitively,
+bindings allow the modeling of conjunctions (all sets of places must
+be reached) and disjunctions (one set of place is reached if at least
+one of its place is reached) of constraints to control the enabling of
+provide ports. Note that once a port is enabled, it remains in that
+state forever.
 
 %% SR remove the distinctinction between data and "regular" ports, all 
 
@@ -176,7 +178,8 @@ tuple $\langle \mk, \reached, \exec \rangle$, where
 \end{itemize}
 
 The initial configuration of an assembly is given by $\langle I, I,
-\emptyset\rangle$.
+\emptyset\rangle$, where $I = \{ \pi \, \mid \, \Delta_i(\pi) =
+\emptyset \}$ (\ie the set of initial places).
 
 %% \noindent\textbf{Terminology.}
 
@@ -363,12 +366,6 @@ Figure~\ref{fig:r4}.
 %\subsection{Consistency rule}
 %--------------------------
 
-\SR{TODO: Define acyclicity and add it as a requirement}
-
-\SR{Other possible requirement: places without input dock must be initial (but then there is not need to mark initial places in the set $I$}
-
-\SR{Add lemmas about reachability}
-
 \paragraph{Consistency}{
   In \mad, the maximum number of tokens that can be used is the
   maximum number of possible parallel branches. A token can only be
@@ -380,4 +377,39 @@ Figure~\ref{fig:r4}.
   plan in future work to support reconfiguration to allow cycles in
   very specific settings to keep control on the tokens and their
   creation.
+}
+
+\SR{Add constraint that the initial place should be unique? Does not really matter for theoretical puroposes.}
+
+\paragraph{Structural constraints}{
+  A place $\pi_2$ is said to \emph{follow} a place $\pi_1$ if there
+  exists $(s, \alpha, d) \in \Theta$ such that $\pi(s) = \pi_1$ and
+  $\pi(d) = \pi_2$.  If there exists a sequence $(\pi_1, \pi_2, \dots,
+  \pi_n)$, such that $\pi_{i+1}$ follows $\pi_i$ for any $i$ where $1
+  \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
+
+  A \mad component is said to be well-formed if there exists no place
+  $\pi$ that depends on itself. Intuitively, the component, viewed as
+  a directed graph, must be acyclic.
+
+  \begin{lemma}
+    Let $c$ be a well-formed component. For any execution where all
+    use ports $u \in S_u$ are eventually provided, all places of $c$
+    will eventually be reached.
+  \end{lemma}
+
+  \begin{proof}
+    TODO.
+  \end{proof}
+
+  This lemma indicates that the \mad model provides, by construction,
+  a guarantee of reachability at the component level, \ie deadlocks
+  cannot occur within a component. At the level of an assembly, we
+  cannot enforce similar structural constraints, because the different
+  components are typically developed independently from each other,
+  often by different actors. For this reason, reachability guarantees
+  cannot be offered on assemblies. Instead we must rely on analysis of
+  a given assembly. One way to perform this analysis is to use
+  model-checking~\cite{coullon:hal-02323641}, but for most assemblies,
+  a simpler analysis tool can be used.
 }

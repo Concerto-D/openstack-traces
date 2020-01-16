@@ -251,25 +251,24 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 %%%%%%%%%%%%%%%
 %%\input{figures/servporttodag.tex}
 
-For each initial place $\pi$ we associate one arc from $v^\text{source}$
- to $v_\pi^\text{place}$, representing the fact that a token is placed in each
- initial place in the initial configuration.
+For each initial place $\pi$ we introduce one arc from $v^\text{source}$
+to $v_\pi^\text{place}$, representing the fact that a token is placed in each
+initial place in the initial configuration.
 Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
 places \emph{c1p1} and \emph{c2p2}.
 \[
-E_I=\bigcup_{\pi\in I^*}\left\{ \left(v^\text{source},0,v_\pi^\text{place}\right)\right\} 
+E_I=\bigcup_{\pi, \Delta_i(\pi) = \emptyset}\left\{ \left(v^\text{source},0,v_\pi^\text{place}\right)\right\} 
 \]
 
-In addition to the set of all initial places $I^*$, we define the set
-of final places $F^* = \left\{ \pi\,\mid\, \Delta_o(\pi)
-= \emptyset\right\}$. Intuitively, this represents the fact that the
+For each final place $\pi$ we introduce one arc from $v_\pi^\text{place}$
+to $v^\text{sink}$. Intuitively, this represents the fact that the
 commissionning is over only after all components have reached the
 places without outgoing transitions.
 Figure~\ref{fig:source_sink_graph} depicts the dependency graph
 corresponding to three final places \emph{c1p2}, \emph{c2p2}
 and \emph{c2p3}.
 \[
-E_F=\bigcup_{\pi\in F^*}\left\{ v_\pi^\text{place},0,v^\text{sink}\right\} 
+E_F=\bigcup_{\pi, \Delta_o(\pi) = \emptyset}\left\{ \left(v_\pi^\text{place},0,v^\text{sink}\right)\right\} 
 \]
 
 %%%%%%%%%%%%%%%
