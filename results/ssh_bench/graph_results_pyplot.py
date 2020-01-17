@@ -77,7 +77,6 @@ def graph_for_1par_xcomp(results, list_nb_comp, exp_data):
         # adding the average curve with std as error
         ax.errorbar(list_nb_comp, averages, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
-        ax.set_ylim(bottom=4, auto=True, top=6)
         ax.set_xticks([1, 5, 10, 15, 20, 50])
 
         plt.xlabel("Number of Components")
@@ -113,7 +112,6 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
         # adding the average curve with std as error
         ax.errorbar(list_nb_parallel_transitions, averages, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
-        ax.set_ylim(bottom=4, auto=True, top=6)
         ax.set_xticks([1, 5, 10, 20])
 
         plt.xlabel("Number of Transitions")
