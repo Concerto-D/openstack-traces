@@ -71,11 +71,15 @@ to 40 components with a single transition per component $T=1$. For
 Benchmark (C), the number of component is fixed to $N=1$ and the
 number of transitions varies from 1 to 20.
 
-Each measure presented in the results is an average of ten executions.
-For each transition an execution time of 5 seconds has been
-applied. This execution time is guaranteed by the call to the sleep
-function of \python. This execution time has been chosen to get a
-coherent and readable scale of results.
+Experiments have been performed on a single node of the \ecotype
+cluster of the experimental platform
+Grid'5000\footnote{\url{www.grid5000.fr}}. The detailed configuration
+of the node is given in Table~\ref{tab:g5k}. Each experiment presented
+in the results is an average of ten executions. For each transition
+an execution time of 5 seconds has been applied. This execution time
+is guaranteed by the call to the sleep function of \python. This
+execution time has been chosen to get a coherent and readable scale of
+results.
 %They are both evaluated in \emph{dryrun} mode without any
 %ssh connections and with \emph{ssh connections} active in the assembly
 %between components, so as to allow visualisation of the eventual
