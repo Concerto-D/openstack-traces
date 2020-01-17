@@ -22,8 +22,8 @@ component.
 Thus, a dependency graph representing the execution of the whole
 assembly is obtained. By weighting the arcs corresponding to the transitions with
 these transitions' individual execution time (and the other ones with 0),
-we can find the total execution time of the assembly by finding the longest
-path from the \emph{source} vertex to the \emph{sink} vertex.
+we can compute the expected total execution time of the assembly by finding the
+longest path from the \emph{source} vertex to the \emph{sink} vertex.
 
 \HC[HC]{why a performance model? give some motivations! 2 reasons,
   first a performance model offers a way to estimate the execution
@@ -41,6 +41,8 @@ The performance model given here is valid only for assemblies such
 that any set of places bound to a provide port contains exactly one
 place. This means that the requirement to enable such a port may only
 take the form of a conjunction of constraints on reached places.
+
+\MC{Préciser ici que dans la pratique ce n'est pas un problème ?}
 
 The estimation provided by the model is a best case scenario: it
 assumes that all actions are started as soon as possible, and that the
