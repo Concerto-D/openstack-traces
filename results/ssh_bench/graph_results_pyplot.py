@@ -3,9 +3,7 @@ import matplotlib.pyplot as plt
 import click
 
 import json
-
-from matplotlib.ticker import MaxNLocator
-
+import statistics
 
 @click.group()
 def cli():
@@ -62,22 +60,25 @@ def graph_for_1par_xcomp(results, list_nb_comp, exp_data):
     averages = []
     stds = []
     ideals = []
-    avg_time_for_one_comp = results["1"]["1"]["average"]
+    medians = []
     for comp in results_one_tr:
         avg = results_one_tr[comp]["average"]
+        medians.append(statistics.median(results_one_tr[comp]["runs"]))
         averages.append(avg)
         stds.append(results_one_tr[comp]["std"])
         # in theory if all components have one transition of 5 seconds, they should all finish in 5 sec or so
-        ideals.append(avg_time_for_one_comp)
+        ideals.append(5)
     if exp_data is "dryrun":
         figure = plt.figure()
         ax = plt.subplot()
         # adding the ideal curve
         plt.plot(list_nb_comp, ideals, label="theoretical")
         # adding the average curve with std as error
-        ax.errorbar(list_nb_comp, averages, yerr=stds, label="Madeus")
+        # ax.errorbar(list_nb_comp, averages, yerr=stds, label="Madeus")
+        ax.errorbar(list_nb_comp, medians, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
-        ax.set_xticks([1, 5, 10, 15, 20, 50])
+        # ax.set_ylim(bottom=4.8, auto=True, top=5.2)
+        ax.set_xticks([1, 5, 10, 15, 20, 30, 40, 50])
 
         plt.xlabel("Number of Components")
         # Hide the right and top spines
@@ -97,9 +98,11 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
     averages = []
     stds = []
     ideals = []
+    medians = []
     for transition in range(len(results_one_comp)):
         avg = results_one_comp[transition]["average"]
         std = results_one_comp[transition]["std"]
+        medians.append(statistics.median(results_one_comp[transition]["runs"]))
         averages.append(avg)
         stds.append(std)
         ideals.append(5)
@@ -110,8 +113,10 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
         # adding the ideal curve
         plt.plot(list_nb_parallel_transitions, ideals, label="theoretical")
         # adding the average curve with std as error
-        ax.errorbar(list_nb_parallel_transitions, averages, yerr=stds, label="Madeus")
+        # ax.errorbar(list_nb_parallel_transitions, averages, yerr=stds, label="Madeus")
+        ax.errorbar(list_nb_parallel_transitions, medians, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
+        # ax.set_ylim(bottom=4.8, auto=True, top=5.2)
         ax.set_xticks([1, 5, 10, 20])
 
         plt.xlabel("Number of Transitions")

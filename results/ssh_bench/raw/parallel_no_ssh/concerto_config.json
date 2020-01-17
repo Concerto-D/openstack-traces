@@ -1,8 +1,8 @@
 {
 	"remote_hosts": [],
 	"concerto_host": {
-		"address": "ecotype-5.nantes.grid5000.fr",
-		"ip": "172.16.193.5"
+		"address": "ecotype-8.nantes.grid5000.fr",
+		"ip": "172.16.193.8"
 	},
 	"list_nb_components": [
 		1,
@@ -10,6 +10,8 @@
 		10,
 		15,
 		20,
+		30,
+		40,
 		50
 	],
 	"list_nb_parallel_transitions": [
