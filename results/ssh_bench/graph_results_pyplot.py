@@ -73,11 +73,13 @@ def graph_for_1par_xcomp(results, list_nb_comp, exp_data):
         figure = plt.figure()
         ax = plt.subplot()
         # adding the ideal curve
-        plt.plot(list_nb_comp, ideals, label="ideals")
+        plt.plot(list_nb_comp, ideals, label="theoretical")
         # adding the average curve with std as error
-        ax.errorbar(list_nb_comp, averages, yerr=stds, label="dry-run")
+        ax.errorbar(list_nb_comp, averages, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
-        ax.set_ylim(bottom=0, auto=True, top=10)
+        ax.set_ylim(bottom=4, auto=True, top=6)
+        ax.set_xticks([1, 5, 10, 15, 20, 50])
+
         plt.xlabel("Number of Components")
         # Hide the right and top spines
         ax.spines['right'].set_visible(False)
@@ -107,12 +109,13 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
         figure = plt.figure()
         ax = plt.subplot()
         # adding the ideal curve
-        plt.plot(list_nb_parallel_transitions, ideals, label="ideals")
+        plt.plot(list_nb_parallel_transitions, ideals, label="theoretical")
         # adding the average curve with std as error
-        ax.errorbar(list_nb_parallel_transitions, averages, yerr=stds, label="dry-run")
+        ax.errorbar(list_nb_parallel_transitions, averages, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
-        ax.xaxis.set_major_locator(MaxNLocator(nbins=10, integer=True, min_n_ticks=8))
-        ax.set_ylim(bottom=0, auto=True, top=10)
+        ax.set_ylim(bottom=4, auto=True, top=6)
+        ax.set_xticks([1, 5, 10, 20])
+
         plt.xlabel("Number of Transitions")
         # Hide the right and top spines
         ax.spines['right'].set_visible(False)
@@ -139,9 +142,11 @@ def graph_seq(results, list_chain_length, exp_data):
         figure = plt.figure()
         ax = plt.subplot()
         # adding the ideal curve
-        plt.plot(list_chain_length, ideals, label="ideals")
+        plt.plot(list_chain_length, ideals, label="theoretical")
         # adding the average curve with std as error
-        ax.errorbar(list_chain_length, averages, yerr=stds, label="dry-run")
+        ax.errorbar(list_chain_length, averages, yerr=stds, label="Madeus")
+
+        ax.set_xticks([1, 5, 10, 25, 100])
         plt.ylabel("Time (s)")
 
         plt.xlabel("Number of Components")
