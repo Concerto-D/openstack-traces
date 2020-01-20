@@ -88,14 +88,12 @@ commissioning procedures for complex distributed software systems.
   declared for each of the component and can be observed in the figure
   (parallel arrows). Both components have two ports. MariaDB provides
   both data and a service (once installed), while Apache uses a
-  service and data. Note that in the figure, for the sake of clarity,
-  service and data ports are drawn in a different style, but both
-  ports follow the same behavior. Figure~\ref{fig:example} shows the
-  assembly of one Apache and one MariaDB instanciated from their
-  component types. These instances are connected by their
-  ports. Indeed, the Apache configuration depends on the IP adress of
-  the MariaDB component, and the testing phase for Apache, called
-  \texttt{check}, uses the MariaDB service.}
+  service and data. Figure~\ref{fig:example} shows the assembly of one
+  Apache and one MariaDB instanciated from their component
+  types. These instances are connected by their ports. Indeed, the
+  Apache configuration depends on the IP adress of the MariaDB
+  component, and the testing phase for Apache, called \texttt{check},
+  uses the MariaDB service.}
 
 In \mad, two kinds of \emph{actors} are considered. The first is the
 developer of a control component, who may be the author of the
