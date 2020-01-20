@@ -1,13 +1,12 @@
-
 \graphicspath{{images/}}
 
-In this section an evaluation of \mad on a real
-case-study is presented, the commissioning of OpenStack. As in the previous
-section, all results presented below can be reproduced by following
-the lab on the following publicly available repository:
-\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal}. First this
-lab offers the possibility to reproduce the figures presented in this
-section from the raw data obtained in our experiments on
+In this section an evaluation of \mad on a real case-study is
+presented, the commissioning of OpenStack. As in the previous section,
+all results presented below can be reproduced by following the lab on
+the following publicly available repository:
+\footnote{\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal/lab}}. First
+this lab offers the possibility to reproduce the figures presented in
+this section from the raw data obtained in our experiments on
 Grid'5000. Second, the lab redraws the complete process to reproduce
 the experiments on the Grid'5000 platform.
 
@@ -69,17 +68,17 @@ and \emph{intra-taks} parallelism levels.
   \end{center}
 \end{table*}
 
-\HC[All]{couramment utilisé ? ``opinionated out-of-the-box''}
+\HC[Dimitri]{verifier phrase out-of-the-box}
 
 \kolla is one of the most popular tool for deploying OpenStack in
 production.  It relies on \ansible to deploy OpenStack's modules as
 \docker containers, and will be considered as our reference in the
 rest of this section. It is highly opinionated out-of-the-box,
 allowing operators to quickly deploy a basic OpenStack instance, but
-enables complete customization for advanced administrators. As a
-consequence, the use-case described in this section corresponds to the
-default \kolla deployment, which provides the essential mechanisms to
-operate an infrastructure with OpenStack.
+not enabling the complete customization for advanced
+administrators. As a consequence, the use-case described in this
+section corresponds to the default \kolla deployment, which provides
+the essential mechanisms to operate an infrastructure with OpenStack.
 %
 To compare the performance of \kolla and \mad, we have defined $11$
 \mad components based on the \ansible roles defined in \kolla's
@@ -111,7 +110,7 @@ than the others.
   \end{center}
 \end{figure*}
 
-\Cref{fig:full} depicts the use-case from the operator viewpoint (\ie
+Figure~\ref{fig:full} depicts the use-case from the operator viewpoint (\ie
 at the level of the \mad assembly). For the sake of simplicity and
 readability, the connections between data ports are not
 represented. This figure helps to understand the high-level of
@@ -119,7 +118,7 @@ interplays between components. For instance, Neutron, Glance and Nova
 require Keystone, while Keystone requires itself a database (\ie
 MariaDB) for its commissioning process. Regarding the separation of
 concerns, the operator does not need to understand component
-internals. She just needs to compose the desired component by listing
+internals. She just needs to compose the desired components by listing
 them and connecting their compatible ports. As a consequence, a
 component can be replaced by another one if they expose the same
 interfaces. For instance the operator could replace MariaDB with
@@ -141,31 +140,29 @@ the same ports.
 %   quand on examine Nova (transition indépendante des autres)
 
 We now study our use-case from the developer viewpoint, focusing on
-the three colored components from \cref{fig:full}: MariaDB, Nova and
-Glance.  \Cref{fig:sub} depicts the internals and interplays of these
+the three colored components from Figure~\ref{fig:full}: MariaDB, Nova and
+Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these
 components.
 
 The dependencies previously observed at the assembly level are more
 detailed at the developer level. First, if we isolate Nova and Glance
-for instance, while \cref{fig:full} let us think that Glance must be
-deployed before Nova, it is clear here that once Nova obtains Glance's
-IP address (provided by the first place in Glance), both components
-can be deployed in parallel. This shows how \mad can be leveraged for
-\emph{inter-comp} and \emph{inter-comp-tasks} parallelism.  Second, as we
-discussed before, it seemed in \cref{fig:full} that MariaDB must be
-deployed before Keystone, and Keystone before
-Neutron/Glance/Nova. However, with the \mad representation depicted in
-\cref{fig:sub}, we understand that only the \emph{register} transition
-of Glance and Nova requires the service catalog Keystone to be
-available (\ie to register themselves in the catalog). We can see on
-the figure that other tasks can be executed in parallel while
-\emph{register} waits for Keystone (\eg for Nova, this transition is
-independent for all the other ones). Similarly, \cref{fig:sub} depicts
-for each component many parallel transitions showing how \mad can be
-leveraged for \emph{intra-comp-tasks} parallelism in this use-case.
-
-\HC[Helene]{Aller plus loin et discuter la sep of conc pour chacun
-  ansible, aeolus et mad}
+for instance, while Figure~\ref{fig:full} let us think that Glance
+must be deployed before Nova, it is clear here that once Nova obtains
+Glance's IP address (provided by the first place in Glance), both
+components can be deployed in parallel. This shows how \mad can be
+leveraged for \emph{inter-comp} and \emph{inter-comp-tasks}
+parallelism.  Second, as we discussed before, it seemed in
+Figure~\ref{fig:full} that MariaDB must be deployed before Keystone,
+and Keystone before Neutron/Glance/Nova. However, with the \mad
+representation depicted in Figure~\ref{fig:sub}, we understand that
+only the \emph{register} transition of Glance and Nova requires the
+service catalog Keystone to be available (\ie to register themselves
+in the catalog). We can see on the figure that other tasks can be
+executed in parallel while \emph{register} waits for Keystone (\eg for
+Nova, this transition is independent for all the other
+ones). Similarly, Figure~\ref{fig:sub} depicts for each component many
+parallel transitions showing how \mad can be leveraged for
+\emph{intra-comp-tasks} parallelism in this use-case.
 
 %------------------------------------
 \subsection{Experimental Setup and Parameters}
@@ -239,9 +236,9 @@ between components, their internals are composed of two states
 connected by a single transition which performs all the commissioning
 tasks, such as in \kolla (\ie no \emph{intra-comp-tasks}
 parallelism). Each time a component is deployed, it activates the
-commissioning process of the next one (\ie no \emph{inter-comp} and
-\emph{inter-comp-tasks} parallelism). This assembly features the first
-level of parallelism which is managed by \ansible when tasks are
+commissioning process of the next one (\ie neither \emph{inter-comp}
+nor \emph{inter-comp-tasks} parallelism). This assembly features the
+first level of parallelism which is managed by \ansible when tasks are
 mapped to multiple nodes, \ie \emph{SIMH} parallelism.
 %
 
@@ -298,8 +295,9 @@ nodes.
 
 In this section, we analyze the results of our benchmark through
 different aspects: (i) the performance of each assemblies; (ii) the
-precision of the performance model, and its use to validate our
-results and (iii) the influence of registry modes on our results.
+adequation between the theoretical predicted performance and the
+observed results and (iii) the influence of registry modes on our
+results.
 
 \begin{figure}[t!]
   \begin{center}
@@ -332,20 +330,21 @@ results and (iii) the influence of registry modes on our results.
 \end{table}
 
 In these different studies, we will refer to
-\cref{fig:ecotype,fig:nova} which respectively show our results on
-\ecotype and \nova clusters. The upper part displays the recorded
+Figures~\ref{fig:ecotype,fig:nova} which respectively show our results
+on \ecotype and \nova clusters. The upper part displays the recorded
 times to commission OpenStack as a function of the three different
 assemblies studied. For a better understanding of the comparison, the
 value of each result is written on top of the bars, while the ratio
-compared to \ansass, our reference, is displayed below the bars' edges.
-Furthermore, for each assembly on the X-axis, the results for the
-three \docker registry settings are displayed with different colors:
-blue, red and green respectively for \emph{remote}, \emph{local} and
-\emph{cached} respectively. On the lower part, the means for each
-result are depicted as blue, red and green horizontal lines, the
-related standard deviations are represented by vertical lines, while
-boxes represent the minimum and maximum values computed with the
-theoretical performance model of Section~\ref{sec:perf_model}.
+compared to \ansass, our reference, is displayed below the bars'
+edges.  Furthermore, for each assembly on the X-axis, the results for
+the three \docker registry settings are displayed with different
+colors: blue, red and green respectively for \emph{remote},
+\emph{local} and \emph{cached} respectively. On the lower part, the
+means for each result are depicted as blue, red and green horizontal
+lines, the related standard deviations are represented by vertical
+lines, while boxes represent the minimum and maximum values computed
+with the theoretical performance model of
+Section~\ref{sec:perf_model}.
 % 
 For the sake of readability, the scale of the lower parts are
 differents for each assembly. Each result corresponds to the average
@@ -399,11 +398,11 @@ also displayed in \cref{tab:openstack_results}.
 
 We now compare the time measured to commission OpenStack regarding the
 three assemblies defined previously: \ansass, \aeoass and \madass (the
-lower, the better in \cref{fig:openstack_results}).  As expected, the
-time required to commission these assemblies reflects the level of
-parallelism they handle. Since \ansass is limited to the first
-parallelism level, \ie \emph{SIMH}, its commissioning time is longer
-than \aeoass. By featuring \emph{inter-comp} and
+lower, the better in Figure~\ref{fig:openstack_results}).  As
+expected, the time required to commission these assemblies reflects
+the level of parallelism they handle. Since \ansass is limited to the
+first parallelism level, \ie \emph{SIMH}, its commissioning time is
+longer than \aeoass. By featuring \emph{inter-comp} and
 \emph{inter-comp-tasks} parallelism, the latter outperforms the former
 from $26$\% (\nova, \emph{cached}) to $50$\% (\ecotype,
 \emph{remote}). Leveraging \emph{intra-comp-tasks} parallelism enables
@@ -423,12 +422,12 @@ investigate this aspect, we implemented in \mad the ability to
 generate Gantt charts that display the execution time of the different
 transitions for each component.
 % Maybe something to put in the implementation part
-\Cref{fig:gantt_ansible,fig:gantt_aeolus,fig:gantt_madeus}
+Figures~\ref{fig:gantt_ansible,fig:gantt_aeolus,fig:gantt_madeus}
 respectively represent the Gantt charts of the commissioning execution
 of \ansass, \aeoass and \madass, when the registry is set to
 \emph{cached} on \ecotype. Each line of these figures represents a
 transition as a function of the elapsed-time displayed on the X-axis.
-First, as explained previously, \cref{fig:gantt_ansible} shows that a
+First, as explained previously, Figure~\ref{fig:gantt_ansible} shows that a
 single transition exists in each component of the \ansass
 assembly. Thus, here, each line also corresponds to one component
 commissioning. As expected, the figure shows that each component is
@@ -443,23 +442,24 @@ dependencies between them (depending on the ability to express
 \emph{inter-comp}, \emph{inter-comp-tasks} and \emph{intra-comp-tasks}
 parallelism).
 %
-\Cref{fig:gantt_aeolus} illustrates that the components we highlighted
-previously (\eg Nova in yellow, Neutron in gray) are based on two
-transitions in \aeoass. This figure shows that this assembly can
-leverage both the \emph{inter-comp} and \emph{inter-comp-tasks}
+Figure~\ref{fig:gantt_aeolus} illustrates that the components we
+highlighted previously (\eg Nova in yellow, Neutron in gray) are based
+on two transitions in \aeoass. This figure shows that this assembly
+can leverage both the \emph{inter-comp} and \emph{inter-comp-tasks}
 parallelism levels since we can see that multiple components and
 different tasks of these components (\eg \texttt{glance.pull} and
-\texttt{haproxy.deploy}) are deployed in parallel. As a consequence,
+\texttt{haproxy.deploy}) are executed in parallel. As a consequence,
 the commissioning time drops from $5$ minutes and $31$ seconds to $3$
 minutes and $49$ seconds.
 %
-Finally, \cref{fig:gantt_madeus} clearly shows how \mad leverages the
-fourth level of parallelism (\ie \emph{intra-comp-tasks} parallelism)
-by displaying multiple transitions executed in parallel. For instance,
-transitions \texttt{nova.pull} and \texttt{nova.config} (depicted in
-yellow), are performed simultaneously which is not possible with
-\ansible or \aeolus. Hence the commissioning time drops from $5$
-minutes and $31$ seconds to $2$ minutes and $8$ seconds.
+Finally, Figure~\ref{fig:gantt_madeus} clearly shows how \mad
+leverages the fourth level of parallelism (\ie \emph{intra-comp-tasks}
+parallelism) by displaying multiple transitions executed in
+parallel. For instance, transitions \texttt{nova.pull} and
+\texttt{nova.config} (depicted in yellow), are performed
+simultaneously which is not possible with \ansible or \aeolus. Hence
+the commissioning time drops from $5$ minutes and $31$ seconds to $2$
+minutes and $8$ seconds.
 %
 
 %-------
@@ -501,18 +501,19 @@ phase.
 % TODO: Give the number for aeolus rather than ansible?
 
 \Cref{tab:openstack_results} contains the gains relatively to \ansass,
-associated to \cref{fig:ecotype}. This table shows that the gain
+associated to Figure~\ref{fig:ecotype}. This table shows that the gain
 obtained with \emph{local} and \emph{remote} registries are better
 than the one obtained with \emph{cached} \docker images.
 
 To better understand the origin of this difference, we can compare
-\cref{fig:gantt_aeolus} and \cref{fig:gantt_aeolus_remote}. The former
-one depicts the time spent by all transitions of \aeoass, on \ecotype,
-when the \docker registry is set on \emph{cached}, while it is set to
-\emph{remote} for the latter. As we can see on the figures, the
-difference is mainly due to the parallel execution of \texttt{pull}
-transitions which are much longer in \emph{remote} (and similarly in
-\emph{local}) than in \emph{cached} where images are already on nodes.
+Figure~\ref{fig:gantt_aeolus} and
+Figure~\ref{fig:gantt_aeolus_remote}. The former one depicts the time
+spent by all transitions of \aeoass, on \ecotype, when the \docker
+registry is set on \emph{cached}, while it is set to \emph{remote} for
+the latter. As we can see on the figures, the difference is mainly due
+to the parallel execution of \texttt{pull} transitions which are much
+longer in \emph{remote} (and similarly in \emph{local}) than in
+\emph{cached} where images are already on nodes.
 
 \Cref{tab:pull} represents the execution time of the \texttt{pull}
 transition of the Nova component on \ecotype, as well as the
@@ -522,25 +523,21 @@ commissioning time in \emph{remote}, while only $3\%$ in
 \emph{cached}. This table confirms that the time spent in the
 \texttt{nova.pull} transition is much larger for \emph{local} and
 \emph{remote} than for \emph{cached}. Thus, in proportion the gain
-when parallelizing of \texttt{pull} transitions is higher for
+when parallelizing \texttt{pull} transitions is higher for
 \emph{local} and \emph{remote}. This result illustrates the interest
 of parallelizing data transfers in container-based commissionings when
 the network bandwidth can support it.
 
-\SR{``hardware configuration'' est un peu ambigu au vu de l'usage du mot
-configuration ailleurs dans le papier. Je suggère ``superior hardware
-capabilities'', or parler plus précisément de la capacité d'exécution parallèle.}
-
 Finally, one can note that the global commissioning time for OpenStack
-is lower on \ecotype than on \nova. This is due to a better hardware
-configuration for the former, regarding CPU, RAM and network, as
+is lower on \ecotype than on \nova. This is due to superior hardware
+capabilities for the former, regarding CPU, RAM and network, as
 detailed in \cref{tab:g5k}. Indeed as \mad introduces more parallelism
 in the commissioning procedure of OpenStack, the better the
-configuration of the cluster, the better the performance. Our claim
-is that the physical nodes on which complex distributed
-software systems are installed often have a very good hardware configuration and
-that exposing more parallelism in the commissioning process is another
-way to exploit their high performance.
+configuration of the cluster, the better the performance. Our claim is
+that the physical nodes on which complex distributed software systems
+are deployed often have very powerful hardware capabilities and that
+exposing more parallelism in the commissioning process is an
+additional way to exploit their high performance.
 
 %\HC[Helene]{J'enlèverai la partie qui suit car ce n'est pas très
 %  précis, on a testé sur 2 clusters pour valider les résultats tout simplement.}
