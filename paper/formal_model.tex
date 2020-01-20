@@ -236,6 +236,13 @@ We now formally present the operational semantics of the \mad model,
 given as a binary relation $\semstep$ over configurations. The rules
 describing this relation are given in Figure \ref{fig:rules}.
 
+An execution of an assembly $A$ is a sequence of configurations
+\[
+\langle I, I, \emptyset \rangle \semstep \langle \mk_1, \reached_1, \exec_1 \rangle \semstep \semstep \langle \mk_2, \reached_2, \exec_2 \rangle \semstep \dots
+\]
+An execution may be finite only if the last configuration $\langle
+\mk_n, \reached_n, \exec_n \rangle$ is such that no rule applies.
+
 \paragraph{Reaching place}{
 
 The rule $\reachplace$ describes the activation of a place $\pi$. It
@@ -322,7 +329,7 @@ rule.
 \begin{figure*}[tp]
   \begin{prooftree}
     \AxiomC{$\pi\in\Pi^*$}
-    \AxiomC{$\Delta_i(\pi) \subseteq  \mk$}
+    \AxiomC{$\emptyset \subset \Delta_i(\pi) \subseteq  \mk$}
     \RightLabel{$\reachplace$}
     \BinaryInfC{$\langle \mk, \reached, \exec \rangle \semstep \langle (\mk \setminus \Delta_i(\pi)) \cup \{ \pi \}, \reached \cup \{ \pi \} , \exec\rangle$}
   \end{prooftree}
@@ -399,7 +406,7 @@ rule.
 %\SR{Add constraint that the initial place should be unique? Does not really matter for theoretical puroposes.}
 
 \paragraph{Structural constraints}{
-  A place $\pi_2$ is said to \emph{follow} a place $\pi_1$ if there
+  A place $\pi_1$ is said to \emph{precede} a place $\pi_2$ if there
   exists $(s, \alpha, d) \in \Theta$ such that $\pi(s) = \pi_1$ and
   $\pi(d) = \pi_2$.  If there exists a sequence $(\pi_1, \pi_2, \dots,
   \pi_n)$, such that $\pi_{i+1}$ follows $\pi_i$ for any $i$ where $1
@@ -409,6 +416,67 @@ rule.
   $\pi$ that depends on itself. Intuitively, the component, viewed as
   a directed graph, must be acyclic.
 
+  The lemmas below all assume an assembly $A = (C, L)$ such that all
+  components $c \in C$ are well-formed.
+
+  \begin{lemma}\label{thm:finite}
+    Any execution of $A$ is finite.
+  \end{lemma}
+
+  \begin{proof}
+    Since the sets of places, docks, transitions and actions are
+    finite, the set of configurations is also finite. Therefore it is
+    enough to show that there exists no cyclic execution $\langle \mk,
+    \reached, \exec \rangle \semstep \dots \semstep \langle \mk,
+    \reached, \exec \rangle$.
+
+    TODO.
+  \end{proof}
+
+  \begin{lemma}\label{thm:applyrules}
+    For any execution of $A$, if the conditions of a rule are
+    eventually satisfied, this rule will eventually be applied.
+  \end{lemma}
+
+  \begin{proof}
+    We can see that, for any execution and any condition of a rule,
+    either the condition remains true forever (in particular, reached
+    places and provided ports remain in that state) or the condition
+    remains true until the rule is applied (\eg a token is moved by
+    the rule).
+
+    By Lemma~\ref{thm:finite}, all executions must be finite, and by
+    definition of an execution, no rule should be applicable in the
+    final configuration.
+  \end{proof}
+
+  \begin{lemma}\label{thm:reachedplaces}
+    Let $c \in C$ be a component, and $\pi$ a place in it. In any
+    execution of $A$, if all places $\pi'$ that precede $\pi$ are
+    eventually reached, and all use ports of $c$ are eventually
+    provided, then $\pi$ is eventually reached.
+  \end{lemma}
+
+  \begin{proof}
+    Let us consider an execution such that (i) all places $\pi'$ that
+    precede $\pi$ are eventually reached, and (ii) all use ports of
+    $c$ are eventually provided.
+
+    If $\Delta_i(\pi) = \emptyset$, then $\pi \in I$ and $\pi$ is
+    reached in the initial configuration.
+    
+    Otherwise, for each place $\pi'$ and each transition $\theta = (s,
+    \alpha, d)$ where $\pi(s) = \pi'$ and $\pi(d) = \pi$, by (i),
+    $\pi'$ must eventually hold a token. By
+    Lemma~\ref{thm:applyrules}, $\theta$ must eventually be fired,
+    $\alpha$ be terminated and $\theta$ be ended (rules $\firetrans$,
+    $\terminaction$ and $\leavetrans$), thus any $d \in \Delta_i(\pi)$
+    will eventually hold a token. Furthermore, tokens are removed from
+    $\Delta_i(\pi)$ only when $\pi$ is reached (rule $\reachplace$),
+    hence the conditions of $\reachplace$ will eventually be
+    satisfied, and $\pi$ reached.
+  \end{proof}
+  
   \begin{lemma}
     Let $c$ be a well-formed component. For any execution where all
     use ports $u \in S_u$ are eventually provided, all places of $c$
@@ -419,7 +487,18 @@ rule.
   nous soumettions rapidement. Soit on laisse et on fait rapidement,
   soit on enlève}
   \begin{proof}
-    TODO.
+    By contradiction, assume the existence of an execution such that
+    (i) some place of $c$ is never reached and (ii) all use ports are
+    eventually provided.
+
+    Let $\reached$ denote the set of place that are eventually reached
+    in that execution. By (i), the set $\Pi \setminus \reached$ is
+    non-empty. Furthermore, because $c$ is well-formed, the
+    precede-relation is well-founded, therefore there exists at least
+    one place $\pi \in Pi \setminus \reached$ such that all places
+    $\pi'$ that precede $\pi$ are in $\reached$. By (ii) and
+    Lemma~\ref{thm:reachedplaces}, $\pi \in \reached$, leading to a
+    contradiction.
   \end{proof}
 
   This lemma indicates that the \mad model provides, by construction,
