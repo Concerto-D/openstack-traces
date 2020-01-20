@@ -19,8 +19,8 @@ class MariaDB (MadeusComponent):
         'check': ('std', 'chd', self.f_check)
     }
     self.dependencies = {
-        'ip': (DepType.DATA_PROVIDE, 'wtg'),
-        'serv': (DepType.PROVIDE, ['std','chd'])
+        'ip': (DepType.PROVIDE, [['wtg']]),
+        'serv': (DepType.PROVIDE, [['std']])
     }
     
     def f_prov(self):

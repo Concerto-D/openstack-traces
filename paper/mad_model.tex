@@ -31,24 +31,24 @@ instead of code design.
 
 A \mad component is called a \emph{control} component as it is only
 intended to model the commissioning procedure of an already existing
-component, module or service. A \mad component is a type containing
-places that represent milestones of the commissioning, and transitions
-that connect the places together and represent actions to be performed
-between milestones (\eg \texttt{apt-get install}, \texttt{docker pull},
+piece of software code (functional component, module or service). A
+\mad control component is a type containing places that represent
+milestones of the commissioning, and transitions that connect the
+places together and represent actions to be performed between
+milestones (\eg \texttt{apt-get install}, \texttt{docker pull},
 etc.). If multiple transitions leave a place, their parallel execution
 is automatically handled and synchronized by \mad. A component may
-have dependencies towards other components. Such dependencies are declared
-through a well-known object in component-based software engineering:
-ports. Four types of ports, working in pairs, are available in \mad:
-service-provide and service-use, data-provide and data-use ports. By
-using ports, each component type can be defined independently and
-component instances can be connected later by another developer, thus
-improving the separation of concerns and the reusability of commissioning
-procedures. A service-provide port is bound to a group of places that
-represents the milestones where the service is offered. A data-provide
-port is bound to a single place where a value is assigned to the
-port. Finally, both use ports are bound to one or multiple transitions
-where data and service requirements are actually used.
+have dependencies towards other components. Such dependencies are
+declared through a well-known object in component-based software
+engineering: ports. Two types of ports, working in pairs, are
+available in \mad: \emph{provide} and \emph{use} ports. By using
+ports, each component type can be defined independently and component
+instances can be connected later by another developer, thus improving
+the separation of concerns and the reusability of commissioning
+procedures. A provide port is bound to sets of places that represents
+the milestones from which the service or the data is offered. Finally,
+use ports are bound to one or multiple transitions where data and
+service requirements are actually used.
 
 The overall commissioning procedure of a distributed software system
 is built by composition in an \emph{assembly}, where component
@@ -83,37 +83,40 @@ commissioning procedures for complex distributed software systems.
   $^,$%
   \footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_a_mariadb_container}}. Two
   \mad control components are declared in this example: Apache and
-  MariaDB. Apache contains four places (white circles), or
-  milestones, while MariaDB contains five places. Some parallel
-  transitions are declared for each of the component and can be
-  observed in the figure (parallel arrows). Both components have two
-  ports. MariaDB provides both data and a service (once installed),
-  while Apache uses a service and data. Figure~\ref{fig:example}
-  shows the assembly of one Apache and one MariaDB instanciated from
-  their component types. These instances are connected by their
-  ports. Indeed, the Apache configuration depends on the IP adress of the
-  MariaDB component, and the testing phase for Apache, called
+  MariaDB. Apache contains four places (white circles), or milestones,
+  while MariaDB contains five places. Some parallel transitions are
+  declared for each of the component and can be observed in the figure
+  (parallel arrows). Both components have two ports. MariaDB provides
+  both data and a service (once installed), while Apache uses a
+  service and data. Note that in the figure, for the sake of clarity,
+  service and data ports are drawn in a different style, but both
+  ports follow the same behavior. Figure~\ref{fig:example} shows the
+  assembly of one Apache and one MariaDB instanciated from their
+  component types. These instances are connected by their
+  ports. Indeed, the Apache configuration depends on the IP adress of
+  the MariaDB component, and the testing phase for Apache, called
   \texttt{check}, uses the MariaDB service.}
 
 In \mad, two kinds of \emph{actors} are considered. The first is the
 developer of a control component, who may be the author of the
-associated existing piece of code, another developer, or even a
-system operator or administrator. The second is the developer of an assembly,
-typically a system operator or administrator who wants to write
-the overall commissioning procedure of a distributed software system
-to deploy on their infrastructure. One important benefit of \mad is
-its clear separation of concerns between the commissioning of a single
+associated existing piece of code, another developer, or even a system
+operator or administrator. The second is the developer of an assembly,
+typically a system operator or administrator who wants to write the
+overall commissioning procedure of a distributed software system to
+deploy on their infrastructure. One important benefit of \mad is its
+clear separation of concerns between the commissioning of a single
 component on the one hand, and the composition of an assembly, without
 having to care about the detailed commissioning of each component on
 the other hand. For instance, even if Ansible offers properties close
-to composition (\eg roles, playbooks, tasks, etc.), the system operator
-still has to determine the correct order of composition. By contrast, the
-correct coordination, hence the correct order of execution, is
-automatically guaranteed by the \mad semantics and the composition of
-the component instances. The composition viewpoint is illustrated in
-Figure~\ref{fig:simple}, where the details of each component not
-needed for composition are omitted. This type of property has also been offered by
-Aeolus~\cite{}, albeit without parallelism within components.
+to composition (\eg roles, playbooks, tasks, etc.), the system
+operator still has to determine the correct order of composition. By
+contrast, the correct coordination, hence the correct order of
+execution, is automatically guaranteed by the \mad semantics and the
+composition of the component instances. The composition viewpoint is
+illustrated in Figure~\ref{fig:simple} where the details of each
+component, not needed for composition, are omitted. This type of
+property has also been offered by Aeolus~\cite{dicosmo2014ic}, albeit
+without parallelism within components.
 
 \begin{figure}[tbp]
   \begin{center}
@@ -124,9 +127,8 @@ Aeolus~\cite{}, albeit without parallelism within components.
   \label{fig:simple}
 \end{figure}
 
-\mad is a formal component-based commissioning model that will be
-detailed in Section~\ref{sec:formal_model}. \mad also comes with a
-prototype and a concrete syntax.
+The formalization of \mad will be detailed in
+Section~\ref{sec:formal_model}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Meta-model}
@@ -177,37 +179,37 @@ prototype and a concrete syntax.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Concrete language}
 
-The concrete syntax of \mad has been implemented in \python. \mad is a
-simple declarative language that follows the model previously
-presented to define component types and assemblies of
-components. Listing~\ref{codemdb} shows the declaration of the MariaDB
-component type of Figure~\ref{fig:example}. Lines 3 to 8 declare
-the places of the component type. A place is
-identified by a unique \texttt{string}. Lines 9 to 15
-declare the transitions of the component type. A transition is
-identified by a unique key (a \texttt{string}), and is associated
-through a dictionary with a source and a destination place. Moreover,
-each transition is associated with a function to call to perform
-corresponding actions. For instance, the function \texttt{f\_pull} of
-transition \texttt{pull} is declared on line 20, and provides the code
-to execute during this transition. Finally lines 16 to 19 declare the
-ports of the component type. A port is identified by a unique key (a
-\texttt{string}), and is associated with a type and the elements to
-which it is bound. As already described, service-provide ports are
-bound to a group of places, data-provide ports to a single place, and
-both service-use and data-use ports to a set of transitions. In the
-case of MariaDB one service-provide port, namely \texttt{serv}, is
-provided both at \texttt{std} and \texttt{chd} places (see the group
-in Figure~\ref{fig:example}), and one data-provide port, namely
-\texttt{ip} is provided from the first place \texttt{wtg}.
+\mad also comes with a prototype and a concrete syntax that has been
+implemented in \python. \mad is a simple declarative language that
+follows the model previously presented to define control component
+types and assemblies of components. Listing~\ref{codemdb} shows the
+declaration of the MariaDB component type of
+Figure~\ref{fig:example}. Lines 3 to 8 declare the places of the
+component type. A place is identified by a unique
+\texttt{string}. Lines 9 to 15 declare the transitions of the
+component type. A transition is identified by a unique key (a
+\texttt{string}), and is associated through a dictionary with a source
+and a destination place. Moreover, each transition is associated with
+a function to call to perform corresponding actions. For instance, the
+function \texttt{f\_pull} of transition \texttt{pull} is declared on
+line 20, and provides the code to execute during this
+transition. Finally lines 16 to 19 declare the ports of the control
+component type. A port is identified by a unique key (a
+\texttt{string}), and is associated with a type (use or provide) and
+the elements to which it is bound. As already described, provide ports
+are bound to sets of places, and use ports to a set of transitions. In
+the case of MariaDB one provide port, namely \texttt{serv}, is
+provided both from the \texttt{std} place, and another (data) provide
+port, namely \texttt{ip} is provided from the first place
+\texttt{wtg}.
 
 \input{./code/mariadb.tex}
 
 Similarly, Listing~\ref{codeapache} shows the declaration of the
-Apache component of Figure~\ref{fig:example} which has one less place
-and one less transition compared to the MariaDB component. Furthermore, the Apache
-component type contains one service-use port and one data-use port
-(lines 18 to 21).
+Apache control component of Figure~\ref{fig:example} which has one
+less place and one less transition compared to the MariaDB
+component. Furthermore, the Apache component type contains two use
+ports, one modeling data and one modeling a service (lines 18 to 21).
 
 \input{./code/apache.tex}
 
@@ -225,56 +227,49 @@ of this execution is given in the next section.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Execution}
 
-\SR{The way in which docks are introduced here is confusing}
-
-In \mad, executing a commissioning procedure requires the execution of an
-assembly. The \mad execution model is governed by operational
+In \mad, executing a commissioning procedure requires the execution of
+an assembly. The \mad execution model is governed by operational
 semantics rules to move from one configuration to another. The concept
 of configuration, which is introduced formally in
 Section~\ref{sec:formal_model}, intuitively corresponds to a snapshot
-of the execution of an assembly, in other words the location of the
-tokens and values currently associated to data-provide ports. In
-practice, semantics rules move tokens from places to transitions within
-components. Those rules are inspired by those of Petri nets, yet have
-a specific semantics for transitions, groups and ports. Details of the
-transformation from a \mad assembly to a Petri net have been given
-in~\cite{coullon:hal-02323641}. The execution of a \mad assembly is
-defined by four operational semantic rules. In this section, we only
-sketch the role of each of these rules. They are formally specified in
-Section~\ref{sec:formal_model}. Before giving the role of each rule,
-one can note in Figure~\ref{fig:example} the small squares that have
-not been explained yet. These squares represent \emph{docks}. Each
-place has input and output transitions, and each transition has a
-source dock and a destination dock. Docks have not been detailed
-previously because they are automatically infered from the concrete
-syntax of \mad. However, this concept is needed to explain the
-execution of a \mad assembly as it is used to handle parallelism and
-synchronization of transitions.
+of the execution of an assembly composed of: the location of the
+tokens, a history of elements that have been visited, and the set of
+actions (transitions) under execution. In practice, semantics rules
+move tokens from places to transitions within components. Those rules
+are inspired by those of Petri nets, yet have a specific semantics for
+transitions, bindings and ports. Details of the transformation from a
+\mad assembly to a Petri net have been given
+in~\cite{coullon:hal-02323641}.
+
+In this paper, the execution of a \mad assembly has been streamlined
+compared to our previsous work~\cite{chardet:hal-01858150} and is
+defined by four operational semantic rules. These rules are formally
+specified in Section~\ref{sec:formal_model}. Note in
+Figure~\ref{fig:example} the small squares that have not been
+explained yet, namely \emph{docks}. Docks are attached to places and
+divided in two groups, input and output docks. Input docks represent
+synchronization points to enter a place, and output docks represent
+scatering points to leave a place and start parallel
+transitions. Thus, each transition has a source dock and a destination
+dock. Docks have not been detailed previously because they are
+automatically infered from the concrete syntax of \mad. However, this
+concept is needed to explain the four semantics rules:
 %
 \begin{enumerate}
-\item \emph{Firing a transition}: when the source dock of a transition
-  contains a token and when all use ports of a transition have their
-  associated connections activated, the token is moved from the source
-  dock to the transition, which is not considered atomic as it is
-  associated with an action.
-\item \emph{Ending a transition}: when a transition holds a token and
+\item \emph{Reaching place}: when all input docks associated to a
+  place hold a token, those tokens can be merged to a single one,
+  located within the place.
+\item \emph{Leaving place}: when a place holds a token the token can
+  be duplicated and placed in each output dock of the place.
+\item \emph{Firing transition}: when the source dock of a transition
+  contains a token and when all use ports bound to this transition
+  have their associated connections provided, the token is moved from
+  the source dock to the transition, which is not considered atomic as
+  it is associated with an action.
+\item \emph{Ending transition}: when a transition holds a token and
   when the action associated to the transition is terminated, the
   token is moved from the transition to its destination dock.
-\item \emph{Entering a place}: when all input docks associated to a
-  place hold a token, those tokens can be merged to a single one, located
-  within the place.
-\item \emph{Leaving a place}: when a place holds a token, and if the
-  token leaving that place does not cause a provide port currently
-  used by other components to be disabled,
-  the token can be duplicated and placed in each output dock of the
-  place.
 \end{enumerate}
-
-One can note that a data connection cannot be disabled. It
-indefinitely holds the last data value.
-%\CP[HC]{Correct?}
-%\HC{je n'ai pas parlé des groupes pour simplifier le discours. je ne pense pas en parler car ce n'est pas utile dans les exemples.}
-%\CP{ok}
 
 \begin{figure}[tbp]
   \begin{center}
@@ -288,7 +283,7 @@ indefinitely holds the last data value.
 
 \paragraph{Example}{
 We now discuss the commissioning execution of the Apache/MariaDB
-example.  The initial assembly, given in Figure~\ref{fig:example}, has
+example. The initial assembly, given in Figure~\ref{fig:example}, has
 already been described. Figure~\ref{fig:scenari} depicts three example
 configurations that may occur at different steps of the
 commissioning. In chronological order, the first configuration is
@@ -301,15 +296,14 @@ has been able to move from its initial place to its output transition
 transition, to finally reach its second place. One can note that in
 this place MariaDB provides data that corresponds to the IP adress
 previously received from the \texttt{provision} transition. As soon as this
-second place is reached, the associated connection is activated and the
-data is considered available. On the other hand, the initial token
-of Apache has been duplicated in three tokens, one for each output
-dock. Two of these tokens have been able to fire respectively the
-transitions \texttt{bootstrap} and \texttt{pull}, and \texttt{pull}
-has been ended. However, the third token has remained in its dock,
-waiting for the connection bound to the transition \texttt{conf} to be
-enabled. In this configuration, as the connection is activated,
-the transition \texttt{conf} may be fired.
+second place is reached, the associated connection is provided. On the
+other hand, the initial token of Apache has been duplicated in three
+tokens, one for each output dock. Two of these tokens have been able
+to fire respectively the transitions \texttt{bootstrap} and
+\texttt{pull}, and \texttt{pull} has been ended. However, the third
+token has remained in its dock, waiting for the connection bound to
+the transition \texttt{conf} to be provided. In this configuration, as
+the connection is already provided, the transition \texttt{conf} may be fired.
 % SR: ancienne formulation
 %the next round of semantics will fire the transition \texttt{conf}.
 
@@ -317,9 +311,8 @@ The blue configuration illustrates a case where parallel transitions
 \texttt{pull}, \texttt{conf}, and \texttt{bootstrap} of MariaDB are
 executed simultaneously.
 
-Finally, the green configuration illustrates an example where
-MariaDB reaches its penultimate place included in the group that
-provides a service. As soon as this place holds a token, its
-associated provide connection is enabled. As a result, the
-\texttt{check} transition of Apache that is using services of MariaDB
-can be fired by semantic rules.}
+Finally, the green configuration illustrates an example where MariaDB
+reaches its penultimate place from which a service is provided. As
+soon as this place holds a token, its associated connection is
+provided. As a result, the \texttt{check} transition of Apache that is
+using services of MariaDB can be fired by semantic rules.}

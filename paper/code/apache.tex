@@ -17,7 +17,7 @@ class Apache (MadeusComponent):
         'check': ('std', 'chd', self.f_check)
     }
     self.dependencies = {
-        'ipMDB': (DepType.DATA_USE, ['conf']),
+        'ipMDB': (DepType.USE, ['conf']),
         'serviceMDB': (DepType.USE, ['check'])
     }
 
