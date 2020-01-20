@@ -1,13 +1,23 @@
-In this section, we present a performance model for \mad. Its goal is to
-estimate the total execution time of the commissionning of a
-given assembly. In order to do this, we need an estimation of the
-execution time of all the actions in the assembly, given as a
+In this section, we present a theoretical performance prediction model
+for \mad. Its goal is to estimate the total execution time of the
+commissionning of a given assembly according to the execution time of
+each transition. Three goals are pursued with such tool. First, the
+theoretical execution time offers a way to evaluate the quality of the
+prototype of \mad. Second, for a system administrator or a developer,
+knowing the theoretical execution time of the commissioning procedure
+is useful. Third, in case of a fully autonomic commissioning and
+reconfiguration process, which is left to future work, theoretical
+information on the execution time are needed to take adequate
+decisions, in particular for critical systems and services.
+
+To build this performance prediction model, we need an estimation of
+the execution time of all the actions in the assembly, given as a
 function $time\,:\,\actions\rightarrow\mathbb{R}^+$.  Computing
 precise execution times for the kind of actions used in a deployment
 can be difficult and is itself the subject of many studies, \eg using
-an analytical model~\cite{todo} a a statistical approach~\cite{todo}.
-However, for our application, we find estimates are sufficient as long as
-they preserve the relative difference between different transitions.
+an analytical model or a statistical approach. However, for our
+application, we find estimates are sufficient as long as they preserve
+the relative difference between different transitions.
 %
 Intuitively, we automatically deduce the execution flow of a \mad
 assembly based on \mad' formal semantics. This is done by generating a
@@ -25,12 +35,6 @@ these transitions' individual execution time (and the other ones with 0),
 we can compute the expected total execution time of the assembly by finding the
 longest path from the \emph{source} vertex to the \emph{sink} vertex.
 
-\HC[HC]{why a performance model? give some motivations! 2 reasons,
-  first a performance model offers a way to estimate the execution
-  time of a commissioning which could be useful for sysadmins. second,
-in this paper the performance model is used to validate the
-experimental results and the quality of the prototype of \mad}
-
 % By generating a graph modelling the execution flow of a \mad assembly,
 % capturing both intra-component and inter-component dependencies, we
 % reduce this problem to finding the longest path in a DAG.
@@ -40,14 +44,19 @@ experimental results and the quality of the prototype of \mad}
 The performance model given here is valid only for assemblies such
 that any set of places bound to a provide port contains exactly one
 place. This means that the requirement to enable such a port may only
-take the form of a conjunction of constraints on reached places.
+take the form of a conjunction of constraints on reached
+places. Indeed, in the specific case of the disjunction ...
 
 \MC{Préciser ici que dans la pratique ce n'est pas un problème ?}
+\HC[Maverick et Simon]{oui, j'ai commencé une phrase, il faut donner
+  l'intuition du problème posé par la disjonction et aussi dire que
+  dans la pratique sur des cas réels nous n'avons jamais eu besoin de
+  disjonctions.}
 
 The estimation provided by the model is a best case scenario: it
 assumes that all actions are started as soon as possible, and that the
-hardware has the capacity to run all possible parallel actions
-(without affecting their execution times).
+hardware has the capacity to run all possible parallel actions without
+affecting their execution times.
 
 %--------------------------------------
 \subsection{Notations}
@@ -99,7 +108,10 @@ itself and one representing the event of a token leaving the place.
 \[
 V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{place},v_\pi^\text{leav}\right\} 
 \]
-\MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de place}
+\MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de
+  place}
+\HC[Maverick]{si c'est long a verifier, laisser comme ça, il faut
+  qu'on soumette !}
 
 For each transition, we introduce two vertices: one representing the
 beginning of the transition and one representing its end.
@@ -107,7 +119,10 @@ beginning of the transition and one representing its end.
 V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{beg},v_\theta^\text{end}\right\} 
 \]
 
-\SR{On peut sans doute retirer les vertices representant les ports, et directement connecter $v^{place}_\pi$ à $v^{beg}_\theta$.}
+\SR{On peut sans doute retirer les vertices representant les ports, et
+  directement connecter $v^{place}_\pi$ à $v^{beg}_\theta$.}
+\HC[Maverick et Simon]{oui je pense aussi, mais même remarque que au
+  dessus, il faut qu'on soumette !}
 For each provide port we introduce one vertex representing its enabling.
 \[
 V_{S_p}=\bigcup_{p\in S_p^*} \left\{ v_p^\text{start}\right\} 
@@ -187,7 +202,7 @@ E_{S_u} = \bigcup_{\substack{(u,p)\in L \\ (u,\theta)\in B_{S_u}^*}} \left\{ \le
 Figure~\ref{fig:ports_graph} depicts the dependency graph corresponding to a
 provide port \emph{p} bound to a place \emph{c1p} and connected to
 a use port \emph{u} which is bound to a transition \emph{c2t}.
-\SR{TODO: change figure (part a)}
+\SR[Maverick]{TODO: change figure (part a)}
 
 %% SR: text before modification
 %% Figure~\ref{fig:data_ports_graph} depicts the dependency graph corresponding to a
