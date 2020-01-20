@@ -17,6 +17,25 @@ model detailed in Section~\ref{sec:perf_model}. By doing so we both
 validate the theoretical performance model compared to the reality,
 and the expected performance of the prototype on the set of use-cases.
 
+\paragraph{Implementation details}
+The prototype implementation was made in Python. Users declare components
+by creating a class, inheriting from the \emph{Component} class, containing
+the description of the \net as well as the actions associated to the
+transitions. These actions are Python functions which usually perform remote
+actions using SSH, Ansible or other tools. Users can then create an assembly
+by extending the appropriate class and listing the components and how their
+ports are connected. This assembly can then be run, which means that the
+semantics of Madeus is executed in this assembly. The commissioning is
+over if the only elements holding a token are places
+without outgoing transitions. While this is not the case, the semantics is
+executed by attempting to apply each rule from the semantics on each component.
+When a transition is fired, the corresponding Python function is executed in
+a Python thread, which does not block the execution of the semantics. Note
+that Python threads do not take advantage of hardware parallelism capabilities,
+but because the functions usually run other (possibly remote) processes to
+do the heavy work, this is not an issue. The $\terminaction$ can be executed
+for the corresponding function when it has finished its execution.
+
 % figures to add for assemblies
 %Sequential
 
