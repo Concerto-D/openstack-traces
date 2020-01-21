@@ -114,15 +114,16 @@ the place being reached.
 \[
 V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{reach}\right\} 
 \]
+
 %% \MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de
 %%   place}
 %% \HC[Maverick]{si c'est long a verifier, laisser comme ça, il faut
 %%   qu'on soumette !}
+%% SR: fait
 
-For each transition, we introduce two vertices: one representing the
-beginning of the transition and one representing its end.
+For each transition, we introduce a vertex representing its firing.
 \[
-V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{fire},v_\theta^\text{end}\right\} 
+V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{fire}\right\} 
 \]
 
 %% \SR{On peut sans doute retirer les vertices representant les ports, et
@@ -138,7 +139,6 @@ enabling.
 \[
 V_{S_p}=\bigcup_{p\in S_p^*} \left\{ v_p^\text{enable}\right\} 
 \]
-
 
 Finally, we define $V$ as the union of all these, plus one source
 and one sink vertices. 
@@ -182,7 +182,7 @@ to the action.
 Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to three
 transitions \emph{t1}, \emph{t2} and \emph{t3}.
 \[
-  E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi_d}^\text{reach}\right)\right\} 
+  E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi(d)}^\text{reach}\right)\right\} 
 \]
 
 %%%%%%%%%%%%%%%
@@ -295,20 +295,20 @@ For each final place $\pi$ we introduce one arc from $v_\pi^\text{reach}$
 to $v^\text{sink}$. Intuitively, this represents the fact that the
 commissionning is over only after all components have reached the
 places without outgoing transitions.
-Figure~\ref{fig:source_sink_graph} depicts the dependency graph
-corresponding to three final places \emph{c1p2}, \emph{c2p2}
-and \emph{c2p3}.
 \[
 E_F=\bigcup_{\pi, \Delta_o(\pi) = \emptyset}\left\{ \left(v_\pi^\text{reach},0,v^\text{sink}\right)\right\} 
 \]
-
-%%%%%%%%%%%%%%%
-\input{figures/exampletodag.tex}
 
 Finally, we define $E$ as 
 \[
 E= E_{\Theta} \cup E_{S_p}\cup E_{S_u}\cup E_{I}\cup E_{F}
 \]
+
+Figure~\ref{fig:source_sink_graph} depicts the dependency graph
+corresponding to a small assembly.
+\SR{Ce serait bien d'avoir un port dans l'example}
+%%%%%%%%%%%%%%%
+\input{figures/exampletodag.tex}
 
 %--------------------------------------
 \subsection{Time estimation}
@@ -454,10 +454,9 @@ We now determine the size complexity of $DG_A=(V,E)$ and the time
 complexity of computing the time estimation.
 
 First, we notice that
-$|V| \in \mathcal{O}\left(\left|\pi^*\right|+\left|\theta^*\right|+\left|S_{p^*}\right|+\left|D_{p^*}\right|\right)$
+$|V| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|S_p^*\right|\right)$
 and
-$|E| \in \mathcal{O}\left(\left|\pi^*\right|+\left|\theta^*\right|+\left|B_{S_p}\right|+\left|B_{D_p}\right|+\left|B_{S_u}\right|\times\left|L_S\right|\right.$ \\
-$\left.+\left|B_{D_u}\right|\times\left|L_D\right|\right)$
+$|E| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|B_{S_p}^*\right|+\left|B_{S_u}^*\right|\times\left|L\right|\right)$
 .
 
 Because $DG_A$ is a a directed acyclic graph, finding the longest path
