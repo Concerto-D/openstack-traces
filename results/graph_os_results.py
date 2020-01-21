@@ -93,9 +93,29 @@ def creategantt(filepath, name):
             # get max time
             if item["end"] > max_time:
                 max_time = item["end"]
-            ax.broken_barh([(item["start"], (item["end"] - item["start"]))], (2 * i + 0.75, 0.5),
+            ax.broken_barh([(item["start"], (item["end"] - item["start"]))], (2 * i + 0.75, 1),
                            facecolors=(color))
-            labels.append(element + "." + item["name"])
+            # shorten long names
+            if len(element) > 4:
+                if element == 'keystone':
+                    element = 'kst'
+                elif element == 'memcached':
+                    element = 'mem'
+                elif element == 'rabbitmq':
+                    element = 'rmq'
+                elif element == 'openvswitch':
+                    element = 'ovs'
+                elif element == 'haproxy':
+                    element = 'hap'
+                elif element == 'common':
+                    element = 'com'
+            # for some, shorten long name of transition
+            transition = item["name"]
+            if item["name"] == 'upgrade_api_db':
+                transition = 'upapidb'
+            elif item["name"] == 'upgrade_db':
+                transition = 'updb'
+            labels.append(element + "." + transition)
             ticks.append(2 * i + 1)
             i += 1
 
