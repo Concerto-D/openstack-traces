@@ -24,18 +24,26 @@ OpenStack. Results have been extensively studied and have shown that
 
 As future work we first plan a generalization of \mad to dynamic
 reconfiguration of distributed software. Indeed, once commissioned
-distributed software may adapt dynamically because of faults, to
+distributed software may adapt dynamically because of faults, or to
 optimize some metrics (\eg energy, efficiency), or to adapt their
 services to dynamic requirements (\eg smart cities). We think that
 when reconfiguration decisions have to be taken, especially for
-critical systems the duration of the reconfiguration have to be taken
+critical systems, the duration of the reconfiguration have to be taken
 into account. Thus, generalizing both \mad and the performance
-prediction models of Section~\ref{sec:perf_model} to reconfiguration
-is an interesting contribution. Second, \mad is currently not equiped
-with mechanisms to handle faults during the commissioning
-procedure. For instance we would like to equip \mad with if/else
+prediction models of Section~\ref{sec:perf_model} to dynamic
+reconfiguration is an interesting contribution.
+
+Second, \mad is currently not equiped with mechanisms to handle faults
+during the commissioning procedure. Typically the rule $\terminaction$
+do not consider the possibility of a failure during the action
+$\alpha \in \exec$. We would like to equip \mad with if/else
 statements or switches as well as rollback mechanisms. Moreover we
 would like to have formal guarantees in case of faults, for instance
 by using game theory or stochastic formal methods.
+
+Finally, we would like to study the semi-automatic (thanks to a very
+light DSL) or automatic (if possible) inference of dependencies from
+\ansible playbooks such that the \mad assemblies can be entirely or
+partially generated for the user.
 
   
