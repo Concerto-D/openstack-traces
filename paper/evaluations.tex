@@ -62,7 +62,7 @@ Figures~\ref{fig:seq} and~\ref{fig:par}.
 The first benchmark, denoted (A), models a sequential \mad assembly,
 depicted in Figure~\ref{fig:seq}. It is composed of one
 \emph{provider} component made of a transition and two places, and
-$N+1$ \emph{user-provider} components that are also composed of a
+$N-1$ \emph{user-provider} components that are also composed of a
 transition and two places, but where the transition uses the provide
 port of the preceeding component. The components are connected in
 chain thus resulting in a sequential execution.
@@ -85,29 +85,30 @@ chain thus resulting in a sequential execution.
 The two other benchmarks model \mad parallel assemblies and are
 depicted in Figure~\ref{fig:par}. The first assembly, denoted (B)
 evaluates the parallelism at the component level, called
-\emph{inter-comp} and \emph{inter-comp-tasks} previously in this
-paper. The second one, denoted (C), models the parallelism at the
-transition level, \ie \emph{intra-comp-tasks}, when transitions are
-performed simultaneously.
+\emph{inter-comp} and \emph{inter-comp-tasks}. The second one, denoted
+(C), models the parallelism at the transition level, \ie
+\emph{intra-comp-tasks}, when transitions are performed
+simultaneously.
 %
 Both benchmarks use the same assembly that is composed of an initial
-\emph{provider} component and $N$ parallel components connected to the
-provider. Each component contains a first transition that uses the
-service provided by the provider component and $T$ parallel
-transitions. For Benchmark (B), the number of components varies from 1
-to 40 components with a single transition per component $T=1$. For
-Benchmark (C), the number of component is fixed to $N=1$ and the
-number of transitions varies from 1 to 20.
+\emph{provider} component and $N$ parallel \emph{user} components
+connected to the provider. Each \emph{user} component contains a first
+transition that uses the service provided by the provider component
+and $T$ parallel transitions. For Benchmark (B), the number of
+components varies from 1 to 40 components with a single transition per
+component $T=1$. For Benchmark (C), the number of component is fixed
+to $N-1=1$ and the number of transitions varies from 1 to 20.
 
 Experiments have been performed on a single node of the \ecotype
 cluster of the experimental platform
 Grid'5000\footnote{\url{www.grid5000.fr}}. The detailed configuration
 of the node is given in Table~\ref{tab:g5k}. Each experiment presented
-in the results is an average of ten executions. For each transition
-an execution time of 5 seconds has been applied. This execution time
-is guaranteed by the call to the sleep function of \python. This
-execution time has been chosen to get a coherent and readable scale of
-results.
+in the results is an average of ten executions. The duration of some
+transitions of the benchmarks are set to $d=0$ and the transitions
+that are interesting for the results are set to $d=5$ (seconds). This
+execution time is guaranteed by the call to the sleep function of
+\python. This execution time has been chosen to get a coherent and
+readable scale of results.
 %They are both evaluated in \emph{dryrun} mode without any
 %ssh connections and with \emph{ssh connections} active in the assembly
 %between components, so as to allow visualisation of the eventual
@@ -124,7 +125,7 @@ results.
 Figure~\ref{fig:seqres} presents the results of Benchmark (A). As (A)
 models a sequential assembly, the theoretical execution time is simply
 the sum of the execution time of each transition of each component
-($N+2$ components). The results show a linear increase in time and the
+($N$ components). The results show a linear increase in time and the
 \emph{dryrun} curve follows the \emph{ideal} curve closely.
 %The difference between the
 %\emph{ssh-connections} curve is hard to visualise but is slightly
@@ -152,20 +153,18 @@ the sum of the execution time of each transition of each component
 %times.json and the modified times.json files to keep the original
 %results intact.
 
-\HC[Charlène]{qu'est-ce qui a été exécuté exactement pour que ça soit
-  5s le résultat ? ça ne colle pas à la figure de l'assemblage qui
-  devrait donner 15s - faut-il refaire la figure ?}
-Figure~\ref{fig:parcompres} depicts the results of Benchmark (B).  The
+Figure~\ref{fig:parcompres} depicts the results of Benchmark (B). The
 ideal theoretical performance for this benchmark is a constant equal
-to the sleep duration time of transitions, \ie $5$ seconds. Indeed as
-components are not connected together through ports they are deployed
-simultaneously.
+to the duration time of the main transition of \emph{user} components,
+\ie $5$ seconds. Indeed as components are independent from each other
+(no ports) they are deployed simultaneously.
 %value as components are commissioned in parallel. In \emph{dryrun}
 %our experimental benchmark
 One can note that the results observed with the \mad prototype is only
 very slightly above the ideal constant result, which shows that the
 prototype does not add significant overhead to the process even for a
-large number of parallel components.
+large number of parallel components on the same node. Indeed,
+deploying 40 components or services on a single node is unusual.
 %The \emph{ssh connection} curve allows us to see
 %that there is steady increase of time, adding almost 3 seconds to the
 %assembly deployment when reaching 40 parallel components. This show
@@ -182,8 +181,8 @@ large number of parallel components.
 Figure~\ref{fig:partrans} shows the results for Benchmark (C). As for
 the previous benchmark, and because transitions are executed
 simultaneously in this benchmark, the theoretical expected curve is a
-constant equal to the sleep duration time of transitions, \ie $5$
-seconds. The results follow the ideal curve closely as well for a
+constant equal to the duration time of one of the $T$ transitions, \ie
+$5$ seconds. The results follow the ideal curve closely as well for a
 large number of transitions.
 
 %calculation for the ideal curve on the parallel assembly benchmark

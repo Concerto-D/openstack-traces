@@ -1,17 +1,41 @@
-\begin{enumerate}
-\item conclusion on what has been introduced
-  \begin{itemize}
-  \item extended rw
-  \item madeus overview with a running example
-  \item madeus formal model
-  \item madeus performance model
-  \item evaluation of the prototype
-  \item evaluation of Madeus on real use-case
-  \end{itemize}
-\item perspectives
-  \begin{itemize}
-  \item reconfiguration
-  \item fault tolerance
-  \end{itemize}
-\end{enumerate}
+\mad is a new component-based model specifically designed for
+distributed software commissioning procedures. By adapting composition
+mechanisms and combining them to the notion of control components \mad
+enhances both the separation of concerns and the efficiency of
+commissionings compared to the related work. In this paper the \mad
+model has been extensively presented from both the theoretical and
+experimental viewpoint.
+
+First, after a detailed study of the related work, an overview of \mad
+was given. Second, the formalization of \mad was presented such that
+the theoretical model is streamlined compared to our previous
+publications. Third, a performance prediction model of \mad was
+studied and consists in the transformation of a \mad assembly to a
+directed acyclic graph (DAG) that represents the execution flow of the
+assembly. Fourth the prototype of \mad was evaluated on three
+synthetic benchmarks and compared to the expected performance
+predicted by the theoretical model. Results have shown a very low
+overhead introduced by the prototype as well as an accurate prediction
+of the performance model. Finally, contributions of \mad regarding the
+separation of concerns and the efficiency has been evaluated and
+discussed on a real complex use-case, the commissioning procedure of
+OpenStack. Results have been extensively studied and have shown that
+\mad outperforms both \ansible and \aeolus in terms of efficiency.
+
+As future work we first plan a generalization of \mad to dynamic
+reconfiguration of distributed software. Indeed, once commissioned
+distributed software may adapt dynamically because of faults, to
+optimize some metrics (\eg energy, efficiency), or to adapt their
+services to dynamic requirements (\eg smart cities). We think that
+when reconfiguration decisions have to be taken, especially for
+critical systems the duration of the reconfiguration have to be taken
+into account. Thus, generalizing both \mad and the performance
+prediction models of Section~\ref{sec:} to reconfiguration is an
+interesting contribution. Second, \mad is currently not equiped with
+mechanisms to handle faults during the commissioning procedure. For
+instance we would like to equip \mad with if/else statements or
+switches as well as rollback mechanisms. Moreover we would like to
+have formal guarantees in case of faults, for instance by using game
+theory or stochastic formal methods. 
+
   
