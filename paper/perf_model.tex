@@ -1,13 +1,13 @@
 In this section, we present a theoretical performance prediction model
-for \mad. Its goal is to estimate the total execution time of the
-commissionning of a given assembly according to the execution time of
-each transition. Three goals are pursued with such tool. First, the
+for \mad that estimates the total execution time of the
+commissionning of a given assembly, according to the execution time of
+each transition. Three goals are pursued with such a tool. First, the
 theoretical execution time offers a way to evaluate the quality of the
 prototype of \mad. Second, for a system administrator or a developer,
 knowing the theoretical execution time of the commissioning procedure
-is useful. Third, in case of a fully autonomic commissioning and
+is useful. Third, in the case of a fully autonomic commissioning and
 reconfiguration process, which is left to future work, theoretical
-information on the execution time are needed to take adequate
+information on the execution time is needed to take adequate
 decisions, in particular for critical systems and services.
 
 To build this performance prediction model, we need an estimation of
@@ -16,7 +16,7 @@ function $time\,:\,\actions\rightarrow\mathbb{R}^+$.  Computing
 precise execution times for the kind of actions used in a deployment
 can be difficult and is itself the subject of many studies, \eg using
 an analytical model or a statistical approach. However, for our
-application, we find estimates are sufficient as long as they preserve
+application, we find that estimates are sufficient as long as they preserve
 the relative difference between different transitions.
 %
 Intuitively, we automatically deduce the execution flow of a \mad
@@ -25,14 +25,13 @@ dependency graph representing the execution flow of each \mad
 component in the assembly and connecting them together according to their
 dependencies (the connections between their ports). Then, a
 \emph{source} vertex is connected to the vertices representing the beginning of
-the execution of each component, and a \emph{sink} vertex is created to which
-are connected the vertices representing the end of the execution of each
-component.
+the execution of each component, and a \emph{sink} vertex is connected to
+the vertices representing the end of the execution of each component.
 %
 Thus, a dependency graph representing the execution of the whole
 assembly is obtained. By weighting the arcs corresponding to the transitions with
-these transitions' individual execution time (and the other ones with 0),
-we can compute the expected total execution time of the assembly by finding the
+the individual execution times of their actions (and the other ones with 0),
+we can compute the expected total execution time of the assembly as the
 longest path from the \emph{source} vertex to the \emph{sink} vertex.
 
 % By generating a graph modelling the execution flow of a \mad assembly,
@@ -43,15 +42,22 @@ longest path from the \emph{source} vertex to the \emph{sink} vertex.
 
 The performance model given here is valid only for assemblies such
 that any set of places bound to a provide port contains exactly one
-place. This means that the requirement to enable such a port may only
-take the form of a conjunction of constraints on reached
-places. Indeed, in the specific case of the disjunction ...
+place. If a provide port is bound to a set containing multiple
+places, the requirement imposed by this binding is satisfied as soon
+as one of the places is reached. The total time then depends on the
+earliest time at which one of these places is reached, which cannot be
+modeled as a longest path. In practice this is not a severe
+restriction, as ports requirements very rarely include
+disjunctions. Indeed, none of our use-cases relies on this
+feature. However, we still consider the possibility of having multiple
+sets (of one place) bound to a port. In this case, the port is enabled
+when all the places are reached.
 
-\MC{Préciser ici que dans la pratique ce n'est pas un problème ?}
-\HC[Maverick et Simon]{oui, j'ai commencé une phrase, il faut donner
-  l'intuition du problème posé par la disjonction et aussi dire que
-  dans la pratique sur des cas réels nous n'avons jamais eu besoin de
-  disjonctions.}
+%% \MC{Préciser ici que dans la pratique ce n'est pas un problème ?}
+%% \HC[Maverick et Simon]{oui, j'ai commencé une phrase, il faut donner
+%%   l'intuition du problème posé par la disjonction et aussi dire que
+%%   dans la pratique sur des cas réels nous n'avons jamais eu besoin de
+%%   disjonctions.}
 
 The estimation provided by the model is a best case scenario: it
 assumes that all actions are started as soon as possible, and that the
