@@ -427,7 +427,7 @@ respectively represent the Gantt charts of the commissioning execution
 of \ansass, \aeoass and \madass, when the registry is set to
 \emph{cached} on \ecotype. Each line of these figures represents a
 transition as a function of the elapsed-time displayed on the X-axis.
-First, as explained previously, Figure~\ref{fig:gantt_ansible} shows that a
+First, as previously explained, Figure~\ref{fig:gantt_ansible} shows that a
 single transition exists in each component of the \ansass
 assembly. Thus, here, each line also corresponds to one component
 commissioning. As expected, the figure shows that each component is
@@ -436,7 +436,7 @@ deployed in a sequential way. The first level of parallelism (\ie
 internally by \ansible playbooks executed in each transition of the
 assembly. One can note that Nova, MariaDB, Glance, Keystone and
 Neutron are particularly long to commission. \aeoass and \madass
-faster the process by combining (i) splitting the transition of
+accelerate the process by combining (i) splitting the transition of
 components into smaller ones and (ii) managing more or less
 dependencies between them (depending on the ability to express
 \emph{inter-comp}, \emph{inter-comp-tasks} and \emph{intra-comp-tasks}
@@ -540,7 +540,7 @@ configuration of the cluster, the better the performance. Our claim is
 that the physical nodes on which complex distributed software systems
 are deployed often have very powerful hardware capabilities and that
 exposing more parallelism in the commissioning process is an
-additional way to exploit their high performance.
+additional way to exploit their high performance level.
 
 %\HC[Helene]{J'enlèverai la partie qui suit car ce n'est pas très
 %  précis, on a testé sur 2 clusters pour valider les résultats tout simplement.}
