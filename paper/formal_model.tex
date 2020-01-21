@@ -391,26 +391,12 @@ rule.
 %\subsection{Consistency rule}
 %--------------------------
 
-\paragraph{Consistency}{
-  In \mad, the maximum number of tokens that can be used is the
-  maximum number of possible parallel branches. A token can only be
-  created during a branching (rule $\leaveplace$), where one token is
-  created for each output dock of the place. Cycles are forbidden
-  within a \mad component. Without this restriction, it would be
-  possible to generate an arbitrarily large number of tokens, which
-  does not make sense in the context of a commissioning procedure. We
-  plan in future work to support reconfiguration to allow cycles in
-  very specific settings to keep control on the tokens and their
-  creation.
-}
-%\SR{Add constraint that the initial place should be unique? Does not really matter for theoretical puroposes.}
-
 \paragraph{Structural constraints}{
   A place $\pi_1$ is said to \emph{precede} a place $\pi_2$ if there
   exists $(s, \alpha, d) \in \Theta$ such that $\pi(s) = \pi_1$ and
   $\pi(d) = \pi_2$.  If there exists a sequence $(\pi_1, \pi_2, \dots,
-  \pi_n)$, such that $\pi_{i+1}$ follows $\pi_i$ for any $i$ where $1
-  \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
+  \pi_n)$, such that $\pi_{i}$ precedes $\pi_{i+1}$ for any $i$ where
+  $1 \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
 
   A \mad component is said to be well-formed if there exists no place
   $\pi$ that depends on itself. Intuitively, the component, viewed as
@@ -424,11 +410,38 @@ rule.
   \end{lemma}
 
   \begin{proof}
-    Since the sets of places, docks, transitions and actions are
-    finite, the set of configurations is also finite. Therefore it is
-    enough to show that there exists no cyclic execution $\langle \mk,
-    \reached, \exec \rangle \semstep \dots \semstep \langle \mk,
-    \reached, \exec \rangle$.
+    By contradiction, assume that there exists an infinite execution
+    of $A$. Since the sets of places, docks, transitions and actions
+    are finite, the set of configurations is also finite. Therefore
+    the execution must reach the same configuration more than once,
+    \ie it has a prefix
+    \[
+    \langle I, I, \emptyset \rangle \semstep \dots \semstep \langle \mk, \reached, \exec \rangle_i \semstep \dots \semstep \langle \mk, \reached, \exec \rangle_j
+    \]
+    such that $\langle \mk, \reached, \exec \rangle_i = \langle \mk,
+    \reached, \exec \rangle_j$.
+
+    Let us denote $\reached^+$ the set of places that is reached more
+    than once. By case analysis over the relation $\langle \mk,
+    \reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
+    \rangle_{i+1}$, we can check that $\reached^+$ is non-empty.
+    \begin{itemize}
+    \item for the case of the rule $\leaveplace$, a token is removed
+      from the place $\pi$, therefore a token must be placed back on
+      $\pi$ to attain configuration $\langle \mk, \reached, \exec
+      \rangle_j$ ;
+    \item for the case of the rules $\reachplace$, $\firetrans$,
+      $\terminaction$ and $\leavetrans$, there must exist a transition
+      $\theta = (s, \alpha, d)$ such that $\pi(s)$ is reached
+      more than once.
+    \end{itemize}
+    Furthermore, because all components are well-formed, the
+    precede-relation over places is well-founded, therefore there
+    exists at least one place $\pi \in \reached^+$ such that all
+    places $\pi'$ that precede $\pi$ are in $\Pi \setminus
+    \reached^+$. This place is reached more than once, but all the
+    places that precede it have been reached at most one time, leading
+    to a contradiction.
   \end{proof}
 
   \begin{lemma}\label{thm:applyrules}
@@ -486,14 +499,14 @@ rule.
     (i) some place of $c$ is never reached and (ii) all use ports are
     eventually provided.
 
-    Let $\reached$ denote the set of place that are eventually reached
-    in that execution. By (i), the set $\Pi \setminus \reached$ is
-    non-empty. Furthermore, because $c$ is well-formed, the
-    precede-relation is well-founded, therefore there exists at least
-    one place $\pi \in Pi \setminus \reached$ such that all places
-    $\pi'$ that precede $\pi$ are in $\reached$. By (ii) and
-    Lemma~\ref{thm:reachedplaces}, $\pi \in \reached$, leading to a
-    contradiction.
+    Let $\reached^\omega$ denote the set of places that are eventually
+    reached in that execution. By (i), the set $\Pi \setminus
+    \reached^\omega$ is non-empty. Furthermore, because $c$ is
+    well-formed, the precede-relation is well-founded, therefore there
+    exists at least one place $\pi \in \Pi \setminus \reached^\omega$
+    such that all places $\pi'$ that precede $\pi$ are in
+    $\reached^\omega$. By (ii) and Lemma~\ref{thm:reachedplaces}, $\pi
+    \in \reached^\omega$, leading to a contradiction.
   \end{proof}
 
   This lemma indicates that the \mad model provides, by construction,
@@ -506,4 +519,19 @@ rule.
   a given assembly. One way to perform this analysis is to use
   model-checking~\cite{coullon:hal-02323641}, but for most assemblies,
   a simpler analysis tool can be used.
+}
+
+\paragraph{Consistency}{
+
+  \SR{Keep? Move somewhere else?}
+  
+  In \mad, the maximum number of tokens that can be used is the
+  maximum number of possible parallel branches. A token can only be
+  created during a branching (rule $\leaveplace$), where one token is
+  created for each output dock of the place. Because components are
+  well-formed, places can be reached (and therefore, left) at most
+  once, so the maximum number of tokens that can be present in a
+  component is bounded. We plan in future work to support
+  reconfiguration to allow cycles in very specific settings to keep
+  control on the tokens and their creation.
 }
