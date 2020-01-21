@@ -12,7 +12,7 @@ decisions, in particular for critical systems and services.
 
 To build this performance prediction model, we need an estimation of
 the execution time of all the actions in the assembly, given as a
-function $time\,:\,\actions\rightarrow\mathbb{R}^+$.  Computing
+function $t\,:\,\actions\rightarrow\mathbb{R}^+$.  Computing
 precise execution times for the kind of actions used in a deployment
 can be difficult and is itself the subject of many studies, \eg using
 an analytical model or a statistical approach. However, for our
@@ -109,29 +109,34 @@ $V$ and $E$ in the following.
 \subsection{Vertices}
 %--------------------------------------
 
-For each place, we introduce two vertices: one representing the place
-itself and one representing the event of a token leaving the place.
+For each place, we introduce one vertex that represents the event of
+the place being reached.
 \[
-V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{place},v_\pi^\text{leav}\right\} 
+V_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ v_\pi^\text{reach}\right\} 
 \]
-\MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de
-  place}
-\HC[Maverick]{si c'est long a verifier, laisser comme ça, il faut
-  qu'on soumette !}
+%% \MC[Maverick]{TODO : vérifier si on peut fusionner les deux sommets de
+%%   place}
+%% \HC[Maverick]{si c'est long a verifier, laisser comme ça, il faut
+%%   qu'on soumette !}
 
 For each transition, we introduce two vertices: one representing the
 beginning of the transition and one representing its end.
 \[
-V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{beg},v_\theta^\text{end}\right\} 
+V_{\Theta}=\bigcup_{\theta\in\Theta^*}\left\{ v_\theta^\text{fire},v_\theta^\text{end}\right\} 
 \]
 
-\SR{On peut sans doute retirer les vertices representant les ports, et
-  directement connecter $v^{place}_\pi$ à $v^{beg}_\theta$.}
-\HC[Maverick et Simon]{oui je pense aussi, mais même remarque que au
-  dessus, il faut qu'on soumette !}
-For each provide port we introduce one vertex representing its enabling.
+%% \SR{On peut sans doute retirer les vertices representant les ports, et
+%%   directement connecter $v^{place}_\pi$ à $v^{beg}_\theta$.}
+%% \HC[Maverick et Simon]{oui je pense aussi, mais même remarque que au
+%%   dessus, il faut qu'on soumette !}
+%% \SR{Réponse de Maverick: la façon de faire actuelle permet d'éviter un
+%%   nombre quadratique d'arcs pour les ports liés à plusieurs transition
+%%   et ensembles de places.}
+
+For each provide port we introduce one vertex representing its
+enabling.
 \[
-V_{S_p}=\bigcup_{p\in S_p^*} \left\{ v_p^\text{start}\right\} 
+V_{S_p}=\bigcup_{p\in S_p^*} \left\{ v_p^\text{enable}\right\} 
 \]
 
 
@@ -151,31 +156,34 @@ vertex, at least $w$ seconds apart where $w$ is the weight of the arc. In
 practice, arcs corresponding to actions are weighed with the corresponding
 time, while other arcs have a weight 0 and merely represent a dependency.
 
-For each place $\pi$ we introduce one arc from $v_\pi^\text{place}$ to
-$v_\pi^\text{leav}$. This represents the fact that a token may leave $\pi$
-only after it has entered it.
-Figure~\ref{fig:place_graph} depicts the dependency graph corresponding to a place.
-\[
-E_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ \left(v_\pi^\text{place},0,v_\pi^\text{leav}\right)\right\} 
-\]
+%% For each place $\pi$ we introduce one arc from $v_\pi^\text{place}$ to
+%% $v_\pi^\text{leav}$. This represents the fact that a token may leave $\pi$
+%% only after it has entered it.
+%% Figure~\ref{fig:place_graph} depicts the dependency graph corresponding to a place.
+%% \[
+%% E_{\Pi}=\bigcup_{\pi\in\Pi^*}\left\{ \left(v_\pi^\text{place},0,v_\pi^\text{leav}\right)\right\} 
+%% \]
 
 %%%%%%%%%%%%%%%
-\input{figures/placetodag.tex}
+%\input{figures/placetodag.tex}
 
 For each transition $\theta = (s, \alpha, d)$, we introduce
-three arcs. The first between $v_\theta^\text{beg}$ and $v_\theta^\text{end}$
-represents the fact that the end of $\theta$ happens at the time of the
-start of $\theta$ plus the time required for the action $\alpha$. The second between $v_{\pi(s)}^\text{leav}$
-and $v_\theta^\text{beg}$ represents the fact that $\theta$ may only
-happen after a token has left $\pi(s)$. The third one between $v_\theta^\text{end}$ and
-$v_{\pi(d)}^\text{place}$ represents the fact that a token may enter $\pi(d)$ only
-after $\theta$ has ended.
+two arcs.
+%
+The first, from $v_{\pi(s)}^\text{reach}$
+to $v_\theta^\text{fire}$, represents the fact that $\theta$ may only
+be fired after $\pi(s)$ has been reached.
+%
+The second, from $v_\theta^\text{fire}$ to $v_{\pi(d)}^\text{reach}$
+represents the fact that a token may enter $\pi(d)$ only after
+$\theta$ has ended, which requires a time $t(\alpha)$ corresponding
+to the action.
+%
 Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to three
 transitions \emph{t1}, \emph{t2} and \emph{t3}.
-\begin{align*}
-E_{\Theta}=\bigcup_{\theta=(s,\alpha,d)\in\Theta^*} & \left\{ \left(v_\theta^\text{beg},time(\alpha),v_\theta^\text{end}\right),\right.\\
- & \left(v_{\pi(s)}^\text{leav},0,v_\theta^\text{beg}\right),\left. \left(v_\theta^\text{end},0,v_{\pi(d)}^\text{place}\right)\right\}
-\end{align*}
+\[
+  E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi_d}^\text{reach}\right)\right\} 
+\]
 
 %%%%%%%%%%%%%%%
 \input{figures/transtodag.tex}
@@ -183,26 +191,26 @@ E_{\Theta}=\bigcup_{\theta=(s,\alpha,d)\in\Theta^*} & \left\{ \left(v_\theta^\te
 %% SR: text before modification
 %% For each data-provide port $p$, we associate (a) for each binding between
 %% $p$ and a place $\pi$ one arc from $v_\pi^\text{place}$ to
-%% $v_p^\text{start}$, and (b) for each connection connecting $p$
+%% $v_p^\text{enable}$, and (b) for each connection connecting $p$
 %% to a data-use port $u$, for each binding between $u$ and a transition
-%% $\theta$ one arc from $v_p^\text{start}$ to $v_\theta^\text{beg}$.
+%% $\theta$ one arc from $v_p^\text{enable}$ to $v_\theta^\text{fire}$.
 
 For each data-provide port $p$ and each place $\pi$ such that
 $\{\pi\}$ is bound to $p$, we introduce one arc from
-$v_\pi^\text{place}$ to $v_p^\text{start}$. This represents the
+$v_\pi^\text{reach}$ to $v_p^\text{enable}$. This represents the
 enabling of the port after all (set of) places bound to the port
 have been reached.
 \[
-A_{S_p}= \bigcup_{(p,\{\pi\})\in B_{S_p}^*}\left\{ \left(v_\pi^\text{place},0,v_p^\text{start}\right)\right\}
+E_{S_p}= \bigcup_{(p,\{\pi\})\in B_{S_p}^*}\left\{ \left(v_\pi^\text{reach},0,v_p^\text{enable}\right)\right\}
 \]
 
 Additionally, for each provide port $p$ and each transition
 $\theta$ such that $p$ is connected to a use port that is bound
-to $\theta$, we introduce one arc from $v_p^\text{start}$ to
-$v_\theta^\text{beg}$. This represents the activation of the transitions
+to $\theta$, we introduce one arc from $v_p^\text{enable}$ to
+$v_\theta^\text{fire}$. This represents the activation of the transitions
 bound to a use port, after the port is provided.
 \[
-E_{S_u} = \bigcup_{\substack{(u,p)\in L \\ (u,\theta)\in B_{S_u}^*}} \left\{ \left(v_p^\text{start},0,v_\theta^\text{beg}\right)\right\}
+E_{S_u} = \bigcup_{\substack{(u,p)\in L \\ (u,\theta)\in B_{S_u}^*}} \left\{ \left(v_p^\text{enable},0,v_\theta^\text{fire}\right)\right\}
 \]
 
 Figure~\ref{fig:ports_graph} depicts the dependency graph corresponding to a
@@ -216,9 +224,9 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 %% a data-use port \emph{du} which is bound to a transition \emph{c2t}.
 %% \begin{align*}
 %% A_{D}=\bigcup_{p\in D_p}
-%% & \left(\bigcup_{\pi,\,\left(p,\pi\right)\in B_{D_{p}}^*}\left\{ \left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right. \\
+%% & \left(\bigcup_{\pi,\,\left(p,\pi\right)\in B_{D_{p}}^*}\left\{ \left(v_\pi^\text{place},v_p^\text{enable},0\right)\right\}\right. \\
 %% & \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_D \\
-%%   \theta,\,\left(u,\theta\right)\in B_{D_{u}}^*}}\left\{ \left(v_p^\text{start},v_\theta^\text{beg},0\right)\right\}\right)
+%%   \theta,\,\left(u,\theta\right)\in B_{D_{u}}^*}}\left\{ \left(v_p^\text{enable},v_\theta^\text{fire},0\right)\right\}\right)
 %% \end{align*}
 
 %%%%%%%%%%%%%%%
@@ -226,12 +234,12 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 
 %% SR: text before modification (see below) 
 %% For each service-provide port $p$, we associate (a) for each binding between
-%% $p$ and a group $g$ one arc from $v_\pi^\text{place}$ to $v_p^\text{start}$
+%% $p$ and a group $g$ one arc from $v_\pi^\text{place}$ to $v_p^\text{enable}$
 %% for each $\pi$ in $g_{in}(g)$ and one arc from $v_p^\text{stop}$ to
 %% $v_\pi^\text{leav}$ for each place $\pi$ $g_{out}(g)$, and (b) for each
 %% connection connecting $p$ to a service-use port $u$, for each binding between
-%% $u$ and a transition $\theta$ one arc from $v_p^\text{start}$ to
-%% $v_\theta^\text{beg}$ and one arc from $v_\theta^\text{end}$ to
+%% $u$ and a transition $\theta$ one arc from $v_p^\text{enable}$ to
+%% $v_\theta^\text{fire}$ and one arc from $v_\theta^\text{end}$ to
 %% $v_p^\text{stop}$.
 %% The (a) arcs represent the fact that the service becomes available when all
 %% groups bound to it have a token, and each of them can be deactivated only when
@@ -241,7 +249,7 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 
 %% For each service-provide port $p$, each groupd $g$ bound to $p$ and
 %% each place $\pi$ in $g_{in}(g)$, we introduce one arc from
-%% $v_\pi^\text{place}$ to $v_p^\text{start}$, representing the
+%% $v_\pi^\text{place}$ to $v_p^\text{enable}$, representing the
 %% availability of the service once all groups bound to it hold a token.
 
 %% Conversely, for each each service-provide port $p$, each group $g$
@@ -252,7 +260,7 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 
 %% Lastly, for each service-provide port $p$ and each transition $\theta$
 %% such that $p$ is connected to a service-use port bound to $\theta$, we
-%% introduce one arc from $v_p^\text{start}$ to $v_\theta^\text{beg}$ and
+%% introduce one arc from $v_p^\text{enable}$ to $v_\theta^\text{fire}$ and
 %% one arc from $v_\theta^\text{end}$ to $v_p^\text{stop}$. They
 %% represent the activation of the transitions bound to a service-use
 %% port after it has been provided, and the release of the port after the
@@ -265,25 +273,25 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 
 %% \begin{alignat*}{3}
 %% A_{S}=\bigcup_{p\in S_p}
-%% & \left(\bigcup_{g,\,\left(p,g\right)\in B_{S_{p}}^*} \right. && \left. \left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{start},0\right)\right\}\right.\right. \\
+%% & \left(\bigcup_{g,\,\left(p,g\right)\in B_{S_{p}}^*} \right. && \left. \left(\bigcup_{\pi\in g_{in}(g)} \left\{\left(v_\pi^\text{place},v_p^\text{enable},0\right)\right\}\right.\right. \\
 %% &&& \left. \cup\left.\bigcup_{\pi\in g_{out}(g)} \left\{\left(v_p^\text{stop},v_\pi^\text{leav},0\right)\right\}\right)\right. \\
 %% & \left.\cup\bigcup_{\substack{u,\,\left(u,p\right)\in L_S \\
-%%       \theta,\,\left(u,\theta\right)\in B_{S_{u}}^*}} \right. && \left. \left\{ \left(v_p^\text{start},v_\theta^\text{beg},0\right),\right.\right. \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
+%%       \theta,\,\left(u,\theta\right)\in B_{S_{u}}^*}} \right. && \left. \left\{ \left(v_p^\text{enable},v_\theta^\text{fire},0\right),\right.\right. \left.\left.\left(v_\theta^\text{end},v_p^\text{stop},0\right)\right.\Big\}\right.\Bigg)
 %% \end{alignat*}
 
 %%%%%%%%%%%%%%%
 %%\input{figures/servporttodag.tex}
 
 For each initial place $\pi$ we introduce one arc from $v^\text{source}$
-to $v_\pi^\text{place}$, representing the fact that a token is placed in each
+to $v_\pi^\text{reach}$, representing the fact that a token is placed in each
 initial place in the initial configuration.
 Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
 places \emph{c1p1} and \emph{c2p2}.
 \[
-E_I=\bigcup_{\pi, \Delta_i(\pi) = \emptyset}\left\{ \left(v^\text{source},0,v_\pi^\text{place}\right)\right\} 
+E_I=\bigcup_{\pi, \Delta_i(\pi) = \emptyset}\left\{ \left(v^\text{source},0,v_\pi^\text{reach}\right)\right\} 
 \]
 
-For each final place $\pi$ we introduce one arc from $v_\pi^\text{place}$
+For each final place $\pi$ we introduce one arc from $v_\pi^\text{reach}$
 to $v^\text{sink}$. Intuitively, this represents the fact that the
 commissionning is over only after all components have reached the
 places without outgoing transitions.
@@ -291,7 +299,7 @@ Figure~\ref{fig:source_sink_graph} depicts the dependency graph
 corresponding to three final places \emph{c1p2}, \emph{c2p2}
 and \emph{c2p3}.
 \[
-E_F=\bigcup_{\pi, \Delta_o(\pi) = \emptyset}\left\{ \left(v_\pi^\text{place},0,v^\text{sink}\right)\right\} 
+E_F=\bigcup_{\pi, \Delta_o(\pi) = \emptyset}\left\{ \left(v_\pi^\text{reach},0,v^\text{sink}\right)\right\} 
 \]
 
 %%%%%%%%%%%%%%%
@@ -299,7 +307,7 @@ E_F=\bigcup_{\pi, \Delta_o(\pi) = \emptyset}\left\{ \left(v_\pi^\text{place},0,v
 
 Finally, we define $E$ as 
 \[
-E=E_\Pi\cup E_{\Theta} \cup E_{S_p}\cup E_{S_u}\cup E_{I}\cup E_{F}
+E= E_{\Theta} \cup E_{S_p}\cup E_{S_u}\cup E_{I}\cup E_{F}
 \]
 
 %--------------------------------------
@@ -329,21 +337,18 @@ $v^\text{sink}$ in $DG_A$.
  well-defined.
 \end{proof}
 
-\begin{lemma}
- In a component $c \in C$, if place $\pi_t \in \Pi$ is reachable from place
- $\pi_s \in \Pi$ (distinct from $\pi_t$), then $v_{\pi_t}^{place}$
- is reachable from $v_{\pi_s}^{place}$ in a $DG_c$.
- \label{lemma:reachable}
+\begin{lemma}\label{lemma:reachable}
+ In a component $c \in C$, if $\pi_t$ depends on $\pi_s$, then there
+ is a path from $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$ in $DG_c$.
 \end{lemma}
 
 \begin{proof}
- Consider a path $P$ in the \net of $c \in C$ from $\pi_s$ to
- $\pi_t$ (this path exists because $\pi_t$ is reachable from
- $\pi_s$). This path is made of a sequence of places connected by
- transitions: $P=(\pi_s,t1,p2,t2,\dots,t_n,\pi_t)$.\\
- By construction, there exists a path\\
- $(v_{\pi_s}^{place},v_{\pi_s}^{leav},v_{t1}^{beg},v_{t1}^{end},v_{p2}^{place},\dots,v_{\pi_t}^{place})
- \in DG_c$.
+ By assumption, there exists a sequence $(\pi_1, \pi_2, \dots, \pi_n)$
+ such that $\pi_1 = \pi_s$ and $\pi_n = \pi_t$ and $\pi_i$ precedes
+ $\pi_{i+1}$ for $1 \le i < n$. Therefore, by definition of
+ $E_\Theta$, there is a path from $v_{\pi_i}^\text{reach}$ to
+ $v_{\pi_{i+1}}^\text{reach}$ for $1 \le i < n$, hence a path from
+ $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$
 \end{proof}
 
 
@@ -355,11 +360,11 @@ $v^\text{sink}$ in $DG_A$.
 
 \begin{proof}
  Let us consider one component $c \in C$, its initial place $\pi_i$ and one of
- its final places $\pi_f$. By construction, $v_{\pi_i}^\text{place}$ is
+ its final places $\pi_f$. By construction, $v_{\pi_i}^\text{reach}$ is
  reachable from $v^\text{source}$, and $v^\text{sink}$ is reachable from
- $v_{\pi_f}^\text{place}$ in the dependency graph of an assembly containing this
- component. The last thing to prove is that $v_{\pi_f}^\text{place}$ is reachable
- from $v_{\pi_i}^\text{place}$ in $DG_c$.
+ $v_{\pi_f}^\text{reach}$ in the dependency graph of an assembly containing this
+ component. The last thing to prove is that $v_{\pi_f}^\text{reach}$ is reachable
+ from $v_{\pi_i}^\text{reach}$ in $DG_c$.
  The end of the execution of a \mad component is defined as
  when all its tokens are in final places, \ie when there are no more
  transitions to perform. Therefore, by definition $\pi_f$ is
@@ -401,9 +406,9 @@ $v^\text{sink}$ in $DG_A$.
  group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
  $\left|g_{out}(g)\right|=1$); or because of two or more use and provide ports.
  First, because $\left|g_{out}(g)\right|=1$ (we consider $\pi_{out}$ to be the only
- place in $g_{out}(g)$), and because by construction $v_{\pi_{out}}^{leav}$ is
- reachable from $v_{\pi_{in}}^{place}$ (where $\pi_{in}$ is the only place in $g_{in}(g)$,
- then $v_{\pi_{in}}^{place}$ is not reachable from $v_{\pi_{out}}^{leav}$ (otherwise
+ place in $g_{out}(g)$), and because by construction $v_{\pi_{out}}^\text{reach}$ is
+ reachable from $v_{\pi_{in}}^\text{reach}$ (where $\pi_{in}$ is the only place in $g_{in}(g)$,
+ then $v_{\pi_{in}}^\text{reach}$ is not reachable from $v_{\pi_{out}}^\text{reach}$ (otherwise
  there would be a cycle in the dependency graph of the component). Second, a
  cycle can be caused by multiple connections if there are \emph{crossing
  dependencies} (see Figure~\ref{fig:deadlock}). However, this would create a
