@@ -165,9 +165,6 @@ def analyze(result_path):
         results = yaml.load(f)
 
     successful_exps, seq_nt4_exps, dag_nt4_exps, seq_1t_exps, dag_2t_exps = format_results(results)
-    print(seq_1t_exps)
-    print(dag_nt4_exps)
-    print(dag_2t_exps)
     ansible_means = calc_mean(seq_1t_exps)
     madeus_means = calc_mean(dag_nt4_exps)
     aeolus_means = calc_mean(dag_2t_exps)
