@@ -32,23 +32,24 @@ instead of code design.
 A \mad component is called a \emph{control} component as it is only
 intended to model the commissioning procedure of an already existing
 piece of software code (functional component, module or service). A
-\mad control component is a type containing places that represent
-milestones of the commissioning, and transitions that connect the
-places together and represent actions to be performed between
-milestones (\eg \texttt{apt-get install}, \texttt{docker pull},
-etc.). If multiple transitions leave a place, their parallel execution
-is automatically handled and synchronized by \mad. A component may
-have dependencies towards other components. Such dependencies are
-declared through a well-known object in component-based software
-engineering: ports. Two types of ports, working in pairs, are
-available in \mad: \emph{provide} and \emph{use} ports. By using
-ports, each component type can be defined independently and component
-instances can be connected later by another developer, thus improving
-the separation of concerns and the reusability of commissioning
-procedures. A provide port is bound to sets of places that represents
-the milestones from which the service or the data is offered. Finally,
-use ports are bound to one or multiple transitions where data and
-service requirements are actually used.
+\mad control component is a type containing a \net, \ie places that
+represent milestones of the commissioning, and transitions that
+connect the places together and represent actions to be performed
+between milestones (\eg \texttt{apt-get install}, \texttt{docker
+  pull}, etc.). If multiple transitions leave a place, their parallel
+execution is automatically handled and synchronized by \mad. A
+component may have dependencies towards other components. Such
+dependencies are declared through a well-known object in
+component-based software engineering: ports. Two types of ports,
+working in pairs, are available in \mad: \emph{provide} and \emph{use}
+ports. By using ports, each component type can be defined
+independently and component instances can be connected later by
+another developer, thus improving the separation of concerns and the
+reusability of commissioning procedures. A provide port is bound to
+sets of places that represents the milestones from which the service
+or the data is offered. Finally, use ports are bound to one or
+multiple transitions where data and service requirements are actually
+used.
 
 The overall commissioning procedure of a distributed software system
 is built by composition in an \emph{assembly}, where component

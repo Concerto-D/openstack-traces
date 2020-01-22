@@ -55,16 +55,12 @@ You can get these on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-jo
 =ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments.
 
 *** Plotting the curves
-Using the following command by replacing it with the result directory allows to reproduce the graphs from our paper.
 #+BEGIN_SRC sh
-python mad-enoslib.py analyze -b result_directory
+cd results && python graph_os_results.py creategantt -f [filename] -n [name]
 #+END_SRC
-This command will produce several files:
-- a svg file with the histogram of deployment times such as this example
-#+NAME:   Deployment times
-[[./results_deployment_times.svg]]
-- for each resulting json file, the command creates a corresponding gant description and a pdf image of the gantt chart associated with it, looking like this example:
-#+NAME: Gantt chart for an experiment
+This command takes in entry the resulting json file [filename] of the times resulting from one of our experiments and allows to draw the gantt curves
+corresponding to it. It outputs a =svg= file as a result, with the [name] given in input.
+#+NAME: Gantt chart example for an experiment
 [[./gantt.png]]
 
 ** SSH Benchmark Graphs
