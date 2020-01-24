@@ -327,22 +327,21 @@ results.
     \end{center}
 \end{table}
 
-In these different studies, we will refer to
-Figures~\ref{fig:ecotype,fig:nova} which respectively show our results
-on \ecotype and \nova clusters. The upper part displays the recorded
-times to commission OpenStack as a function of the three different
-assemblies studied. For a better understanding of the comparison, the
-value of each result is written on top of the bars, while the ratio
-compared to \ansass, our reference, is displayed below the bars'
-edges.  Furthermore, for each assembly on the X-axis, the results for
-the three \docker registry settings are displayed with different
-colors: blue, red and green respectively for \emph{remote},
-\emph{local} and \emph{cached} respectively. On the lower part, the
-means for each result are depicted as blue, red and green horizontal
-lines, the related standard deviations are represented by vertical
-lines, while boxes represent the minimum and maximum values computed
-with the theoretical performance model of
-Section~\ref{sec:perf_model}.
+In these different studies, we will refer to Figures~\ref{fig:ecotype}
+and~\ref{fig:nova} which respectively show our results on \ecotype and
+\nova clusters. The upper part displays the recorded times to
+commission OpenStack as a function of the three different assemblies
+studied. For a better understanding of the comparison, the value of
+each result is written on top of the bars, while the ratio compared to
+\ansass, our reference, is displayed below the bars' edges.
+Furthermore, for each assembly on the X-axis, the results for the
+three \docker registry settings are displayed with different colors:
+blue, red and green respectively for \emph{remote}, \emph{local} and
+\emph{cached} respectively. On the lower part, the means for each
+result are depicted as blue, red and green horizontal lines, the
+related standard deviations are represented by vertical lines, while
+boxes represent the minimum and maximum values computed with the
+theoretical performance model of Section~\ref{sec:perf_model}.
 % 
 For the sake of readability, the scale of the lower parts are
 differents for each assembly. Each result corresponds to the average
@@ -391,6 +390,7 @@ also displayed in \cref{tab:openstack_results}.
       registry set in \emph{cached}; (d) Gantt chart of the OpenStack
       commissioning for \aeoass, with the registry set in
       \emph{remote}.}
+    \label{}
   \end{center}
 \end{figure*}
 
@@ -418,23 +418,23 @@ investigate this aspect, we implemented in \mad the ability to
 generate Gantt charts that display the execution time of the different
 transitions for each component.
 % Maybe something to put in the implementation part
-Figures~\ref{fig:gantt_ansible,fig:gantt_aeolus,fig:gantt_madeus}
-respectively represent the Gantt charts of the commissioning execution
-of \ansass, \aeoass and \madass, when the registry is set to
-\emph{cached} on \ecotype. Each line of these figures represents a
-transition as a function of the elapsed-time displayed on the X-axis.
-First, as previously explained, Figure~\ref{fig:gantt_ansible} shows that a
-single transition exists in each component of the \ansass
-assembly. Thus, here, each line also corresponds to one component
-commissioning. As expected, the figure shows that each component is
-deployed in a sequential way. The first level of parallelism (\ie
-\emph{SIMH}) is not visible in these figures since it is handled
-internally by \ansible playbooks executed in each transition of the
-assembly. One can note that Nova, MariaDB, Glance, Keystone and
-Neutron are particularly long to commission. \aeoass and \madass
-accelerate the process by combining (i) splitting the transition of
-components into smaller ones and (ii) managing more or less
-dependencies between them (depending on the ability to express
+Figures~\ref{fig:gantt_ansible} \ref{fig:gantt_aeolus},
+and~\ref{fig:gantt_madeus} respectively represent the Gantt charts of
+the commissioning execution of \ansass, \aeoass and \madass, when the
+registry is set to \emph{cached} on \ecotype. Each line of these
+figures represents a transition as a function of the elapsed-time
+displayed on the X-axis.  First, as previously explained,
+Figure~\ref{fig:gantt_ansible} shows that a single transition exists
+in each component of the \ansass assembly. Thus, here, each line also
+corresponds to one component commissioning. As expected, the figure
+shows that each component is deployed in a sequential way. The first
+level of parallelism (\ie \emph{SIMH}) is not visible in these figures
+since it is handled internally by \ansible playbooks executed in each
+transition of the assembly. One can note that Nova, MariaDB, Glance,
+Keystone and Neutron are particularly long to commission. \aeoass and
+\madass accelerate the process by combining (i) splitting the
+transition of components into smaller ones and (ii) managing more or
+less dependencies between them (depending on the ability to express
 \emph{inter-comp}, \emph{inter-comp-tasks} and \emph{intra-comp-tasks}
 parallelism).
 %
