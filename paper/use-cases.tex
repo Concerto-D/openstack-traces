@@ -68,14 +68,12 @@ and \emph{intra-taks} parallelism levels.
   \end{center}
 \end{table*}
 
-\HC[Dimitri]{verifier phrase out-of-the-box}
-
 \kolla is one of the most popular tool for deploying OpenStack in
 production.  It relies on \ansible to deploy OpenStack's modules as
 \docker containers, and will be considered as our reference in the
 rest of this section. It is highly opinionated out-of-the-box,
 allowing operators to quickly deploy a basic OpenStack instance, but
-not enabling the complete customization for advanced
+also enabling the complete customization for advanced
 administrators. As a consequence, the use-case described in this
 section corresponds to the default \kolla deployment, which provides
 the essential mechanisms to operate an infrastructure with OpenStack.
@@ -413,8 +411,6 @@ result, considering the maximum gain compared to \ansass on \ecotype
 the OpenStack commissioning goes from almost 9 minutes to less than 3
 minutes.
 %
-\HC[Dimitri]{Ajouter un paragraphe sur l'application à OpenStack-CI,
-  comment on a fait les requetes et quel gain ca donnerait sur 24h}
 
 To go further in this analysis, we propose to analyze the
 commissioning process at the level of transitions (\ie tasks). To
@@ -465,16 +461,17 @@ minutes and $8$ seconds.
 %-------
 \paragraph{Precision of the performance model}
 % Construire un tableau contenant les valeurs min/max/moy_obs/moy_calc
-The maximum and minimum values obtained by the performance model described
-previously is depicted in \cref{tab:openstack_results}. When analyzing these
-results, one can first note that the measured mean is always between the
-expected maximum and minimum. Secondly, the difference between the computed
-maximum and minimum values is only from $2\%$ to $10\%$ the maximum value. As a
-consequence, this validates the precision of our performance model.
-This one can thus be used to detect anomalies in the component design
-phase.
-\HC[Dimitri]{better explanation - how is computed the min and max with
-  which reference times? explain why it is a good estimation}
+The maximum and minimum values obtained by the performance model
+described previously is depicted in
+\cref{tab:openstack_results}. These theoretical values are computed
+from the average minimum and maximum transitions execution times
+observed for the ten experiments of each benchmark. When analyzing
+these results, one can first note that the measured mean is always
+between the expected maximum and minimum. Secondly, the difference
+between the computed maximum and minimum values is only from $2\%$ to
+$10\%$ the maximum value. As a consequence, this validates the
+precision of our performance model.  This one can thus be used to
+detect anomalies in the component design phase.
 
 % donner un exemple ici - peut être développé précedemment dans la partie modèle
 % de performance, ou intro pour motiver la contribution du modèle de perf ?
@@ -544,6 +541,22 @@ additional way to exploit their high performance level.
 
 %\HC[Helene]{J'enlèverai la partie qui suit car ce n'est pas très
 %  précis, on a testé sur 2 clusters pour valider les résultats tout simplement.}
+
+%  ------
+\paragraph{OpenStack Continuous Integration}
+
+To highlight the possible gain in reality, we apply the above results
+to the traces of the OpenStack CI. As already mentionned,
+Figure~\ref{} has been extracted from the traces of the OpenStack CI
+and represent the set of OpenStack commissionings. To extract this
+information we have used the filtering mechanism by adding a filter on
+the following message \texttt{+ ./stack.sh:main:1477 : openstack
+  complete}. This message is printed as soon as an OpenStack
+commissioning ends. We have chosen three periods in these traces to
+illustrate the projected gain. This projection is presented in
+Table~\ref{}.
+%
+\HC[Helene]{à terminer améliorer avec nouvelles traces}
 
 %-------
 % \paragraph{Impact of underlying clusters}

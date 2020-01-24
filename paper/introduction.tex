@@ -147,11 +147,17 @@ self-adaptive systems) and dynamic infrastructures (\eg edge
 computing) where disruption time of services must be minimized.
 % experiments and continuous integration
 Furthermore, there are two specific contexts where distributed
-software commissionings are extensively executed: research or industry
-\emph{experiments} and \emph{continuous integration} of distributed
-software systems. For instance, by exploring the traces of the
-OpenStack CI platform, we have observed that the OpenStack
-commissioning is called around 6,000 times in 24 hours.
+software commissionings are extensively executed: \emph{experiments}
+(research or industry) and \emph{continuous integration} of
+distributed software systems. For instance, by exploring the traces of
+the OpenStack CI
+platform\footnote{\url{http://logstash.openstack.org}}, we have
+observed that the OpenStack commissioning is oftenly and irregularly
+called. Figure~\ref{} shows the recorded deployments of OpenStack
+during a year where oscillations can be observed. The highest peak
+represents XXX commissionings of OpenStack in 24 hours.
+%
+\HC[Helene]{à terminer et améliorer avec nouvelles traces}
 
 Many different techniques could be studied to improve the efficiency
 of distributed software commissionings such as for instance: using
