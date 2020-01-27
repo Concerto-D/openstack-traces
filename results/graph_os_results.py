@@ -95,7 +95,7 @@ def calc_gains(exp_table, ref_table):
 
 def generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains):
     """"
-        From results in the tables, builds a TeX table for our papere
+        From results in the tables, builds a TeX table for our paper
     """
     with open("tab_openstack_results.tex", "w") as f:
         f.write("\n\\begin{tabular}{cll|ccc}\n")
@@ -405,6 +405,56 @@ def create_figure(results, name: str):
     ax.spines['right'].set_visible(False)
     ax.spines['top'].set_visible(False)
     figure.savefig(name, format="svg", bbox_inches='tight')
+
+
+@cli.command(help="Creates data for table of pull information (% and s) of nova  ")
+@click.option("-f", "--filepath",
+              type=click.Path(file_okay=False),
+              required=True,
+              help="The path containing the results")
+@click.option("-n", "--number",
+              type=int,
+              required=True,
+              help="The number of json files of each type (nb of experiments)")
+def tableofpulls(filepath, number):
+    # go through cached data
+    cached_filename_base = filepath + "/results_cached_seq_nt4_"
+    get_pull_info(cached_filename_base, "cached", number)
+
+    # go through local data
+    local_filename_base = filepath + "/results_local_seq_nt4_"
+    get_pull_info(local_filename_base, "local", number)
+
+    remote_filename_base = filepath + "/results_remote_seq_nt4_"
+    get_pull_info(remote_filename_base, "remote", number)
+
+
+def get_pull_info(filebase, type_pull, number):
+    pull_times = []
+    max_times = []
+    # go through cached data
+    for i in range(number):
+        filename = filebase + str(i) + ".json"
+        # first we calculate % and s for cached experiment data
+        max_time = 0
+        with open(filename, "r") as f:
+            data = json.load(f)
+            for component in data:
+                    for transition in data[component]:
+                        for action in data[component][transition]:
+                            if component == 'nova':
+                                if action["name"] == "pull":
+                                    time = action["end"]-action["start"]
+                                    pull_times.append(time)
+                            if action["end"] > max_time:
+                                max_time = action["end"]
+            max_times.append(max_time)
+    mean_pull_time = statistics.mean(pull_times)
+    mean_total_time = statistics.mean(max_times)
+    percentage = mean_pull_time / mean_total_time * 100
+    print("Ansible {typ} mean pull time {t}s ".format(t=int(mean_pull_time), typ=type_pull))
+    print("Ansible {typ} mean max time {t}s ".format(t=int(mean_total_time), typ=type_pull))
+    print("Ansible {typ} pull over total time {p}%".format(p=int(percentage), typ=type_pull))
 
 
 if __name__ == '__main__':
