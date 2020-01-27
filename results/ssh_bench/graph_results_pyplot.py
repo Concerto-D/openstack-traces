@@ -78,7 +78,7 @@ def graph_for_1par_xcomp(results, list_nb_comp, exp_data):
         ax.errorbar(list_nb_comp, medians, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
         # ax.set_ylim(bottom=4.8, auto=True, top=5.2)
-        ax.set_xticks([1, 5, 10, 15, 20, 30, 40, 50])
+        ax.set_xticks([1, 10, 20, 30, 40])
 
         plt.xlabel("Number of Components")
         # Hide the right and top spines
@@ -117,7 +117,7 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
         ax.errorbar(list_nb_parallel_transitions, medians, yerr=stds, label="Madeus")
         plt.ylabel("Time (s)")
         # ax.set_ylim(bottom=4.8, auto=True, top=5.2)
-        ax.set_xticks([1, 5, 10, 20])
+        ax.set_xticks([1, 10, 20, 30, 40])
 
         plt.xlabel("Number of Transitions")
         # Hide the right and top spines

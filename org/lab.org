@@ -37,18 +37,20 @@ First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-proje
 #+BEGIN_SRC sh
 git clone https://gitlab.inria.fr/VeRDi-project/madeus-journal.git
 #+END_SRC
-
 You can get these on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][repository]] in the =results= directory. There are two Open Stack deployment result directories,
 =ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments.
 
 *** Plotting the curves
 #+BEGIN_SRC sh
-cd results && python graph_os_results.py creategantt -f [filename] -n [name]
+cd results && python graph_os_results.py creategantt -f [filename] -n [name] -nb [number]
 #+END_SRC
 This command takes in entry the resulting json file [filename] of the times resulting from one of our experiments and allows to draw the gantt curves
-corresponding to it. It outputs a =svg= file as a result, with the [name] given in input.
+corresponding to it. It outputs a =svg= file as a result, with the [name] given in input and the [number] of files corresponding to the name (number of experiments).
 #+NAME: Gantt chart example for an experiment
-[[./gantt.png]]
+[[./gantt_dag_nt4_remote.png]]
+The gantt graph displays the deployment of the various transitions, with all transitions from the same component sharing the same colour.
+For sequential assemblies, the transitions are ordered by starting order.
+*** Recreating tables of results
 
 ** SSH Benchmark Graphs
 *** Requirements

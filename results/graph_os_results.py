@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import json
 import statistics
+import fnmatch
+import os
 
 import matplotlib.pyplot as plt
 import click
@@ -208,44 +210,58 @@ def analyze(result_path):
 
 @cli.command(help="Create gantt graph from result file and saves it to svg format")
 @click.option("-f", "--filepath",
-              type=click.Path(exists=False),
+              type=click.Path(file_okay=False),
               required=True,
-              help="The path containing the json file with times for gantt")
-def creategantt(filepath):
-    cached_dag2t_results = get_results(filepath)
-    title = filepath +".svg"
+              help="The path containing the json files with times for gantt")
+@click.option("-n", "--namepattern",
+              type=str,
+              required=True,
+              help="The name pattern of the json files (results_cached_dag_nt4 for example)")
+@click.option("-nb", "--number",
+              type=int,
+              required=True,
+              help="The number of result json files")
+def creategantt(filepath, namepattern, number):
+    """
+        Gets results and creates the appropriate gantt graph
+        :param filepath: the path of the file
+        :param namepattern: the file namepattern (to which we add _[x].json where x is a number
+        :param number: the number of files following the pattern, it's the [x] above
+        :return: nothing
+    """
+    cached_dag2t_results = get_results(filepath, namepattern, number)
+    title = namepattern +".svg"
     create_figure(cached_dag2t_results, title)
 
 
-def get_results(filepath):
+def get_results(filepath, namepattern, number):
+    """
+        Aggregates results from files matching a pattern into a single dictionary
+        :param filepath: the path of the file
+        :param namepattern: the file namepattern (to which we add _[x].json where x is a number
+        :param number: the number of files following the pattern, it's the [x] above
+        :return: the results as a dictionary
+    """
     results = {}
     # we get all result in one dict
-    for i in range(10):
-        filename = filepath + "_" + str(i) + ".json"
+    for i in range(number):
+        filename = filepath + namepattern + "_" + str(i) + ".json"
         with open(filename, "r") as f:
             data = json.load(f)
             for component in data:
-                # print("Component {s}".format(s=component))
-                # print(data[component])
                 if component not in results.keys():
                     results[component] = {}
                     for behaviour in data[component]:
-                        # print("Behaviour {b}".format(b=behaviour))
-                        # print(data[component][behaviour])
                         results[component][behaviour] = []
                         for transition in data[component][behaviour]:
-                            # print("Transition {t}".format(t=transition))
                             results[component][behaviour].append({
                                 "name": transition["name"],
                                 "starts": [transition["start"]],
                                 "ends": [transition["end"]]
                             })
-                            # print(results[component][behaviour])
                 else:
                     for behaviour in data[component]:
-                        # print("Behaviour {b}".format(b=behaviour))
                         for transition in data[component][behaviour]:
-                            # print("Transition {t}".format(t=transition))
                             results[component][behaviour] = add_start_and_end(
                                 results[component][behaviour], transition["name"], transition["start"],
                                 transition["end"])
@@ -267,50 +283,116 @@ def add_start_and_end(behaviour, name, start, end):
     return result
 
 
+def sort_seq_results(results):
+    """
+        Sorts the results according to the smallest start value
+        results are a dict containing items with lists and we want to sort on the start value of each
+    """
+    elements = []
+    res = []
+    for element in results:
+        for item in results[element]["deploy"]:
+            item["component"] = element
+            # we need to add the component name or we lost it
+            elements.append(item)
+    elements.sort(key=lambda x: x["start"], reverse=True)
+    for el in elements:
+        res.append(
+            {
+                "component": el["component"],
+                "name": el["name"],
+                "start": el["start"],
+                "end": el["end"]
+            }
+        )
+    return res
+
+
+def shorten_comp_name(name: str):
+    """Shortens component names to allow for better readability"""
+    element_name = name
+    if len(name) > 4:
+        if name == 'keystone':
+            element_name = 'kst'
+        elif name == 'memcached':
+            element_name = 'mem'
+        elif name == 'mariadb':
+            element_name = 'mdb'
+        elif name == 'rabbitmq':
+            element_name = 'rmq'
+        elif name == 'openvswitch':
+            element_name = 'ovs'
+        elif name == 'haproxy':
+            element_name = 'hap'
+        elif name == 'common':
+            element_name = 'com'
+    return element_name
+
+
 def create_figure(results, name: str):
-    # TODO: sort results for sequential graphs -> sorting the data that is in a list in a dict...
     figure = plt.figure()
     ax = plt.subplot()
     max_time = 0
     i = 0
+    color_number = 0
     labels = []
     ticks = []
-    colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'tab:blue', 'tab:orange', 'tab:gray', 'tab:brown', 'lime']
-    for element in results:
-        color = colors[i % 12]
-        # for each element, have a color and cycle it
-        # every step is under the deploy keyword in the json result file
-        for item in results[element]["deploy"]:
+    colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'tab:blue', 'tab:orange', 'tab:gray', 'tab:brown', 'lime', 'fuchsia']
+    # sequential means we need to sort the results to display it properly
+    if "seq" in name:
+        results = sort_seq_results(results)
+        components = []
+        for element in results:
+            # for each component, have a color
+            if not any(d["component"] == element["component"] for d in components):
+                components.append(
+                    {
+                        "component": element["component"],
+                        "color": colors[color_number]
+                    }
+                )
+                color_number = color_number + 1
+            # get the right color for the component
+            color_picked = next(item.get("color") for item in components if item["component"] == element["component"])
             # get max time
-            if item["end"] > max_time:
-                max_time = item["end"]
-            ax.broken_barh([(item["start"], (item["end"] - item["start"]))], (2 * i + 0.75, 1),
-                           facecolors=color)
+            if element["end"] > max_time:
+                max_time = element["end"]
+            ax.broken_barh([(element["start"], (element["end"] - element["start"]))], (2 * i + 0.75, 1),
+                           facecolors=color_picked)
             # shorten long names
-            if len(element) > 4:
-                if element == 'keystone':
-                    element = 'kst'
-                elif element == 'memcached':
-                    element = 'mem'
-                elif element == 'mariadb':
-                    element = 'mdb'
-                elif element == 'rabbitmq':
-                    element = 'rmq'
-                elif element == 'openvswitch':
-                    element = 'ovs'
-                elif element == 'haproxy':
-                    element = 'hap'
-                elif element == 'common':
-                    element = 'com'
-            # for some, shorten long name of transition
-            transition = item["name"]
-            if item["name"] == 'upgrade_api_db':
+            element_name = shorten_comp_name(element["component"])
+            transition = element["name"]
+            if element["name"] == 'upgrade_api_db':
                 transition = 'upapidb'
-            elif item["name"] == 'upgrade_db':
+            elif element["name"] == 'upgrade_db':
                 transition = 'updb'
-            labels.append(element + "." + transition)
+            labels.append(element_name + "." + transition)
             ticks.append(2 * i + 1)
             i += 1
+    else:
+        for element in results:
+            color_picked = colors[color_number % 13]
+            color_number += 1
+            # for each element, have a color and cycle it
+            # every step is under the deploy keyword in the json result file
+            looping = results[element]["deploy"]
+            for item in looping:
+                # get max time
+                if item["end"] > max_time:
+                    max_time = item["end"]
+                ax.broken_barh([(item["start"], (item["end"] - item["start"]))], (2 * i + 0.75, 1),
+                               facecolors=color_picked)
+                # shorten component name on graph
+                element = shorten_comp_name(element)
+                # for some, shorten long name of transition
+                transition = item["name"]
+                if item["name"] == 'upgrade_api_db':
+                    transition = 'upapidb'
+                elif item["name"] == 'upgrade_db':
+                    transition = 'updb'
+                labels.append(element + "." + transition)
+                ticks.append(2 * i + 1)
+                i += 1
 
     ax.set_xlim(0, max_time + 10)
     ax.set_ylim(0, i * 2)
