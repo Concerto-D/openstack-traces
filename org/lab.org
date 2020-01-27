@@ -33,24 +33,11 @@ This lab will allow the reproduction of the various graphs of the paper and the 
 ** Open Stack Deployment Graphs
 *** Requirements
 Python 3.7+ and git are required.
-First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks][Gitlab]] repository.
+First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][Gitlab] repository.
 #+BEGIN_SRC sh
-git clone https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks.git
+git clone https://gitlab.inria.fr/VeRDi-project/madeus-journal.git
 #+END_SRC
 
-Once you have that you can set up a virtual environment:
-#+BEGIN_SRC sh
-virtualenv -p python3 venv
-source venv/bin/activate
-#+END_SRC
-
-The makefile allows for the installation of the requirements, you can use:
-#+BEGIN_SRC sh
-make install_deps
-#+END_SRC
-We use [[https://github.com/plotly/orca][Orca]] for the curve plotting.
-
-Then you need to copy the directory result from the paper that you wish to reproduce. 
 You can get these on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][repository]] in the =results= directory. There are two Open Stack deployment result directories,
 =ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments.
 

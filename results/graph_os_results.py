@@ -157,13 +157,12 @@ def cli():
 def analyze(result_path):
     """
         Analyze the results and produce tables for the means, % gains and std
-        May contain rounding inacurracies
+        May contain rounding inaccuracies
     """
     # From the path we get the files we need
     result_file = result_path + '/results_deployment_times'
     with open(result_file, "r") as f:
         results = yaml.load(f)
-
     successful_exps, seq_nt4_exps, dag_nt4_exps, seq_1t_exps, dag_2t_exps = format_results(results)
     ansible_means = calc_mean(seq_1t_exps)
     madeus_means = calc_mean(dag_nt4_exps)
@@ -209,30 +208,76 @@ def analyze(result_path):
 
 @cli.command(help="Create gantt graph from result file and saves it to svg format")
 @click.option("-f", "--filepath",
-              type=click.Path(exists=True),
-              required=True,
-              help="The path containing the json file with times for gantt")
-@click.option("-n", "--name",
               type=click.Path(exists=False),
               required=True,
-              help="Name of the file to be saved for the gantt svg")
-def creategantt(filepath, name):
+              help="The path containing the json file with times for gantt")
+def creategantt(filepath):
+    cached_dag2t_results = get_results(filepath)
+    title = filepath +".svg"
+    create_figure(cached_dag2t_results, title)
 
-    # adds the extension to the file name if needed
-    if not name.endswith(".svg"):
-        name = name + ".svg"
 
-    with open(filepath, "r") as f:
-        results = json.load(f)
+def get_results(filepath):
+    results = {}
+    # we get all result in one dict
+    for i in range(10):
+        filename = filepath + "_" + str(i) + ".json"
+        with open(filename, "r") as f:
+            data = json.load(f)
+            for component in data:
+                # print("Component {s}".format(s=component))
+                # print(data[component])
+                if component not in results.keys():
+                    results[component] = {}
+                    for behaviour in data[component]:
+                        # print("Behaviour {b}".format(b=behaviour))
+                        # print(data[component][behaviour])
+                        results[component][behaviour] = []
+                        for transition in data[component][behaviour]:
+                            # print("Transition {t}".format(t=transition))
+                            results[component][behaviour].append({
+                                "name": transition["name"],
+                                "starts": [transition["start"]],
+                                "ends": [transition["end"]]
+                            })
+                            # print(results[component][behaviour])
+                else:
+                    for behaviour in data[component]:
+                        # print("Behaviour {b}".format(b=behaviour))
+                        for transition in data[component][behaviour]:
+                            # print("Transition {t}".format(t=transition))
+                            results[component][behaviour] = add_start_and_end(
+                                results[component][behaviour], transition["name"], transition["start"],
+                                transition["end"])
+    # we calc the mean value for transition starts and ends
+    for component in results:
+        for behaviour in results[component]:
+            for transition in results[component][behaviour]:
+                transition["start"] = statistics.mean(transition["starts"])
+                transition["end"] = statistics.mean(transition["ends"])
+    return results
+
+
+def add_start_and_end(behaviour, name, start, end):
+    result = behaviour
+    for transition in result:
+        if name == transition["name"]:
+            transition["ends"].append(end)
+            transition["starts"].append(start)
+    return result
+
+
+def create_figure(results, name: str):
+    # TODO: sort results for sequential graphs -> sorting the data that is in a list in a dict...
     figure = plt.figure()
     ax = plt.subplot()
     max_time = 0
     i = 0
     labels = []
     ticks = []
-    colors = ['blue', 'red', 'orange', 'green', 'grey']
+    colors = ['b', 'r', 'g', 'c', 'm', 'y', 'k', 'tab:blue', 'tab:orange', 'tab:gray', 'tab:brown', 'lime']
     for element in results:
-        color = colors[i % 5]
+        color = colors[i % 12]
         # for each element, have a color and cycle it
         # every step is under the deploy keyword in the json result file
         for item in results[element]["deploy"]:
@@ -240,13 +285,15 @@ def creategantt(filepath, name):
             if item["end"] > max_time:
                 max_time = item["end"]
             ax.broken_barh([(item["start"], (item["end"] - item["start"]))], (2 * i + 0.75, 1),
-                           facecolors=(color))
+                           facecolors=color)
             # shorten long names
             if len(element) > 4:
                 if element == 'keystone':
                     element = 'kst'
                 elif element == 'memcached':
                     element = 'mem'
+                elif element == 'mariadb':
+                    element = 'mdb'
                 elif element == 'rabbitmq':
                     element = 'rmq'
                 elif element == 'openvswitch':
