@@ -321,11 +321,20 @@ results.
 
 \begin{table}
     \begin{center}
-        \input{tables/tab_openstack_results2.tex}
+        \input{tables/tab_openstack_results_ecotype.tex}
         \caption{Measured and theoretical results of our benchmark on \ecotype.}
-        \label{tab:openstack_results}
+        \label{tab:openstack_results_ecotype}
     \end{center}
 \end{table}
+
+\begin{table}
+    \begin{center}
+        \input{tables/tab_openstack_results_nova.tex}
+        \caption{Measured and theoretical results of our benchmark on \nova.}
+        \label{tab:openstack_results_nova}
+    \end{center}
+\end{table}
+
 
 In these different studies, we will refer to Figures~\ref{fig:ecotype}
 and~\ref{fig:nova} which respectively show our results on \ecotype and
@@ -396,7 +405,7 @@ also displayed in \cref{tab:openstack_results}.
 
 We now compare the time measured to commission OpenStack regarding the
 three assemblies defined previously: \ansass, \aeoass and \madass (the
-lower, the better in Figure~\ref{fig:openstack_results}).  As
+lower, the better in Figure~\ref{fig:openstack_results_ecotype}).  As
 expected, the time required to commission these assemblies reflects
 the level of parallelism they handle. Since \ansass is limited to the
 first parallelism level, \ie \emph{SIMH}, its commissioning time is

@@ -47,8 +47,7 @@ def format_results(results):
 
 def calc_mean(exp_table):
     """
-        Calculate means for a group of experiment, remote/local/cached
-        with std
+        Calculate means, std, mins, and maxes for a group of experiment, remote/local/cached
     """
     remotes = []
     locales = []
@@ -63,15 +62,21 @@ def calc_mean(exp_table):
     results = {
         "remote": {
             "mean": statistics.mean(remotes),
-            "std": statistics.stdev(remotes)
+            "std": statistics.stdev(remotes),
+            "min": min(remotes),
+            "max": max(remotes)
         },
         "cached": {
             "mean": statistics.mean(cacheds),
-            "std": statistics.stdev(cacheds)
+            "std": statistics.stdev(cacheds),
+            "min": min(cacheds),
+            "max": max(cacheds)
         },
         "local": {
             "mean": statistics.mean(locales),
-            "std": statistics.stdev(locales)
+            "std": statistics.stdev(locales),
+            "min": min(locales),
+            "max": max(locales)
         }
     }
     return results
@@ -93,11 +98,15 @@ def calc_gains(exp_table, ref_table):
     return result
 
 
-def generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains):
+def generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains, tex_name):
     """"
         From results in the tables, builds a TeX table for our paper
     """
-    with open("tab_openstack_results.tex", "w") as f:
+    if not tex_name.endswith(".tex"):
+        file_name = tex_name + ".tex"
+    else:
+        file_name = tex_name
+    with open(file_name, "w") as f:
         f.write("\n\\begin{tabular}{cll|ccc}\n")
         f.write("\\toprule\n")
         f.write("& & & remote & local & cached \\\\\n")
@@ -137,11 +146,30 @@ def generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, 
         f.write("\n{mad_cac_std}s \\\\".format(mad_cac_std=int(madeus_means["cached"]["std"])))
         f.write("\n\\midrule")
         f.write("\n\\multirow{6}{*}{\\STAB{\\rotatebox[origin=c]{90}{theoretical}}} & \\multirow{3}{*}{\\STAB{\\rotatebox[origin=c]{90}{max}}}  & ansible  &")
-        f.write("\n540s &\n485s &\n334s \\\\\n & & aeolus & \n269s &\n259s &\n232s \\\\\n & & madeus & \n156s &")
-        f.write("\n158s &\n136s \\\\")
+        f.write("\n{ans_rem_max}s &".format(ans_rem_max=int(ansible_means["remote"]["max"])))
+        f.write("\n{ans_loc_max}s &".format(ans_loc_max=int(ansible_means["local"]["max"])))
+        f.write("\n{ans_cac_max}s \\\\".format(ans_cac_max=int(ansible_means["cached"]["max"])))
+        f.write("\n & & aeolus &")
+        f.write("\n{aeo_rem_max}s &".format(aeo_rem_max=int(aeolus_means["remote"]["max"])))
+        f.write("\n{aeo_loc_max}s &".format(aeo_loc_max=int(aeolus_means["local"]["max"])))
+        f.write("\n{aeo_cac_max}s \\\\".format(aeo_cac_max=int(aeolus_means["cached"]["max"])))
+        f.write("\n & & madeus &")
+        f.write("\n{mad_rem_max}s &".format(mad_rem_max=int(madeus_means["remote"]["max"])))
+        f.write("\n{mad_loc_max}s &".format(mad_loc_max=int(madeus_means["local"]["max"])))
+        f.write("\n{mad_cac_max}s \\\\".format(mad_cac_max=int(madeus_means["cached"]["max"])))
         f.write("\n\\cmidrule{2-6}& \\multirow{3}{*}{\\STAB{\\rotatebox[origin=c]{90}{min}}}  & ansible  &")
-        f.write("\n523s &\n473s &\n326s \\\\\n & & aeolus &\n257s &\n249s &\n223 \\\\\n & & madeus &")
-        f.write("\n141s &\n143s &\n123s \\\\\n\\bottomrule\\end{tabular}")
+        f.write("\n{ans_rem_min}s &".format(ans_rem_min=int(ansible_means["remote"]["min"])))
+        f.write("\n{ans_loc_min}s &".format(ans_loc_min=int(ansible_means["local"]["min"])))
+        f.write("\n{ans_cac_min}s \\\\".format(ans_cac_min=int(ansible_means["cached"]["min"])))
+        f.write("\n & & aeolus &")
+        f.write("\n{aeo_rem_min}s &".format(aeo_rem_min=int(aeolus_means["remote"]["min"])))
+        f.write("\n{aeo_loc_min}s &".format(aeo_loc_min=int(aeolus_means["local"]["min"])))
+        f.write("\n{aeo_cac_min}s \\\\".format(aeo_cac_min=int(aeolus_means["cached"]["min"])))
+        f.write("\n & & madeus &")
+        f.write("\n{mad_rem_min}s &".format(mad_rem_min=int(madeus_means["remote"]["min"])))
+        f.write("\n{mad_loc_min}s &".format(mad_loc_min=int(madeus_means["local"]["min"])))
+        f.write("\n{mad_cac_min}s \\\\".format(mad_cac_min=int(madeus_means["cached"]["min"])))
+        f.write("\n\\bottomrule\n\\end{tabular}")
 
 
 @click.group()
@@ -156,7 +184,11 @@ def cli():
               type=click.Path(exists=True, file_okay=False),
               required=True,
               help="The path containing the file results_deployment_times")
-def analyze(result_path):
+@click.option("-tn", "--tex_name",
+              type=str,
+              required=True,
+              help="Name for the resulting tex file of the table")
+def analyze(result_path, tex_name):
     """
         Analyze the results and produce tables for the means, % gains and std
         May contain rounding inaccuracies
@@ -205,7 +237,7 @@ def analyze(result_path):
         local=int(aeolus_gains["local"]),
         cached=int(aeolus_gains["cached"])))
 
-    generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains)
+    generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains, tex_name)
 
 
 @cli.command(help="Create gantt graph from result file and saves it to svg format")
@@ -234,18 +266,18 @@ def creategantt(filepath, namepattern, number):
     create_figure(cached_dag2t_results, title)
 
 
-def get_results(filepath, namepattern, number):
+def get_results(file_path, name_pattern, number):
     """
         Aggregates results from files matching a pattern into a single dictionary
-        :param filepath: the path of the file
-        :param namepattern: the file namepattern (to which we add _[x].json where x is a number
+        :param file_path: the path of the file
+        :param name_pattern: the file name_pattern (to which we add _[x].json where x is a number
         :param number: the number of files following the pattern, it's the [x] above
         :return: the results as a dictionary
     """
     results = {}
     # we get all result in one dict
     for i in range(number):
-        filename = filepath + namepattern + "_" + str(i) + ".json"
+        filename = file_path + name_pattern + "_" + str(i) + ".json"
         with open(filename, "r") as f:
             data = json.load(f)
             for component in data:
@@ -417,15 +449,65 @@ def create_figure(results, name: str):
               required=True,
               help="The number of json files of each type (nb of experiments)")
 def tableofpulls(filepath, number):
+    cluster_name = "Cluster"
+    if "nova" in filepath:
+        cluster_name = "Nova"
+    elif "ecotype" in filepath:
+        cluster_name = "Ecotype"
+    # first we do it for the madeus part (dag_nt4)
+    print("===============================================")
+    print("{c} pull time information for nova component on Madeus assembly".format(c=cluster_name))
     # go through cached data
-    cached_filename_base = filepath + "/results_cached_seq_nt4_"
+    cached_filename_base = filepath + "/results_cached_dag_nt4_"
     get_pull_info(cached_filename_base, "cached", number)
 
     # go through local data
-    local_filename_base = filepath + "/results_local_seq_nt4_"
+    local_filename_base = filepath + "/results_local_dag_nt4_"
     get_pull_info(local_filename_base, "local", number)
 
-    remote_filename_base = filepath + "/results_remote_seq_nt4_"
+    remote_filename_base = filepath + "/results_remote_dag_nt4_"
+    get_pull_info(remote_filename_base, "remote", number)
+
+    # then we do it for the aoelus part (dag_2t)
+    print("===============================================")
+    print("{c} pull time information for nova component on  Aeolus assembly".format(c=cluster_name))
+    # go through cached data
+    cached_filename_base = filepath + "/results_cached_dag_2t_"
+    get_pull_info(cached_filename_base, "cached", number)
+
+    # go through local data
+    local_filename_base = filepath + "/results_local_dag_2t_"
+    get_pull_info(local_filename_base, "local", number)
+
+    remote_filename_base = filepath + "/results_remote_dag_2t_"
+    get_pull_info(remote_filename_base, "remote", number)
+
+    # # then we do it for the seq_nt4 part (seq_nt4)
+    # print("===============================================")
+    # print("{c} pull time information for nova component on seq_nt4 assembly".format(c=cluster_name))
+    # # go through cached data
+    # cached_filename_base = filepath + "/results_cached_seq_nt4_"
+    # get_pull_info(cached_filename_base, "cached", number)
+    #
+    # # go through local data
+    # local_filename_base = filepath + "/results_local_seq_nt4_"
+    # get_pull_info(local_filename_base, "local", number)
+    #
+    # remote_filename_base = filepath + "/results_remote_seq_nt4_"
+    # get_pull_info(remote_filename_base, "remote", number)
+
+    # then we do it for the ansible part (seq_1t)
+    print("===============================================")
+    print("{c} pull time information for nova component on Ansible assembly".format(c=cluster_name))
+    # go through cached data
+    cached_filename_base = filepath + "/results_cached_seq_1t_"
+    get_pull_info(cached_filename_base, "cached", number)
+
+    # go through local data
+    local_filename_base = filepath + "/results_local_seq_1t_"
+    get_pull_info(local_filename_base, "local", number)
+
+    remote_filename_base = filepath + "/results_remote_seq_1t_"
     get_pull_info(remote_filename_base, "remote", number)
 
 
@@ -440,21 +522,30 @@ def get_pull_info(filebase, type_pull, number):
         with open(filename, "r") as f:
             data = json.load(f)
             for component in data:
-                    for transition in data[component]:
-                        for action in data[component][transition]:
-                            if component == 'nova':
+                for transition in data[component]:
+                    for action in data[component][transition]:
+                        if component == 'nova':
+                            # seq_1t have only "deploy
+                            if "seq_1t" not in filebase:
                                 if action["name"] == "pull":
                                     time = action["end"]-action["start"]
                                     pull_times.append(time)
-                            if action["end"] > max_time:
-                                max_time = action["end"]
+                            else:
+                                time = action["end"]-action["start"]
+                                pull_times.append(time)
+                        if action["end"] > max_time:
+                            max_time = action["end"]
             max_times.append(max_time)
     mean_pull_time = statistics.mean(pull_times)
     mean_total_time = statistics.mean(max_times)
     percentage = mean_pull_time / mean_total_time * 100
-    print("Ansible {typ} mean pull time {t}s ".format(t=int(mean_pull_time), typ=type_pull))
-    print("Ansible {typ} mean max time {t}s ".format(t=int(mean_total_time), typ=type_pull))
-    print("Ansible {typ} pull over total time {p}%".format(p=int(percentage), typ=type_pull))
+    if "seq_1t" not in filebase:
+        action_type = "pull"
+    else:
+        action_type = "deploy"
+    print("\tAnsible {typ} mean  {a} time {t}s ".format(t=int(mean_pull_time), typ=type_pull, a=action_type))
+    print("\tAnsible {typ} mean max time {t}s ".format(t=int(mean_total_time), typ=type_pull))
+    print("\tAnsible {typ} {a} over total time {p}%".format(p=int(percentage), typ=type_pull, a=action_type))
 
 
 if __name__ == '__main__':
