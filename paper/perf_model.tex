@@ -48,7 +48,7 @@ as one of the places is reached. The total time then depends on the
 earliest time at which one of these places is reached, which cannot be
 modeled as a longest path. In practice this is not a severe
 restriction, as ports requirements very rarely include
-disjunctions. Indeed, none of our use-cases relies on this
+disjunctions. Indeed, none of our use-cases rely on this
 feature. However, we still consider the possibility of having multiple
 sets (of one place) bound to a port. In this case, the port is enabled
 when all the places are reached.
@@ -198,7 +198,7 @@ transitions \emph{t1}, \emph{t2} and \emph{t3}.
 For each provide port $p$ and each place $\pi$ such that
 $\{\pi\}$ is bound to $p$, we introduce one arc from
 $v_\pi^\text{reach}$ to $v_p^\text{enable}$. This represents the
-enabling of the port after all (set of) places bound to the port
+enabling of the port after all (sets of) places bound to the port
 have been reached.
 \[
 E_{S_p}= \bigcup_{(p,\{\pi\})\in B_{S_p}^*}\left\{ \left(v_\pi^\text{reach},0,v_p^\text{enable}\right)\right\}
@@ -285,8 +285,8 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 For each initial place $\pi$ we introduce one arc from $v^\text{source}$
 to $v_\pi^\text{reach}$, representing the fact that a token is placed in each
 initial place in the initial configuration.
-Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
-places \emph{c1p1} and \emph{c2p2}.
+%% Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
+%% places \emph{c1p1} and \emph{c2p2}.
 \[
 E_I=\bigcup_{\pi, \Delta_i(\pi) = \emptyset}\left\{ \left(v^\text{source},0,v_\pi^\text{reach}\right)\right\} 
 \]
@@ -317,7 +317,10 @@ corresponding to a small assembly.
 In the following, we denote $DG_A=(V,E)$ the dependency graph
 corresponding to an assembly $A=(C,L)$. We define the time estimation
 of the execution of the \mad assembly $A$ to be the length of the
-longest path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$.
+longest path from $v^\text{source}$ to $v^\text{sink}$ in
+$DG_A$. Clearly, the size of $DG_A$ is linear in the size of
+$A$. Furthermore, the graph is either a DAG or has a path of infinite
+length, so the longest path can be computed in polynomial time.
 
 Since our execution model does not include a notion of time, proving
 the correctness of this performance model is outside the scope of this
@@ -327,7 +330,7 @@ assess reachability.
 \begin{lemma}
   Let $A$ be an assembly of well-formed components. If the longest
   path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$ has a
-  finite weight, then in any execution of $A$, all places in $A$ are
+  finite length, then in any execution of $A$, all places in $A$ are
   eventually reached.
 \end{lemma}
 
@@ -338,10 +341,10 @@ assess reachability.
   in $DG_A$ is located on some path from $v^\text{source}$ to
   $v^\text{sink}$, we have that $DG_A$ is acyclic.
 
-  Then we can use induction on the structure of the graph to verify
-  the following conjunction, for any vertex $v$, if $v =
-  v^\text{reach}_\pi$ for some place $\pi$, then $\pi$ is eventually
-  reached in any execution of $A$. The proof is similar to that of
+  Then we can use well-founded induction on the structure of the graph
+  to verify that, for any vertex $v$, if $v = v^\text{reach}_\pi$ for
+  some place $\pi$, then $\pi$ is eventually reached in any execution
+  of $A$. The proof is similar to that of
   Lemma~\ref{thm:reachedplaces}.
 \end{proof}
 
@@ -471,21 +474,19 @@ assess reachability.
 %% practice, we expect most real-life assemblies to fulfill these requirements.
 %% In particular, all of the assemblies presented in this article do.
 
+%% \subsection{Complexity}
 
-\subsection{Complexity}
+%% We now determine the size complexity of $DG_A=(V,E)$ and the time
+%% complexity of computing the time estimation.
 
-We now determine the size complexity of $DG_A=(V,E)$ and the time
-complexity of computing the time estimation.
+%% First, we notice that
+%% $|V| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|S_p^*\right|\right)$
+%% and
+%% $|E| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|B_{S_p}^*\right|+\left|B_{S_u}^*\right|\times\left|L\right|\right)$
+%% .
 
-First, we notice that
-$|V| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|S_p^*\right|\right)$
-and
-$|E| \in \mathcal{O}\left(\left|\Pi^*\right|+\left|\Theta^*\right|+\left|B_{S_p}^*\right|+\left|B_{S_u}^*\right|\times\left|L\right|\right)$
-.
-
-Because $DG_A$ is a a directed acyclic graph, finding the longest path
-between $v^\text{source}$ and $v^\text{sink}$, \ie finding a time estimation,
-can be done in $\mathcal{O}(|V|+|E|)$ by sorting the
-vertices topologically and iterating through them, computing their maximum
-distance from the source using the one of their parents.
-
+%% Because $DG_A$ is a a directed acyclic graph, finding the longest path
+%% between $v^\text{source}$ and $v^\text{sink}$, \ie finding a time estimation,
+%% can be done in $\mathcal{O}(|V|+|E|)$ by sorting the
+%% vertices topologically and iterating through them, computing their maximum
+%% distance from the source using the one of their parents.
