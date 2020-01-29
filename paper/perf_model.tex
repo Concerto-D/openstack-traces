@@ -306,7 +306,7 @@ E= E_{\Theta} \cup E_{S_p}\cup E_{S_u}\cup E_{I}\cup E_{F}
 
 Figure~\ref{fig:source_sink_graph} depicts the dependency graph
 corresponding to a small assembly.
-\SR{Ce serait bien d'avoir un port dans l'example}
+\SR{Ce serait bien d'avoir un port dans l'exemple}
 %%%%%%%%%%%%%%%
 \input{figures/exampletodag.tex}
 
@@ -314,138 +314,162 @@ corresponding to a small assembly.
 \subsection{Time estimation}
 %--------------------------------------
 
-In the following, we denote $DG_A=(V,E)$ the dependency graph corresponding
-to assembly $A=(C,L)$, and $DG_c$ the part of a dependency graph
-corresponding to component $c \in C$.
+In the following, we denote $DG_A=(V,E)$ the dependency graph
+corresponding to an assembly $A=(C,L)$. We define the time estimation
+of the execution of the \mad assembly $A$ to be the length of the
+longest path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$.
 
-We define the time estimation of the execution of the \mad assembly $A$
-to be the length of a longest path between $v^\text{source}$ and
-$v^\text{sink}$ in $DG_A$.
-
-\begin{lemma}
- In $DG_A$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there
- are no cycles, then the time estimation for $A$ is well-defined.
- \label{lemma:well_defined}
-\end{lemma}
-
-\begin{proof}
- If $v^\text{sink}$ is reachable from $v^\text{source}$, there exists at least
- one path from $v^\text{source}$ to  $v^\text{sink}$. Because there are no
- cycles, the number of paths between $v^\text{source}$ and $v^\text{sink}$ is
- finite. Because all the paths have a weight, the set of longest paths is
- well-defined (and not empty). Therefore the length of a longest path is
- well-defined.
-\end{proof}
-
-\begin{lemma}\label{lemma:reachable}
- In a component $c \in C$, if $\pi_t$ depends on $\pi_s$, then there
- is a path from $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$ in $DG_c$.
-\end{lemma}
-
-\begin{proof}
- By assumption, there exists a sequence $(\pi_1, \pi_2, \dots, \pi_n)$
- such that $\pi_1 = \pi_s$ and $\pi_n = \pi_t$ and $\pi_i$ precedes
- $\pi_{i+1}$ for $1 \le i < n$. Therefore, by definition of
- $E_\Theta$, there is a path from $v_{\pi_i}^\text{reach}$ to
- $v_{\pi_{i+1}}^\text{reach}$ for $1 \le i < n$, hence a path from
- $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$
-\end{proof}
-
+Since our execution model does not include a notion of time, proving
+the correctness of this performance model is outside the scope of this
+paper. However we show that the performance model can be used to
+assess reachability.
 
 \begin{lemma}
- If an assembly $A$ has one or more components then $v^\text{sink}$ is
- reachable from $v^\text{source}$ in $DG_A$.
- \label{lemma:source_sink}
+  Let $A$ be an assembly of well-formed components. If the longest
+  path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$ has a
+  finite weight, then in any execution of $A$, all places in $A$ are
+  eventually reached.
 \end{lemma}
 
 \begin{proof}
- Let us consider one component $c \in C$, its initial place $\pi_i$ and one of
- its final places $\pi_f$. By construction, $v_{\pi_i}^\text{reach}$ is
- reachable from $v^\text{source}$, and $v^\text{sink}$ is reachable from
- $v_{\pi_f}^\text{reach}$ in the dependency graph of an assembly containing this
- component. The last thing to prove is that $v_{\pi_f}^\text{reach}$ is reachable
- from $v_{\pi_i}^\text{reach}$ in $DG_c$.
- The end of the execution of a \mad component is defined as
- when all its tokens are in final places, \ie when there are no more
- transitions to perform. Therefore, by definition $\pi_f$ is
- necessarily reachable from $\pi_i$ in the \net of $c \in C$.
- We conclude by applying Lemma~\ref{lemma:reachable}.
+  By construction of $DG_A$, there exists no cycle formed only of arcs
+  of weight 0, and by the assumption, any path from $v^\text{source}$
+  to $v^\text{sink}$ does not feature of a cycle. Since every vertex
+  in $DG_A$ is located on some path from $v^\text{source}$ to
+  $v^\text{sink}$, we have that $DG_A$ is acyclic.
+
+  Then we can use induction on the structure of the graph to verify
+  the following conjunction, for any vertex $v$, if $v =
+  v^\text{reach}_\pi$ for some place $\pi$, then $\pi$ is eventually
+  reached in any execution of $A$. The proof is similar to that of
+  Lemma~\ref{thm:reachedplaces}.
 \end{proof}
 
-\begin{lemma}
- If a component $c \in C$ is well-formed then $DG_c$ has no cycle.
- \label{lemma:no_cycles_component}
-\end{lemma}
 
-\begin{proof}
- By construction, in $DG_c$ the vertices and arcs corresponding to places do
- not form cycles and are disjoint, so they cannot produce a cycle by themselves.
- Likewise, the arcs corresponding to port bindings have either their source
- vertex or their destination vertex of degree 1, so they cannot produce a cycle.
- Only the arcs corresponding to transitions can produce cycles. Moreover, the
- arcs in $DG_c$ connect only the vertices corresponding to the places which
- are connected in the \net. This means that if there is a cycle in $DG_c$,
- there is a cycle in the \net. However, the \net of a well-formed \mad component
- has no cycle. Therefore there are no cycles in $DG_c$.
-\end{proof}
+%% \begin{lemma}
+%%  In $DG_A$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there
+%%  are no cycles, then the time estimation for $A$ is well-defined.
+%%  \label{lemma:well_defined}
+%% \end{lemma}
 
-\begin{lemma}
- In an assembly $A$ of well-formed components with no deadlocks, if each port
- is bound to at most one element (place, transition or group) and if
- $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $A$ then the $DG_A$ has no cycles.
- \label{lemma:no_cycles_assembly}
-\end{lemma}
+%% \begin{proof}
+%%  If $v^\text{sink}$ is reachable from $v^\text{source}$, there exists at least
+%%  one path from $v^\text{source}$ to  $v^\text{sink}$. Because there are no
+%%  cycles, the number of paths between $v^\text{source}$ and $v^\text{sink}$ is
+%%  finite. Because all the paths have a weight, the set of longest paths is
+%%  well-defined (and not empty). Therefore the length of a longest path is
+%%  well-defined.
+%% \end{proof}
 
-\begin{proof}
- By Lemma~\ref{lemma:no_cycles_component}, we have that the dependency graph
- of all the components in $A$ have no cycles.
- Then, the only way a cycle may exist in $DG_A$ is if the vertices and arcs
- corresponding to connections cause a cycle to exist.
- This may be acheived in two ways: because of a single service port bound to
- group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
- $\left|g_{out}(g)\right|=1$); or because of two or more use and provide ports.
- First, because $\left|g_{out}(g)\right|=1$ (we consider $\pi_{out}$ to be the only
- place in $g_{out}(g)$), and because by construction $v_{\pi_{out}}^\text{reach}$ is
- reachable from $v_{\pi_{in}}^\text{reach}$ (where $\pi_{in}$ is the only place in $g_{in}(g)$,
- then $v_{\pi_{in}}^\text{reach}$ is not reachable from $v_{\pi_{out}}^\text{reach}$ (otherwise
- there would be a cycle in the dependency graph of the component). Second, a
- cycle can be caused by multiple connections if there are \emph{crossing
- dependencies} (see Figure~\ref{fig:deadlock}). However, this would create a
- deadlock in the assembly, which is not possible by hypothesis.
-\end{proof}
+%% \begin{lemma}\label{lemma:reachable}
+%%  In a component $c \in C$, if $\pi_t$ depends on $\pi_s$, then there
+%%  is a path from $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$ in $DG_c$.
+%% \end{lemma}
 
-\begin{figure}[t]
-  \begin{center}
-    \includegraphics[width=0.5\linewidth]{./images/deadlock.pdf}
-  \end{center}
-  \caption{Example of an invalid assembly: crossing dependencies cause a deadlock.}
-  \label{fig:deadlock}
-\end{figure}
+%% \begin{proof}
+%%  By assumption, there exists a sequence $(\pi_1, \pi_2, \dots, \pi_n)$
+%%  such that $\pi_1 = \pi_s$ and $\pi_n = \pi_t$ and $\pi_i$ precedes
+%%  $\pi_{i+1}$ for $1 \le i < n$. Therefore, by definition of
+%%  $E_\Theta$, there is a path from $v_{\pi_i}^\text{reach}$ to
+%%  $v_{\pi_{i+1}}^\text{reach}$ for $1 \le i < n$, hence a path from
+%%  $v_{\pi_s}^\text{reach}$ to $v_{\pi_t}^\text{reach}$
+%% \end{proof}
 
-\begin{theorem}
- In an assembly $A$ of one or more well-formed components with no deadlocks,
- if each port is bound to at most one element (place, transition or group) and if
- $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
- $g$ in $A$, then the time estimation obtained using $DG_A$ is well-defined.
- \label{theorem:well_defined}
-\end{theorem}
 
-\begin{proof}
- By applying Lemma~\ref{lemma:source_sink}, we know that $v^\text{sink}$ is reachable
- from $v^\text{source}$. By applying Lemma~\ref{lemma:no_cycles_assembly}, we know
- that there are no cycles in $DG_A$. We conclude by applying
- Lemma~\ref{lemma:well_defined}.
-\end{proof}
+%% \begin{lemma}
+%%  If an assembly $A$ has one or more components then $v^\text{sink}$ is
+%%  reachable from $v^\text{source}$ in $DG_A$.
+%%  \label{lemma:source_sink}
+%% \end{lemma}
 
-\paragraph{Remark}
+%% \begin{proof}
+%%  Let us consider one component $c \in C$, its initial place $\pi_i$ and one of
+%%  its final places $\pi_f$. By construction, $v_{\pi_i}^\text{reach}$ is
+%%  reachable from $v^\text{source}$, and $v^\text{sink}$ is reachable from
+%%  $v_{\pi_f}^\text{reach}$ in the dependency graph of an assembly containing this
+%%  component. The last thing to prove is that $v_{\pi_f}^\text{reach}$ is reachable
+%%  from $v_{\pi_i}^\text{reach}$ in $DG_c$.
+%%  The end of the execution of a \mad component is defined as
+%%  when all its tokens are in final places, \ie when there are no more
+%%  transitions to perform. Therefore, by definition $\pi_f$ is
+%%  necessarily reachable from $\pi_i$ in the \net of $c \in C$.
+%%  We conclude by applying Lemma~\ref{lemma:reachable}.
+%% \end{proof}
 
-The restrictions imposed in \ref{theorem:well_defined} are here to consider only
-assemblies for which the structure of the dependency graph does not change
-depending on the duration of the transitions. To handle arbitrary assemblies,
-a more complex performance model is needed, which is left as future work. In
-practice, we expect most real-life assemblies to fulfill these requirements.
-In particular, all of the assemblies presented in this article do.
+%% \begin{lemma}
+%%  If a component $c \in C$ is well-formed then $DG_c$ has no cycle.
+%%  \label{lemma:no_cycles_component}
+%% \end{lemma}
+
+%% \begin{proof}
+%%  By construction, in $DG_c$ the vertices and arcs corresponding to places do
+%%  not form cycles and are disjoint, so they cannot produce a cycle by themselves.
+%%  Likewise, the arcs corresponding to port bindings have either their source
+%%  vertex or their destination vertex of degree 1, so they cannot produce a cycle.
+%%  Only the arcs corresponding to transitions can produce cycles. Moreover, the
+%%  arcs in $DG_c$ connect only the vertices corresponding to the places which
+%%  are connected in the \net. This means that if there is a cycle in $DG_c$,
+%%  there is a cycle in the \net. However, the \net of a well-formed \mad component
+%%  has no cycle. Therefore there are no cycles in $DG_c$.
+%% \end{proof}
+
+%% \begin{lemma}
+%%  In an assembly $A$ of well-formed components with no deadlocks, if each port
+%%  is bound to at most one element (place, transition or group) and if
+%%  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
+%%  $g$ in $A$ then the $DG_A$ has no cycles.
+%%  \label{lemma:no_cycles_assembly}
+%% \end{lemma}
+
+%% \begin{proof}
+%%  By Lemma~\ref{lemma:no_cycles_component}, we have that the dependency graph
+%%  of all the components in $A$ have no cycles.
+%%  Then, the only way a cycle may exist in $DG_A$ is if the vertices and arcs
+%%  corresponding to connections cause a cycle to exist.
+%%  This may be acheived in two ways: because of a single service port bound to
+%%  group $g$ if $\left|g_{out}(g)\right|>0$ (which implies by hypothesis
+%%  $\left|g_{out}(g)\right|=1$); or because of two or more use and provide ports.
+%%  First, because $\left|g_{out}(g)\right|=1$ (we consider $\pi_{out}$ to be the only
+%%  place in $g_{out}(g)$), and because by construction $v_{\pi_{out}}^\text{reach}$ is
+%%  reachable from $v_{\pi_{in}}^\text{reach}$ (where $\pi_{in}$ is the only place in $g_{in}(g)$,
+%%  then $v_{\pi_{in}}^\text{reach}$ is not reachable from $v_{\pi_{out}}^\text{reach}$ (otherwise
+%%  there would be a cycle in the dependency graph of the component). Second, a
+%%  cycle can be caused by multiple connections if there are \emph{crossing
+%%  dependencies} (see Figure~\ref{fig:deadlock}). However, this would create a
+%%  deadlock in the assembly, which is not possible by hypothesis.
+%% \end{proof}
+
+%% \begin{figure}[t]
+%%   \begin{center}
+%%     \includegraphics[width=0.5\linewidth]{./images/deadlock.pdf}
+%%   \end{center}
+%%   \caption{Example of an invalid assembly: crossing dependencies cause a deadlock.}
+%%   \label{fig:deadlock}
+%% \end{figure}
+
+%% \begin{theorem}
+%%  In an assembly $A$ of one or more well-formed components with no deadlocks,
+%%  if each port is bound to at most one element (place, transition or group) and if
+%%  $\left|g_{in}(g)\right|\leq 1$ and $\left|g_{out}(g)\right|\leq 1$ for each group
+%%  $g$ in $A$, then the time estimation obtained using $DG_A$ is well-defined.
+%%  \label{theorem:well_defined}
+%% \end{theorem}
+
+%% \begin{proof}
+%%  By applying Lemma~\ref{lemma:source_sink}, we know that $v^\text{sink}$ is reachable
+%%  from $v^\text{source}$. By applying Lemma~\ref{lemma:no_cycles_assembly}, we know
+%%  that there are no cycles in $DG_A$. We conclude by applying
+%%  Lemma~\ref{lemma:well_defined}.
+%% \end{proof}
+
+%% \paragraph{Remark}
+
+%% The restrictions imposed in \ref{theorem:well_defined} are here to consider only
+%% assemblies for which the structure of the dependency graph does not change
+%% depending on the duration of the transitions. To handle arbitrary assemblies,
+%% a more complex performance model is needed, which is left as future work. In
+%% practice, we expect most real-life assemblies to fulfill these requirements.
+%% In particular, all of the assemblies presented in this article do.
 
 
 \subsection{Complexity}
