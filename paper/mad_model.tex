@@ -231,8 +231,8 @@ an assembly. The \mad execution model is governed by operational
 semantics rules to move from one configuration to another. The concept
 of configuration, which is introduced formally in
 Section~\ref{sec:formal_model}, intuitively corresponds to a snapshot
-of the execution of an assembly composed of: the location of the
-tokens, a history of elements that have been visited, and the set of
+of the execution of an assembly. It is composed of the location of the
+tokens, a history of places that have been reached, and the set of
 actions (transitions) under execution. In practice, semantics rules
 move tokens from places to transitions within components. Those rules
 are inspired by those of Petri nets, yet have a specific semantics for
@@ -240,34 +240,54 @@ transitions, bindings and ports. Details of the transformation from a
 \mad assembly to a Petri net have been given
 in~\cite{coullon:hal-02323641}.
 
-In this paper, the execution of a \mad assembly has been streamlined
-compared to our previsous work~\cite{chardet:hal-01858150} and is
-defined by four operational semantic rules. These rules are formally
-specified in Section~\ref{sec:formal_model}. Note in
-Figure~\ref{fig:example} the small squares that have not been
-explained yet, namely \emph{docks}. Docks are attached to places and
-divided in two groups, input and output docks. Input docks represent
-synchronization points to enter a place, and output docks represent
-scatering points to leave a place and start parallel
-transitions. Thus, each transition has a source dock and a destination
-dock. Docks have not been detailed previously because they are
-automatically infered from the concrete syntax of \mad. However, this
-concept is needed to explain the four semantics rules:
+%% In this paper, the execution of a \mad assembly has been streamlined
+%% compared to our previsous work~\cite{chardet:hal-01858150} and is
+%% defined by five operational semantic rules. These rules are formally
+%% specified in Section~\ref{sec:formal_model}. Note in
+%% Figure~\ref{fig:example} the small squares that have not been
+%% explained yet, namely \emph{docks}. Docks are attached to places and
+%% divided in two groups, input and output docks. Input docks represent
+%% synchronization points to enter a place, and output docks represent
+%% scatering points to leave a place and start parallel
+%% transitions. Thus, each transition has a source dock and a destination
+%% dock. Docks have not been detailed previously because they are
+%% automatically infered from the concrete syntax of \mad. However, this
+%% concept is needed to explain the four semantics rules:
 %
+In the formal model, transitions are composed of three elements: an
+output dock attached to the source place, an action, and an input dock
+attached to the destination place. Docks are used to model
+synchronization points in the execution: the output dock holds a token
+if the action is ready to be started, whereas the input dock holds a
+token after the action has ended.
+
+In this paper, the execution model of \mad has been streamlined
+compared to our previous work~\cite{chardet:hal-01858150}.  It is
+defined by five operational semantic rules, that are formally
+specified in Section~\ref{sec:formal_model}. These rules correspond to
+the following behaviors:
+
 \begin{enumerate}
-\item \emph{Reaching place}: when all input docks associated to a
-  place hold a token, those tokens can be merged to a single one,
-  located within the place.
-\item \emph{Leaving place}: when a place holds a token the token can
-  be duplicated and placed in each output dock of the place.
-\item \emph{Firing transition}: when the source dock of a transition
-  contains a token and when all use ports bound to this transition
-  have their associated connections provided, the token is moved from
-  the source dock to the transition, which is not considered atomic as
-  it is associated with an action.
-\item \emph{Ending transition}: when a transition holds a token and
-  when the action associated to the transition is terminated, the
-  token is moved from the transition to its destination dock.
+\item \emph{Reaching a place}: when all the actions required by a
+  milestone have finished, the milestone can be reached. Formally,
+  this is represented by replacing the tokens in the input docks of a
+  place by a token on the place itself. Note that the enabling of
+  provide ports depends on place reached, so this event may enable
+  additional ports.
+\item \emph{Leaving a place}: after a milestone of the deployment has
+  been reached, new actions can be started. This is represented by
+  replacing a token on a place by tokens on its output docks.
+\item \emph{Firing a transition}: if the source dock of a transition
+  contains a token, and all use ports bound to this transition are
+  connected to enabled provide ports, the action associated with the
+  transition may be initiated.
+\item \emph{Terminating an action}: an ongoing action may terminate at
+  any point during the execution. This captures the fact that, after
+  an action has been initiated, its execution and termination are
+  outside of the control of the \mad model. However, our notion of
+  execution is limited to non-terminating actions.
+\item \emph{Ending a transition}: after an action terminates, a token
+  is placed on the output dock of the corresponding transition.
 \end{enumerate}
 
 \begin{figure}[tbp]
@@ -290,28 +310,29 @@ represented by red tokens, the second one by blue tokens, and the
 third one by green tokens.
 
 In the first configuration, on the one hand, the red token of MariaDB
-has been able to move from its initial place to its output transition
-\texttt{provision}, then to execute the action associated to this
-transition, to finally reach its second place. One can note that in
-this place MariaDB provides data that corresponds to the IP adress
-previously received from the \texttt{provision} transition. As soon as this
-second place is reached, the associated connection is provided. On the
-other hand, the initial token of Apache has been duplicated in three
-tokens, one for each output dock. Two of these tokens have been able
-to fire respectively the transitions \texttt{bootstrap} and
-\texttt{pull}, and \texttt{pull} has been ended. However, the third
-token has remained in its dock, waiting for the connection bound to
-the transition \texttt{conf} to be provided. In this configuration, as
-the connection is already provided, the transition \texttt{conf} may be fired.
-% SR: ancienne formulation
-%the next round of semantics will fire the transition \texttt{conf}.
+is found on the second place, which can only occur after a token has
+been moved from the initial place of the component to the output dock
+of transition \texttt{provision} and the action associated with this
+transition has been executed. The provide port bound to this place
+models data provided by the component, in this case the IP adress
+resulting from the action of \texttt{provision}. As soon as this
+second place is reached, the provide port \texttt{@IP mdb} is enabled,
+and the use port connected to it is provided. On the other hand, the
+initial token of Apache has been replaced by three tokens, one for
+each output dock. Two of these tokens have been used to fire
+respectively the transitions \texttt{bootstrap} and \texttt{pull}, and
+\texttt{pull} has terminated. However, the third token has remained in
+its dock. The transition \texttt{conf} could not be fired until the
+bound use port became provided. In this configuration, this is the
+case and the transition may be fired.
 
 The blue configuration illustrates a case where parallel transitions
 \texttt{pull}, \texttt{conf}, and \texttt{bootstrap} of MariaDB are
 executed simultaneously.
 
 Finally, the green configuration illustrates an example where MariaDB
-reaches its penultimate place from which a service is provided. As
-soon as this place holds a token, its associated connection is
-provided. As a result, the \texttt{check} transition of Apache that is
-using services of MariaDB can be fired by semantic rules.}
+reaches its penultimate place. The provide port \texttt{mdb} bound to
+it models the service offered by the component. As soon as the place
+holds a token, the provide port becomes enabled. As a result, the use
+port of Apache that is connected to it becomes provided, and the
+transition \texttt{check} of Apache can be fired.}

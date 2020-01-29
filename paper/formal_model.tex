@@ -293,13 +293,8 @@ action $\alpha$ is executed, as illustrated in Figure~\ref{fig:r1}
 }
 
 \paragraph{Terminating action}{
-
   The rule $\terminaction$ corresponds to the termination of an action
   $\alpha$. Any such action in $\exec$ can be removed by this rule.
-  This captures the fact that, after an action has been initiated by a
-  transition, its execution and termination is outside of the control
-  of the \mad model.
-
 }
 
 \paragraph{Ending transition}{
@@ -307,9 +302,8 @@ action $\alpha$ is executed, as illustrated in Figure~\ref{fig:r1}
 The rule $\leavetrans$ formally describes the end of a transition
 $\theta = (s, \alpha, d)$. It requires that $\theta$ holds a token and
 that the action $\alpha$ has terminated. When ending a transition, the
-token is moved from $\theta$ to the input dock $d$ and the action
-$\alpha$ is marked as complete. Figure~\ref{fig:r2} illustrates this
-rule.
+token is moved from $\theta$ to the input dock
+$d$. Figure~\ref{fig:r2} illustrates this rule.
 
 \begin{figure}[t]
 \begin{center}
@@ -398,9 +392,9 @@ rule.
   \pi_n)$, such that $\pi_{i}$ precedes $\pi_{i+1}$ for any $i$ where
   $1 \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
 
-  A \mad component is said to be well-formed if there exists no place
-  $\pi$ that depends on itself. Intuitively, the component, viewed as
-  a directed graph, must be acyclic.
+  A \mad component is said to be \emph{well-formed} if there exists no
+  place $\pi$ that depends on itself. Intuitively, the component,
+  viewed as a directed graph, must be acyclic.
 
   The lemmas below all assume an assembly $A = (C, L)$ such that all
   components $c \in C$ are well-formed.
@@ -421,7 +415,7 @@ rule.
     such that $\langle \mk, \reached, \exec \rangle_i = \langle \mk,
     \reached, \exec \rangle_j$.
 
-    Let us denote $\reached^+$ the set of places that is reached more
+    Let us denote $\reached^+$ the set of places that are reached more
     than once. By case analysis over the relation $\langle \mk,
     \reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
     \rangle_{i+1}$, we can check that $\reached^+$ is non-empty.
