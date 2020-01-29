@@ -41,6 +41,7 @@ You can get these on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-jo
 =ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments.
 
 *** Plotting the curves
+**** Gantt charts
 #+BEGIN_SRC sh
 cd results && python graph_os_results.py creategantt -f [filename] -n [name] -nb [number]
 #+END_SRC
@@ -50,6 +51,14 @@ corresponding to it. It outputs a =svg= file as a result, with the [name] given 
 [[./gantt_dag_nt4_remote.png]]
 The gantt graph displays the deployment of the various transitions, with all transitions from the same component sharing the same colour.
 For sequential assemblies, the transitions are ordered by starting order.
+**** Performance comparison charts
+#+BEGIN_SRC sh
+cd results && python graph_os_results.py performcomparison -rp [result_path] -f [filename]
+#+END_SRC
+This command takes in entry the path as [result_path] where the resulting json file from the experiments are and draw a performance comparison
+between the different assemblies and the remote, local and cached version of their deployment. It outputs an svg file [filename] of this chart.
+#+NAME: Performance comparison example
+[[./perform_ecotype.png]]
 *** Recreating tables of results
 
 ** SSH Benchmark Graphs

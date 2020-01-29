@@ -6,10 +6,12 @@ import os
 
 import matplotlib.pyplot as plt
 import click
+import numpy
 
 import yaml
 # necessary import for the yaml object in the results
 from execo_engine import *
+from matplotlib.gridspec import GridSpec
 
 
 def format_results(results):
@@ -175,6 +177,201 @@ def generate_tex_table(ansible_means, aeolus_means, madeus_means, aeolus_gains, 
 @click.group()
 def cli():
     pass
+
+
+@cli.command(help="Generates a performance comparison graph for the various assembly benchmarks")
+@click.option("-rp", "--result_path",
+              type=click.Path(exists=True, file_okay=False),
+              required=True,
+              help="The path containing the file results_deployment_times")
+@click.option("-f", "--fig_name",
+              type=str,
+              required=True,
+              help="Name for the resulting svg file of the figure")
+def performcomparison(result_path, fig_name):
+    # From the path we get the files we need
+    result_file = result_path + '/results_deployment_times'
+    with open(result_file, "r") as f:
+        results = yaml.load(f)
+    successful_exps, seq_nt4_exps, dag_nt4_exps, seq_1t_exps, dag_2t_exps = format_results(results)
+    ansible_means = calc_mean(seq_1t_exps)
+    madeus_means = calc_mean(dag_nt4_exps)
+    aeolus_means = calc_mean(dag_2t_exps)
+    madeus_gains = calc_gains(madeus_means, ansible_means)
+    aeolus_gains = calc_gains(aeolus_means, ansible_means)
+    data = [ansible_means, aeolus_means, madeus_means, aeolus_gains, madeus_gains]
+    fig = plt.figure(constrained_layout=True)
+    gs = GridSpec(2, 3, figure=fig)
+    generate_histogram(data, gs, fig)
+    box_plot_data_1 = [
+        [
+            data[0]["remote"]["max"],
+            data[0]["remote"]["mean"],
+            data[0]["remote"]["min"]
+        ],
+        [
+            data[0]["local"]["max"],
+            data[0]["local"]["mean"],
+            data[0]["local"]["min"]
+        ],
+        [
+            data[0]["cached"]["max"],
+            data[0]["cached"]["mean"],
+            data[0]["cached"]["min"]
+        ]
+    ]
+    std_1 = [
+        data[0]["remote"]["std"],
+        data[0]["local"]["std"],
+        data[0]["cached"]["std"]
+    ]
+    box_plot_data_2 = [
+        [
+            data[1]["remote"]["max"],
+            data[1]["remote"]["mean"],
+            data[1]["remote"]["min"]
+        ],
+        [
+            data[1]["local"]["max"],
+            data[1]["local"]["mean"],
+            data[1]["local"]["min"]
+        ],
+        [
+            data[1]["cached"]["max"],
+            data[1]["cached"]["mean"],
+            data[1]["cached"]["min"]
+        ]
+    ]
+    std_2 = [
+        data[1]["remote"]["std"],
+        data[1]["local"]["std"],
+        data[1]["cached"]["std"]
+    ]
+    box_plot_data_3 = [
+        [
+            data[2]["remote"]["max"],
+            data[2]["remote"]["mean"],
+            data[2]["remote"]["min"]
+        ],
+        [
+            data[2]["local"]["max"],
+            data[2]["local"]["mean"],
+            data[2]["local"]["min"]
+        ],
+        [
+            data[2]["cached"]["max"],
+            data[2]["cached"]["mean"],
+            data[2]["cached"]["min"]
+        ]
+    ]
+    std_3 = [
+        data[2]["remote"]["std"],
+        data[2]["local"]["std"],
+        data[2]["cached"]["std"]
+    ]
+    generate_box_plot(box_plot_data_1, std_1, gs[-1, 0], fig, True)  # ansible
+    generate_box_plot(box_plot_data_2, std_2, gs[-1, -2], fig, False)  # aeolus
+    generate_box_plot(box_plot_data_3, std_3, gs[1:, -1], fig, False)  # madeus
+
+    # save the result
+    if fig_name.endswith(".svg"):
+        name = fig_name
+    else:
+        name = fig_name + ".svg"
+    fig.savefig(name, format="svg", bbox_inches='tight')
+
+
+def generate_box_plot(data, std, coordinates, fig, first):
+    # not a box_plot
+    box_plot = fig.add_subplot(coordinates)
+    if first:
+        box_plot.set_ylabel("Time (s)")
+    bar_width = 15
+    line_width = 1
+    colours = ["blue", "red", "green"]
+    for i in range(3):
+        diff_max_min = data[i][0] - data[i][2]
+        box_plot.bar(x=i * bar_width,
+                     height=diff_max_min,
+                     width=bar_width,
+                     bottom=data[i][2],
+                     linewidth=line_width,
+                     facecolor="White",
+                     edgecolor='k')
+        eb = box_plot.errorbar(x=i * bar_width,
+                         y= data[i][1],
+                         xerr=5, yerr=std[i],
+                         ecolor=colours[i],
+                         fmt='none')
+        elines = eb.get_children()
+        elines[1].set_color('k')
+    box_plot.tick_params(
+        axis='x',  # changes apply to the x-axis
+        which='both',  # both major and minor ticks are affected
+        bottom=False,  # ticks along the bottom edge are off
+        top=False,  # ticks along the top edge are off
+        labelbottom=False)  # labels along the bottom edge are off
+    box_plot.grid(True, axis='y')
+    box_plot.set_axisbelow(True)
+
+
+def autolabel(rects, ax, over_text, text_data=None):
+    """
+    Attach a text label above each bar displaying its height if there is no string under_text
+    Other wise displays a text under the bar
+    """
+    i = 0
+    max_height = 0
+    for rect in rects:
+        height = rect.get_height()
+        if max_height < height:
+            max_height = height
+        # adapt the position of the ratio in the bar
+        if max_height > 530:
+            diff = 90
+        else:
+            diff = 50
+        text = '%d' % int(height)
+        color = 'black'
+        if not over_text:
+            height = rect.get_height() - diff
+            text = "{:.2f}".format(text_data[i] / 100.00)
+            color = 'white'
+        ax.text(rect.get_x() + rect.get_width()/2., height, str(text)[:4],
+                ha='center', va='bottom', color=color)
+        i = i + 1
+
+
+def generate_histogram(data, gs, fig):
+    histo = fig.add_subplot(gs[0, :])
+    bar_data = [
+        [int(data[0]["remote"]["mean"]), int(data[1]["remote"]["mean"]), int(data[2]["remote"]["mean"])],
+        [int(data[0]["local"]["mean"]), int(data[1]["local"]["mean"]), int(data[2]["local"]["mean"])],
+        [int(data[0]["cached"]["mean"]), int(data[1]["cached"]["mean"]), int(data[2]["cached"]["mean"])]
+    ]
+    percent_data = [
+        [100, 100 - int(data[3]["remote"]), 100 - int(data[4]["remote"])],
+        [100, 100 - int(data[3]["local"]), 100 - int(data[4]["local"])],
+        [100, 100 - int(data[3]["cached"]), 100 - int(data[4]["cached"])]
+    ]
+    x = numpy.arange(3)
+    histo.spines['right'].set_visible(False)
+    histo.spines['top'].set_visible(False)
+    ax = plt.bar(x, bar_data[0], color='blue', width=0.25, label="remote")
+    autolabel(ax, histo, True)
+    autolabel(ax, histo, False, percent_data[0])
+    ax2 = plt.bar(x + 0.25, bar_data[1], color='red', width=0.25, label="local")
+    autolabel(ax2, histo, True)
+    autolabel(ax2, histo, False, percent_data[1])
+    ax3 = plt.bar(x + 0.5, bar_data[2], color='green', width=0.25, label="cached")
+    autolabel(ax3, histo, True)
+    autolabel(ax3, histo, False, percent_data[2])
+    histo.set_xticks([0.25, 1.25, 2.25])
+    histo.set_xticklabels(['ansible', 'aeolus', 'madeus'])
+    handles, labels = histo.get_legend_handles_labels()
+    plt.legend(handles, labels)
+    histo.set_xlabel("Assemblies")
+    histo.set_ylabel("Time (s)")
 
 
 @cli.command(help="Gives the means and std from results for open stack deployment benchmarks and the percentage"
