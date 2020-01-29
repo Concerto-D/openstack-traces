@@ -398,9 +398,9 @@ rule.
   \pi_n)$, such that $\pi_{i}$ precedes $\pi_{i+1}$ for any $i$ where
   $1 \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
 
-  A \mad component is said to be well-formed if there exists no place
-  $\pi$ that depends on itself. Intuitively, the component, viewed as
-  a directed graph, must be acyclic.
+  A \mad component is said to be \emph{well-formed} if there exists no
+  place $\pi$ that depends on itself. Intuitively, the component,
+  viewed as a directed graph, must be acyclic.
 
   The lemmas below all assume an assembly $A = (C, L)$ such that all
   components $c \in C$ are well-formed.
@@ -421,7 +421,7 @@ rule.
     such that $\langle \mk, \reached, \exec \rangle_i = \langle \mk,
     \reached, \exec \rangle_j$.
 
-    Let us denote $\reached^+$ the set of places that is reached more
+    Let us denote $\reached^+$ the set of places that are reached more
     than once. By case analysis over the relation $\langle \mk,
     \reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
     \rangle_{i+1}$, we can check that $\reached^+$ is non-empty.
