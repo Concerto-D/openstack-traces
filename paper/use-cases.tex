@@ -404,8 +404,8 @@ also displayed in \cref{tab:openstack_results}.
 \end{figure*}
 
 We now compare the time measured to commission OpenStack regarding the
-three assemblies defined previously: \ansass, \aeoass and \madass (the
-lower, the better in Figure~\ref{fig:openstack_results_ecotype}).  As
+three assemblies previously defined: \ansass, \aeoass and \madass (the
+lower, the better in Figure~\ref{fig:openstack_results}).  As
 expected, the time required to commission these assemblies reflects
 the level of parallelism they handle. Since \ansass is limited to the
 first parallelism level, \ie \emph{SIMH}, its commissioning time is
@@ -461,7 +461,7 @@ Finally, Figure~\ref{fig:gantt_madeus} clearly shows how \mad
 leverages the fourth level of parallelism (\ie \emph{intra-comp-tasks}
 parallelism) by displaying multiple transitions executed in
 parallel. For instance, transitions \texttt{nova.pull} and
-\texttt{nova.config} (depicted in yellow), are performed
+\texttt{nova.config} (depicted in orange), are performed
 simultaneously which is not possible with \ansible or \aeolus. Hence
 the commissioning time drops from $5$ minutes and $31$ seconds to $2$
 minutes and $8$ seconds.
@@ -472,7 +472,7 @@ minutes and $8$ seconds.
 % Construire un tableau contenant les valeurs min/max/moy_obs/moy_calc
 The maximum and minimum values obtained by the performance model
 described previously is depicted in
-\cref{tab:openstack_results}. These theoretical values are computed
+\cref{tab:openstack_results_ecotype} and \cref{tab:openstack_results_nova}. These theoretical values are computed
 from the average minimum and maximum transitions execution times
 observed for the ten experiments of each benchmark. When analyzing
 these results, one can first note that the measured mean is always
