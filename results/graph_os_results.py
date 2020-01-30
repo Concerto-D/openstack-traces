@@ -651,70 +651,48 @@ def tableofpulls(filepath, number):
         cluster_name = "Nova"
     elif "ecotype" in filepath:
         cluster_name = "Ecotype"
-    # first we do it for the madeus part (dag_nt4)
+    # first we get the pull times of madeus
     print("===============================================")
-    print("{c} pull time information for nova component on Madeus assembly".format(c=cluster_name))
-    # go through cached data
-    cached_filename_base = filepath + "/results_cached_dag_nt4_"
-    get_pull_info(cached_filename_base, "cached", number)
-
-    # go through local data
-    local_filename_base = filepath + "/results_local_dag_nt4_"
-    get_pull_info(local_filename_base, "local", number)
-
-    remote_filename_base = filepath + "/results_remote_dag_nt4_"
-    get_pull_info(remote_filename_base, "remote", number)
-
-    # then we do it for the aoelus part (dag_2t)
-    print("===============================================")
-    print("{c} pull time information for nova component on  Aeolus assembly".format(c=cluster_name))
-    # go through cached data
+    print("{c} pull information for nova component ".format(c=cluster_name))
     cached_filename_base = filepath + "/results_cached_dag_2t_"
-    get_pull_info(cached_filename_base, "cached", number)
+    cached_aeolus_pull, cached_aeolus_mean = get_mean_pull_and_mean_total(cached_filename_base, number)
 
-    # go through local data
     local_filename_base = filepath + "/results_local_dag_2t_"
-    get_pull_info(local_filename_base, "local", number)
+    local_aeolus_pull, local_aeolus_mean = get_mean_pull_and_mean_total(local_filename_base, number)
 
     remote_filename_base = filepath + "/results_remote_dag_2t_"
-    get_pull_info(remote_filename_base, "remote", number)
+    remote_aeolus_pull, remote_aeolus_mean = get_mean_pull_and_mean_total(remote_filename_base, number)
 
-    # # then we do it for the seq_nt4 part (seq_nt4)
-    # print("===============================================")
-    # print("{c} pull time information for nova component on seq_nt4 assembly".format(c=cluster_name))
-    # # go through cached data
-    # cached_filename_base = filepath + "/results_cached_seq_nt4_"
-    # get_pull_info(cached_filename_base, "cached", number)
-    #
-    # # go through local data
-    # local_filename_base = filepath + "/results_local_seq_nt4_"
-    # get_pull_info(local_filename_base, "local", number)
-    #
-    # remote_filename_base = filepath + "/results_remote_seq_nt4_"
-    # get_pull_info(remote_filename_base, "remote", number)
+    print("*********** Aeolus ***********************")
+    print("*********** Cached ***********************")
+    calc_percentage(cached_aeolus_pull, cached_aeolus_mean)
+    print("*********** Local ************************")
+    calc_percentage(local_aeolus_pull, local_aeolus_mean)
+    print("*********** Remote ************************")
+    calc_percentage(remote_aeolus_pull, remote_aeolus_mean)
 
-    # then we do it for the ansible part (seq_1t)
-    print("===============================================")
-    print("{c} pull time information for nova component on Ansible assembly".format(c=cluster_name))
-    # go through cached data
-    cached_filename_base = filepath + "/results_cached_seq_1t_"
-    get_pull_info(cached_filename_base, "cached", number)
+    cached_filename_base = filepath + "/results_cached_dag_nt4_"
+    cached_madeus_pull, cached_madeus_mean = get_mean_pull_and_mean_total(cached_filename_base, number)
 
-    # go through local data
-    local_filename_base = filepath + "/results_local_seq_1t_"
-    get_pull_info(local_filename_base, "local", number)
+    local_filename_base = filepath + "/results_local_dag_nt4_"
+    local_madeus_pull, local_madeus_mean = get_mean_pull_and_mean_total(local_filename_base, number)
 
-    remote_filename_base = filepath + "/results_remote_seq_1t_"
-    get_pull_info(remote_filename_base, "remote", number)
+    remote_filename_base = filepath + "/results_remote_dag_nt4_"
+    remote_madeus_pull, remote_madeus_mean = get_mean_pull_and_mean_total(remote_filename_base, number)
+    print("\n\n*********** Madeus ***********************")
+    print("*********** Cached ***********************")
+    calc_percentage(cached_madeus_pull, cached_madeus_mean)
+    print("*********** Local ************************")
+    calc_percentage(local_madeus_pull, local_madeus_mean)
+    print("*********** Remote ************************")
+    calc_percentage(remote_madeus_pull, remote_madeus_mean)
 
 
-def get_pull_info(filebase, type_pull, number):
+def get_mean_pull_and_mean_total(filebase, number):
     pull_times = []
     max_times = []
-    # go through cached data
     for i in range(number):
         filename = filebase + str(i) + ".json"
-        # first we calculate % and s for cached experiment data
         max_time = 0
         with open(filename, "r") as f:
             data = json.load(f)
@@ -722,27 +700,25 @@ def get_pull_info(filebase, type_pull, number):
                 for transition in data[component]:
                     for action in data[component][transition]:
                         if component == 'nova':
-                            # seq_1t have only "deploy
-                            if "seq_1t" not in filebase:
-                                if action["name"] == "pull":
-                                    time = action["end"]-action["start"]
-                                    pull_times.append(time)
-                            else:
-                                time = action["end"]-action["start"]
+                            if action["name"] == "pull":
+                                time = action["end"] - action["start"]
                                 pull_times.append(time)
                         if action["end"] > max_time:
                             max_time = action["end"]
             max_times.append(max_time)
-    mean_pull_time = statistics.mean(pull_times)
-    mean_total_time = statistics.mean(max_times)
-    percentage = mean_pull_time / mean_total_time * 100
-    if "seq_1t" not in filebase:
-        action_type = "pull"
+    if len(pull_times) > 0:
+        mean_pull_time = statistics.mean(pull_times)
     else:
-        action_type = "deploy"
-    print("\tAnsible {typ} mean  {a} time {t}s ".format(t=int(mean_pull_time), typ=type_pull, a=action_type))
-    print("\tAnsible {typ} mean max time {t}s ".format(t=int(mean_total_time), typ=type_pull))
-    print("\tAnsible {typ} {a} over total time {p}%".format(p=int(percentage), typ=type_pull, a=action_type))
+        mean_pull_time = 0
+    max_mean_time = statistics.mean(max_times)
+    return mean_pull_time, max_mean_time
+
+
+def calc_percentage(pull_time, total_duration):
+    percentage = pull_time / total_duration * 100
+    print("\tPull mean time {t}s ".format(t=str(pull_time)[:4]))
+    print("\tMean max time {t}s ".format(t=str(total_duration)[:6]))
+    print("\tPull percentage over total time {p}%".format(p=str(percentage)[:4]))
 
 
 if __name__ == '__main__':

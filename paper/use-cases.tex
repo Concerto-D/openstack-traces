@@ -357,8 +357,8 @@ differents for each assembly. Each result corresponds to the average
 computed from $10$ iterations. The corresponding numerical values are
 also displayed in \cref{tab:openstack_results}.
 %
-\HC[Dimitri]{pourquoi les resultats sur ecotype seulement dans le
-  tableau? mettre 2 tableaux?}
+%\HC[Dimitri]{pourquoi les resultats sur ecotype seulement dans le
+%  tableau? mettre 2 tableaux?}
 % Et bien ça en fait un beau paragraphe pour seulement expliquer comment
 % fonctionne la figure ^^'...
 
@@ -494,12 +494,12 @@ detect anomalies in the component design phase.
       \toprule
       & cached & local & remote\\
       \midrule
-      \emph{pull}(s) & 9 & 78 & 127\\
-      \emph{pull}(\%) & 3\% & 20\% & 32\%\\
+      \emph{pull}(s) & 13 & 48 & 52\\
+      \emph{pull}(\%) & 10\% & 32\% & 35\%\\
       \bottomrule
     \end{tabular}
     \caption{Time spent in the \emph{pull} transition from Nova and
-    percentage compared to the total time for \ansass commissioning.}
+    percentage compared to the total time for \madass commissioning.}
     \label{tab:pull}
   \end{center}
 \end{table}
@@ -527,8 +527,8 @@ longer in \emph{remote} (and similarly in \emph{local}) than in
 \Cref{tab:pull} represents the execution time of the \texttt{pull}
 transition of the Nova component on \ecotype, as well as the
 percentage compared to the total sequential execution time with
-\ansass. The \texttt{nova.pull} transition takes $32\%$ of the total
-commissioning time in \emph{remote}, while only $3\%$ in
+\madass. The \texttt{nova.pull} transition takes $35\%$ of the total
+commissioning time in \emph{remote}, while only $10\%$ in
 \emph{cached}. This table confirms that the time spent in the
 \texttt{nova.pull} transition is much larger for \emph{local} and
 \emph{remote} than for \emph{cached}. Thus, in proportion the gain

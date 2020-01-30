@@ -19,7 +19,11 @@ def cli():
               type=click.Choice(['parallel', 'sequential'], case_sensitive=False),
               required=True,
               help="Whether the benchmark is parallel or sequential")
-def analyze(dryrun_path, exp):
+@click.option("-fn", "--filename",
+              type=str,
+              required=True,
+              help="name of the file to save")
+def analyze(dryrun_path, exp, filename):
     """Analyze the results and produce graphs for it"""
     # From the path we get the files we need
     dry_run_config_file = dryrun_path + "/concerto_config.json"
@@ -43,14 +47,17 @@ def analyze(dryrun_path, exp):
         with open(dry_run_result_file, "r") as result:
             results = json.load(result)
             fig_1par_comp = graph_for_1par_xcomp(results, list_nb_components, "dryrun")
-            fig_1par_comp.savefig("evaluations_par_component.svg", format="svg")
+            comp_name = filename + "par_comp.svg"
+            fig_1par_comp.savefig(comp_name, format="svg")
             fig_1comp_xpar = graph_for_1comp_xpar(results, list_nb_parallel_transitions, "dryrun")
-            fig_1comp_xpar.savefig("evaluations_par_transitions.svg", format="svg")
+            trans_name = filename + "par_trans.svg"
+            fig_1comp_xpar.savefig(trans_name, format="svg")
     else:
         with open(dry_run_result_file, "r") as result:
             results = json.load(result)
             fig_sequentiel = graph_seq(results, list_chain_length, "dryrun")
-            fig_sequentiel.savefig("evaluations_sequential.svg", format="svg")
+            seq_name = filename + "seq.svg"
+            fig_sequentiel.savefig(seq_name, format="svg")
 
 
 def graph_for_1par_xcomp(results, list_nb_comp, exp_data):
