@@ -1,0 +1,207 @@
+set xrange [0.000000:78.001600]
+set yrange [0.400000:16.600000]
+set autoscale x
+set xlabel "Data Range"
+set ylabel ""
+set title ""
+set ytics ("user0.run.trans9" 1, "user0.run.trans5" 2, "user0.run.trans2" 3, "user0.run.trans4" 4, "user0.run.trans1" 5, "user0.run.trans7" 6, "user0.run.trans6" 7, "user0.run.trans0" 8, "user0.run.trans3" 9, "user0.run.trans8" 10, "user0.run.wait\\\_dep" 11, "user0.reset.reset" 12, "user0" 13, "provider.reset.reset" 14, "provider.provide.provide" 15, "provider" 16)
+unset key
+set grid xtics
+set palette model RGB defined ( 0 1.0 0.8 0.8, 1 1.0 0.8 1.0, 2 0.8 0.8 1.0, 3 0.8 1.0 1.0, 4 0.8 1.0 0.8, 5 1.0 1.0 0.8 )
+unset colorbox
+set object 1 rectangle from 1.016896, 15.6 to 1.017179, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 2 rectangle from 8.721587, 15.6 to 8.722011, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 3 rectangle from 8.727321, 15.6 to 8.727487, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 4 rectangle from 16.410135, 15.6 to 16.410496, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 5 rectangle from 16.415781, 15.6 to 16.415936, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 6 rectangle from 24.041867, 15.6 to 24.042217, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 7 rectangle from 24.047503, 15.6 to 24.047657, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 8 rectangle from 31.725144, 15.6 to 31.725493, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 9 rectangle from 31.730776, 15.6 to 31.730939, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 10 rectangle from 39.414867, 15.6 to 39.415322, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 11 rectangle from 39.420635, 15.6 to 39.420801, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 12 rectangle from 47.135587, 15.6 to 47.135902, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 13 rectangle from 47.141187, 15.6 to 47.141322, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 14 rectangle from 54.852610, 15.6 to 54.852952, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 15 rectangle from 54.858237, 15.6 to 54.858388, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 16 rectangle from 62.606231, 15.6 to 62.606591, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 17 rectangle from 62.611927, 15.6 to 62.612095, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 18 rectangle from 70.345941, 15.6 to 70.346254, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 19 rectangle from 70.351569, 15.6 to 70.351729, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 20 rectangle from 78.001235, 15.6 to 78.001590, 16.4 fillcolor palette frac 1.00 fillstyle solid 0.8
+set object 21 rectangle from 1.016938, 14.6 to 1.017122, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 22 rectangle from 8.727335, 14.6 to 8.727449, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 23 rectangle from 16.415795, 14.6 to 16.415900, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 24 rectangle from 24.047518, 14.6 to 24.047621, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 25 rectangle from 31.730790, 14.6 to 31.730903, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 26 rectangle from 39.420650, 14.6 to 39.420764, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 27 rectangle from 47.141203, 14.6 to 47.141285, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 28 rectangle from 54.858251, 14.6 to 54.858353, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 29 rectangle from 62.611954, 14.6 to 62.612060, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 30 rectangle from 70.351593, 14.6 to 70.351694, 15.4 fillcolor palette frac 0.93 fillstyle solid 0.8
+set object 31 rectangle from 8.721656, 13.6 to 8.721874, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 32 rectangle from 16.410174, 13.6 to 16.410359, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 33 rectangle from 24.041906, 13.6 to 24.042081, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 34 rectangle from 31.725183, 13.6 to 31.725359, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 35 rectangle from 39.414936, 13.6 to 39.415182, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 36 rectangle from 47.135618, 13.6 to 47.135769, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 37 rectangle from 54.852649, 13.6 to 54.852821, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 38 rectangle from 62.606270, 13.6 to 62.606471, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 39 rectangle from 70.345973, 13.6 to 70.346121, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 40 rectangle from 78.001274, 13.6 to 78.001455, 14.4 fillcolor palette frac 0.87 fillstyle solid 0.8
+set object 41 rectangle from 1.016837, 12.6 to 6.708963, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 42 rectangle from 8.721559, 12.6 to 8.722024, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 43 rectangle from 8.727312, 12.6 to 14.397707, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 44 rectangle from 16.410124, 12.6 to 16.410507, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 45 rectangle from 16.415772, 12.6 to 22.029543, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 46 rectangle from 24.041856, 12.6 to 24.042226, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 47 rectangle from 24.047494, 12.6 to 29.712720, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 48 rectangle from 31.725133, 12.6 to 31.725502, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 49 rectangle from 31.730767, 12.6 to 37.402232, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 50 rectangle from 39.414837, 12.6 to 39.415334, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 51 rectangle from 39.420626, 12.6 to 45.123206, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 52 rectangle from 47.135576, 12.6 to 47.135912, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 53 rectangle from 47.141178, 12.6 to 52.840164, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 54 rectangle from 54.852599, 12.6 to 54.852961, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 55 rectangle from 54.858228, 12.6 to 60.593809, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 56 rectangle from 62.606221, 12.6 to 62.606600, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 57 rectangle from 62.611880, 12.6 to 68.333603, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 58 rectangle from 70.345931, 12.6 to 70.346263, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 59 rectangle from 70.351531, 12.6 to 75.988818, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 60 rectangle from 78.001223, 12.6 to 78.001600, 13.4 fillcolor palette frac 0.80 fillstyle solid 0.8
+set object 61 rectangle from 8.721900, 11.6 to 8.721972, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 62 rectangle from 16.410393, 11.6 to 16.410463, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 63 rectangle from 24.042115, 11.6 to 24.042185, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 64 rectangle from 31.725394, 11.6 to 31.725459, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 65 rectangle from 39.415208, 11.6 to 39.415284, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 66 rectangle from 47.135789, 11.6 to 47.135875, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 67 rectangle from 54.852856, 11.6 to 54.852923, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 68 rectangle from 62.606490, 11.6 to 62.606560, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 69 rectangle from 70.346141, 11.6 to 70.346226, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 70 rectangle from 78.001489, 11.6 to 78.001559, 12.4 fillcolor palette frac 0.73 fillstyle solid 0.8
+set object 71 rectangle from 1.017186, 10.6 to 1.017261, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 72 rectangle from 1.017292, 9.6 to 6.235552, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 73 rectangle from 1.017690, 8.6 to 6.338483, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 74 rectangle from 1.017929, 7.6 to 6.395093, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 75 rectangle from 1.018296, 6.6 to 6.307714, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 76 rectangle from 1.019142, 5.6 to 6.611098, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 77 rectangle from 1.020325, 4.6 to 6.456601, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 78 rectangle from 1.021581, 3.6 to 6.708826, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 79 rectangle from 1.022286, 2.6 to 6.559580, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 80 rectangle from 1.026523, 1.6 to 6.662515, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 81 rectangle from 1.028438, 0.6 to 6.502963, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 82 rectangle from 8.727492, 10.6 to 8.727584, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 83 rectangle from 8.727613, 9.6 to 13.923188, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 84 rectangle from 8.728029, 8.6 to 14.082517, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 85 rectangle from 8.728352, 7.6 to 14.031263, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 86 rectangle from 8.728563, 6.6 to 14.284141, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 87 rectangle from 8.729413, 5.6 to 13.995191, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 88 rectangle from 8.729741, 4.6 to 14.217381, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 89 rectangle from 8.730200, 3.6 to 14.397646, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 90 rectangle from 8.735510, 2.6 to 14.175908, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 91 rectangle from 8.737287, 1.6 to 14.335960, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 92 rectangle from 8.738418, 0.6 to 14.144168, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 93 rectangle from 16.415942, 10.6 to 16.416012, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 94 rectangle from 16.416054, 9.6 to 21.612783, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 95 rectangle from 16.416375, 8.6 to 21.859738, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 96 rectangle from 16.416668, 7.6 to 21.797670, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 97 rectangle from 16.416937, 6.6 to 21.658967, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 98 rectangle from 16.417330, 5.6 to 21.751447, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 99 rectangle from 16.417604, 4.6 to 21.926640, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 100 rectangle from 16.418484, 3.6 to 21.880241, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 101 rectangle from 16.420220, 2.6 to 22.029481, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 102 rectangle from 16.424754, 1.6 to 21.988424, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 103 rectangle from 16.425270, 0.6 to 21.705232, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 104 rectangle from 24.047663, 10.6 to 24.047731, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 105 rectangle from 24.047774, 9.6 to 29.262330, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 106 rectangle from 24.048076, 8.6 to 29.318724, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 107 rectangle from 24.048344, 7.6 to 29.421363, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 108 rectangle from 24.048595, 6.6 to 29.359875, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 109 rectangle from 24.048964, 5.6 to 29.460942, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 110 rectangle from 24.049575, 4.6 to 29.671615, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 111 rectangle from 24.050727, 3.6 to 29.512181, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 112 rectangle from 24.052694, 2.6 to 29.573924, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 113 rectangle from 24.056979, 1.6 to 29.614934, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 114 rectangle from 24.058369, 0.6 to 29.712663, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 115 rectangle from 31.730945, 10.6 to 31.731029, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 116 rectangle from 31.731057, 9.6 to 36.953446, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 117 rectangle from 31.731430, 8.6 to 37.113028, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 118 rectangle from 31.731707, 7.6 to 37.025533, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 119 rectangle from 31.731962, 6.6 to 37.051145, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 120 rectangle from 31.732340, 5.6 to 37.191245, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 121 rectangle from 31.732676, 4.6 to 37.402162, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 122 rectangle from 31.733447, 3.6 to 37.129567, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 123 rectangle from 31.735010, 2.6 to 37.314497, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 124 rectangle from 31.739206, 1.6 to 37.242624, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 125 rectangle from 31.739971, 0.6 to 37.355790, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 126 rectangle from 39.420807, 10.6 to 39.420899, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 127 rectangle from 39.420927, 9.6 to 44.752668, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 128 rectangle from 39.421381, 8.6 to 44.630249, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 129 rectangle from 39.421616, 7.6 to 44.695934, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 130 rectangle from 39.422004, 6.6 to 44.952110, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 131 rectangle from 39.422343, 5.6 to 44.814104, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 132 rectangle from 39.423005, 4.6 to 44.982960, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 133 rectangle from 39.423748, 3.6 to 44.875681, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 134 rectangle from 39.425331, 2.6 to 45.029392, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 135 rectangle from 39.428769, 1.6 to 45.123149, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 136 rectangle from 39.433985, 0.6 to 45.092276, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 137 rectangle from 47.141328, 10.6 to 47.141394, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 138 rectangle from 47.141421, 9.6 to 52.346582, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 139 rectangle from 47.141645, 8.6 to 52.505668, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 140 rectangle from 47.141890, 7.6 to 52.557238, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 141 rectangle from 47.142220, 6.6 to 52.449502, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 142 rectangle from 47.142517, 5.6 to 52.624079, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 143 rectangle from 47.142877, 4.6 to 52.670471, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 144 rectangle from 47.143384, 3.6 to 52.721973, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 145 rectangle from 47.144040, 2.6 to 52.783546, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 146 rectangle from 47.145678, 1.6 to 52.408334, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 147 rectangle from 47.146438, 0.6 to 52.840101, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 148 rectangle from 54.858393, 10.6 to 54.858464, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 149 rectangle from 54.858507, 9.6 to 60.075707, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 150 rectangle from 54.858805, 8.6 to 60.381735, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 151 rectangle from 54.859104, 7.6 to 60.185849, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 152 rectangle from 54.859451, 6.6 to 60.412726, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 153 rectangle from 54.859761, 5.6 to 60.144803, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 154 rectangle from 54.860387, 4.6 to 60.474395, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 155 rectangle from 54.860852, 3.6 to 60.325226, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 156 rectangle from 54.861760, 2.6 to 60.593754, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 157 rectangle from 54.862573, 1.6 to 60.536645, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 158 rectangle from 54.864802, 0.6 to 60.241014, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 159 rectangle from 62.612101, 10.6 to 62.612171, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 160 rectangle from 62.612201, 9.6 to 67.897867, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 161 rectangle from 62.612533, 8.6 to 67.836087, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 162 rectangle from 62.612825, 7.6 to 68.063182, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 163 rectangle from 62.613104, 6.6 to 68.104378, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 164 rectangle from 62.613443, 5.6 to 67.954486, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 165 rectangle from 62.614265, 4.6 to 68.160695, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 166 rectangle from 62.614896, 3.6 to 68.000869, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 167 rectangle from 62.616427, 2.6 to 68.268669, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 168 rectangle from 62.617553, 1.6 to 68.207035, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 169 rectangle from 62.618600, 0.6 to 68.333552, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+set object 170 rectangle from 70.351735, 10.6 to 70.351804, 11.4 fillcolor palette frac 0.67 fillstyle solid 0.8
+set object 171 rectangle from 70.351831, 9.6 to 75.547477, 10.4 fillcolor palette frac 0.60 fillstyle solid 0.8
+set object 172 rectangle from 70.352048, 8.6 to 75.604170, 9.4 fillcolor palette frac 0.53 fillstyle solid 0.8
+set object 173 rectangle from 70.352308, 7.6 to 75.634926, 8.4 fillcolor palette frac 0.47 fillstyle solid 0.8
+set object 174 rectangle from 70.352809, 6.6 to 75.935778, 7.4 fillcolor palette frac 0.40 fillstyle solid 0.8
+set object 175 rectangle from 70.353608, 5.6 to 75.696602, 6.4 fillcolor palette frac 0.33 fillstyle solid 0.8
+set object 176 rectangle from 70.354189, 4.6 to 75.899581, 5.4 fillcolor palette frac 0.27 fillstyle solid 0.8
+set object 177 rectangle from 70.354756, 3.6 to 75.837934, 4.4 fillcolor palette frac 0.20 fillstyle solid 0.8
+set object 178 rectangle from 70.355597, 2.6 to 75.988762, 3.4 fillcolor palette frac 0.13 fillstyle solid 0.8
+set object 179 rectangle from 70.359769, 1.6 to 75.796657, 2.4 fillcolor palette frac 0.07 fillstyle solid 0.8
+set object 180 rectangle from 70.361337, 0.6 to 75.740020, 1.4 fillcolor palette frac 0.00 fillstyle solid 0.8
+plot -1 with lines linecolor palette frac 0.00  linewidth 6, \
+	-1 with lines linecolor palette frac 0.07  linewidth 6, \
+	-1 with lines linecolor palette frac 0.13  linewidth 6, \
+	-1 with lines linecolor palette frac 0.20  linewidth 6, \
+	-1 with lines linecolor palette frac 0.27  linewidth 6, \
+	-1 with lines linecolor palette frac 0.33  linewidth 6, \
+	-1 with lines linecolor palette frac 0.40  linewidth 6, \
+	-1 with lines linecolor palette frac 0.47  linewidth 6, \
+	-1 with lines linecolor palette frac 0.53  linewidth 6, \
+	-1 with lines linecolor palette frac 0.60  linewidth 6, \
+	-1 with lines linecolor palette frac 0.67  linewidth 6, \
+	-1 with lines linecolor palette frac 0.73  linewidth 6, \
+	-1 with lines linecolor palette frac 0.80  linewidth 6, \
+	-1 with lines linecolor palette frac 0.87  linewidth 6, \
+	-1 with lines linecolor palette frac 0.93  linewidth 6, \
+	-1 with lines linecolor palette frac 1.00  linewidth 6

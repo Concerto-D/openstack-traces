@@ -1,5 +1,0 @@
-{
-  "list_chain_length": [1, 5, 10, 25, 100],
-  "nb_repeats": 10,
-  "sleep_time": 5
-}

@@ -1,0 +1,24 @@
+{
+	"remote_hosts": [
+		{
+			"address": "ecotype-41.nantes.grid5000.fr",
+			"ip": "172.16.193.41"
+		}
+	],
+	"concerto_host": {
+		"address": "ecotype-46.nantes.grid5000.fr",
+		"ip": "172.16.193.46"
+	},
+	"list_nb_components": [
+		1
+	],
+	"list_nb_parallel_transitions": [
+		1,
+		10,
+		20,
+		30,
+		40
+	],
+	"sleep_time": 5,
+	"nb_repeats": 10
+}

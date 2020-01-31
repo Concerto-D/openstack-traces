@@ -1,0 +1,22 @@
+g5k:
+  dhcp: false
+  env_name: debian10-x64-base
+  job_name: concerto_ssh_1
+  resources:
+    machines:
+    - cluster: ecotype
+      nodes: 0
+      primary_network: n1
+      roles: [remote]
+      secondary_networks: []
+    - cluster: ecotype
+      nodes: 1
+      primary_network: n1
+      roles: [concerto]
+      secondary_networks: []
+    networks:
+    - id: n1
+      roles: [control_network, database_network]
+      site: nantes
+      type: prod
+  walltime: 01:00:00

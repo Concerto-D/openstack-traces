@@ -23,7 +23,7 @@ def cli():
               type=str,
               required=True,
               help="name of the file to save")
-def analyze(dryrun_path, exp, filename):
+def analyze(dryrun_path, exp, filename, ):
     """Analyze the results and produce graphs for it"""
     # From the path we get the files we need
     dry_run_config_file = dryrun_path + "/concerto_config.json"
@@ -44,12 +44,13 @@ def analyze(dryrun_path, exp, filename):
 
     if is_parallel:
         # first we load up the dry run results in a trace
+        exp_type = "dryrun"
         with open(dry_run_result_file, "r") as result:
             results = json.load(result)
-            fig_1par_comp = graph_for_1par_xcomp(results, list_nb_components, "dryrun")
+            fig_1par_comp = graph_for_1par_xcomp(results, list_nb_components, exp_type)
             comp_name = filename + "par_comp.svg"
             fig_1par_comp.savefig(comp_name, format="svg")
-            fig_1comp_xpar = graph_for_1comp_xpar(results, list_nb_parallel_transitions, "dryrun")
+            fig_1comp_xpar = graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type)
             trans_name = filename + "par_trans.svg"
             fig_1comp_xpar.savefig(trans_name, format="svg")
     else:
@@ -115,6 +116,10 @@ def graph_for_1comp_xpar(results, list_nb_parallel_transitions, exp_type):
         ideals.append(5)
 
     if exp_type is "dryrun":
+        dry_run_draw()
+
+
+def dry_run_draw(list_nb_parallel_transitions, ideals, medians, stds):
         figure = plt.figure()
         ax = plt.subplot()
         # adding the ideal curve
@@ -156,7 +161,7 @@ def graph_seq(results, list_chain_length, exp_data):
         # adding the average curve with std as error
         ax.errorbar(list_chain_length, averages, yerr=stds, label="Madeus")
 
-        ax.set_xticks([1, 5, 10, 25, 100])
+        ax.set_xticks([1, 10, 20, 30, 40])
         plt.ylabel("Time (s)")
 
         plt.xlabel("Number of Components")
