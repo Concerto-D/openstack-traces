@@ -654,22 +654,22 @@ def tableofpulls(filepath, number):
     # first we get the pull times of madeus
     print("===============================================")
     print("{c} pull information for nova component ".format(c=cluster_name))
-    cached_filename_base = filepath + "/results_cached_dag_2t_"
-    cached_aeolus_pull, cached_aeolus_mean = get_mean_pull_and_mean_total(cached_filename_base, number)
-
-    local_filename_base = filepath + "/results_local_dag_2t_"
-    local_aeolus_pull, local_aeolus_mean = get_mean_pull_and_mean_total(local_filename_base, number)
-
-    remote_filename_base = filepath + "/results_remote_dag_2t_"
-    remote_aeolus_pull, remote_aeolus_mean = get_mean_pull_and_mean_total(remote_filename_base, number)
-
-    print("*********** Aeolus ***********************")
-    print("*********** Cached ***********************")
-    calc_percentage(cached_aeolus_pull, cached_aeolus_mean)
-    print("*********** Local ************************")
-    calc_percentage(local_aeolus_pull, local_aeolus_mean)
-    print("*********** Remote ************************")
-    calc_percentage(remote_aeolus_pull, remote_aeolus_mean)
+    # cached_filename_base = filepath + "/results_cached_dag_2t_"
+    # cached_aeolus_pull, cached_aeolus_mean = get_mean_pull_and_mean_total(cached_filename_base, number)
+    #
+    # local_filename_base = filepath + "/results_local_dag_2t_"
+    # local_aeolus_pull, local_aeolus_mean = get_mean_pull_and_mean_total(local_filename_base, number)
+    #
+    # remote_filename_base = filepath + "/results_remote_dag_2t_"
+    # remote_aeolus_pull, remote_aeolus_mean = get_mean_pull_and_mean_total(remote_filename_base, number)
+    #
+    # print("*********** Aeolus ***********************")
+    # print("*********** Cached ***********************")
+    # calc_percentage(cached_aeolus_pull, cached_aeolus_mean)
+    # print("*********** Local ************************")
+    # calc_percentage(local_aeolus_pull, local_aeolus_mean)
+    # print("*********** Remote ************************")
+    # calc_percentage(remote_aeolus_pull, remote_aeolus_mean)
 
     cached_filename_base = filepath + "/results_cached_dag_nt4_"
     cached_madeus_pull, cached_madeus_mean = get_mean_pull_and_mean_total(cached_filename_base, number)
@@ -679,7 +679,7 @@ def tableofpulls(filepath, number):
 
     remote_filename_base = filepath + "/results_remote_dag_nt4_"
     remote_madeus_pull, remote_madeus_mean = get_mean_pull_and_mean_total(remote_filename_base, number)
-    print("\n\n*********** Madeus ***********************")
+    print("*********** Madeus ***********************")
     print("*********** Cached ***********************")
     calc_percentage(cached_madeus_pull, cached_madeus_mean)
     print("*********** Local ************************")
