@@ -355,7 +355,7 @@ theoretical performance model of Section~\ref{sec:perf_model}.
 For the sake of readability, the scale of the lower parts are
 differents for each assembly. Each result corresponds to the average
 computed from $10$ iterations. The corresponding numerical values are
-also displayed in \cref{tab:openstack_results}.
+also displayed in \cref{tab:openstack_results_ecotype} and \cref{tab:openstack_results_nova}.
 %
 %\HC[Dimitri]{pourquoi les resultats sur ecotype seulement dans le
 %  tableau? mettre 2 tableaux?}
@@ -505,8 +505,7 @@ detect anomalies in the component design phase.
 \end{table}
 % TODO: Update these values with last results
 % TODO: Give the number for aeolus rather than ansible?
-
-\Cref{tab:openstack_results} contains the gains relatively to \ansass,
+\Cref{tab:openstack_results_ecotype} contains the gains relatively to \ansass,
 associated to Figure~\ref{fig:ecotype}. This table shows that the gain
 obtained with \emph{local} and \emph{remote} registries are better
 than the one obtained with \emph{cached} \docker images.
@@ -515,9 +514,9 @@ than the one obtained with \emph{cached} \docker images.
 %  Madeus, c'est un peu bizarre je trouve, est-ce que le tableau donne
 %  les proportions pour Aeolus ou Madeus ?}
 To better understand the origin of this difference, we can compare
-Figure~\ref{fig:gantt_aeolus} and
-Figure~\ref{fig:gantt_aeolus_remote}. The former one depicts the time
-spent by all transitions of \aeoass, on \ecotype, when the \docker
+Figure~\ref{fig:gantt_madeus} and
+Figure~\ref{fig:gantt_madeus_remote}. The former one depicts the time
+spent by all transitions of \madass, on \ecotype, when the \docker
 registry is set on \emph{cached}, while it is set to \emph{remote} for
 the latter. As we can see on the figures, the difference is mainly due
 to the parallel execution of \texttt{pull} transitions which are much

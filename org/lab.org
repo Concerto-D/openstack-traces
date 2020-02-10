@@ -83,13 +83,12 @@ The inputs required are the experiments *result_path* and a filename *table_name
 
 ** Benchmark Graphs
 *** Requirements
-For the SSH benchmark result plotting we use also Python 3.7.
+For the benchmark result plotting we use also Python 3.7.
 The requirements are the [[https://click.palletsprojects.com/en/7.x/][click]] and [[https://matplotlib.org][matlplotlib]] library.
 *** Plotting the curves
 To plot our graphs, we used the resulting files that are in the =results/ssh_bench/raw= directory.
 
-They are sorted by type of experiment, parallel, sequential, dry-run.
-# or with the ssh connections.
+They are sorted by type of experiment, parallel or sequential.
 
 To plot the graphs, we use the =graph_results_pyplot.py= file is in the =results/ssh_bench= directory of the journal's repository. 
 The command =analyze= is used to create the graphs, and the options to give are the directory containing the dryrun results
