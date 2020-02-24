@@ -30,7 +30,7 @@ Our experiments are based on the deployment of [[https://www.openstack.org/][Ope
 This lab will allow the reproduction of the various graphs of the paper and the experiments themselves.
 
 * Reproducibility
-** Open Stack Deployment Graphs
+** Openstack Deployment Graphs
 *** Requirements
 Python 3.7+ and git are required.
 First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][Gitlab]] repository.
@@ -101,6 +101,24 @@ python3 graph_results_pyplot.py analyze -drp raw/seq_no_ssh -exp sequential
 #+NAME: example of a plotted curve from our script
 [[./img/evaluations_sequential.png]]
 
+** Openstack CI logs
+*** Requirements
+The script uses Python 3.7 and has its requirements listed in the requirements.txt file. 
+Librairy used is [[https://2.python-requests.org/en/master/][requests]].
+It can be installed by using pip:
+#+BEGIN_SRC sh
+pip3 install -r requirements.txt
+#+END_SRC
+*** Get the logs
+To get the log simply go in the openstack_ci repository and launch the *openstack_ci_info.py* script.
+#+BEGIN_SRC sh
+python3 openstack_ci_info.py
+#+END_SRC
+This will generate 7 subprocesses to recover all 7 days of logs archived on logstash.openstack.org, 
+taking the kolla-ansible data and processing it to find which processes took more than 15 minutes to finish, 
+which is a good sign that there has been a kolla-ansible deployment during this.
+It saves up all the build_uuids in the results directory.
+*** Plot the curve
 * Repeatability
 ** Open Stack Use Case
 *** Requirements
