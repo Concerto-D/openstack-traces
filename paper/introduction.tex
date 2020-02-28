@@ -31,9 +31,9 @@
 %for improving the efficiency of the commissioning process (\ie
 %reducing deployment times, minimizing services interruptions etc.).
 
-
+\CP[all]{Intro est raide!}
 %correction: software is uncountable
-Distributed software is software designed in a modular fashion
+A distributed software is asoftware designed in a modular architectural style
 where each module, component, or service is responsible for a
 specific part of the overall objective, and collaborates at runtime
 with other components that are potentially hosted on distant nodes
@@ -41,11 +41,16 @@ with other components that are potentially hosted on distant nodes
 use the generic term \emph{component} to refer
 indifferently to a module or a service.
 %
+\CP[all]{Pb transition!}
+%
 What is called distributed software commissioning in this paper could
 also be called \emph{deployment}. However, we have noticed that,
 according to the community, a different meaning could be given to the
 deployment wording. For this reason, we have deliberately chosen an
 unusual term that we clearly define hereafter.
+%
+\CP[all]{Ne faudrait il pas commencer l'intro avec une description approximative
+puis ensuite préciser le choix de nos termes?}
 %
 The commissioning procedure of a distributed software is the procedure
 responsible for leading the set of components to a valid running state
@@ -60,7 +65,7 @@ executed. For this reason, multiple human actors are often involved in
 the commissioning procedure: developers, system administrators and
 system operators. This frontier is often called the DevOps domain
 where the commissioning fits in. Note that our definition of software
-commissioning does not include dynamic reconfiguration aspects of the
+commissioning does not include \CP[all]{pourquoi dynamic? reconf n'est pas suffisant?} dynamic reconfiguration aspects of the
 distributed software management that is left to future work.
 
 When designing distributed software, first, the code of each component
@@ -74,7 +79,7 @@ the infrastructure level, nor the configuration
 level. \emph{Configuration files} are often used additionally as
 \emph{configuration interfaces} to get information from system
 administrators or operators that cannot be known in advance when
-writing the functional code of the component. Thirdly, components
+writing the functional code of the component. \CP{où est le second?} Thirdly, components
 often require a set of packages or libraries to be installed on the
 host operating system to work properly. Those requirements are
 directly related to the \emph{infrastructure management} as some of
@@ -102,6 +107,8 @@ to combine the Apache component with the MariaDB component. Another
 example could be the commissioning of Spark on top of
 Yarn\footnote{\url{https://spark.apache.org/docs/latest/running-on-yarn.html}}.
 
+\CP{Cela me gène car les gens utilisent des distributions linux par exemple pour se simplifier la vie.}
+
 %ne pas mettre sous cette forme
 %\HC[Dim]{ce listing ne va sans doute pas ici (trop tôt ou top détaillé) mais je le laisse}
 %Many interesting challenges arise from the DevOps community and from
@@ -118,14 +125,17 @@ Yarn\footnote{\url{https://spark.apache.org/docs/latest/running-on-yarn.html}}.
 %  distributed software commissionings.
 %\end{itemize}
 
+\CP[all]{Trop d'aspects sont abordés sans qu'on comprenne quel est l'objectif}
+\CP[all]{Il faudrait dire avant quel est l'objectif, genre automatiser le deploiement}
+
 %%% the three important metrics of this contribution
-In this paper three metrics are considered important regarding the
+In this paper, three metrics are considered important regarding the
 quality of the automation of distributed software commissioning: (1) a
 clear separation of concerns between the different actors of the
 commissioning procedure (\ie developers and system administrators) to
 enhance productivity, maintainability and reusability of commissioning
 codes; (2) the efficiency of the commissioning procedure in terms of
-parallelism expressivity; and (3) the formalization of the tool such
+parallelism expressivity; and (3) the formalization of \CP{the tool???} such
 that formal properties can be proven on a given commissioning
 procedure. The contribution of this paper improves the related work by
 suceeding in the combination of these three metrics.
