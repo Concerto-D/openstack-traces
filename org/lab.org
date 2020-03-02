@@ -119,6 +119,16 @@ taking the kolla-ansible data and processing it to find which processes took mor
 which is a good sign that there has been a kolla-ansible deployment during this.
 It saves up all the build_uuids in the results directory.
 *** Plot the curve
+To plot the curve, we used [[https://matplotlib.org/][matplotlib]] and they can be reproduced by launching the *treat_results.py* script
+#+BEGIN_SRC sh
+python3 treat_results.py
+#+END_SRC
+Because there are millions of logs to go through, another file is created by our script with the information on how many logs total the 
+logs contain and how many were analysed.
+The script goes through the results directory and counts the numbers of builds for each day, before displaying a
+diagram of the results.
+#+NAME: example of the resulting bar plot
+[[./img/kolla_deployments.png]]
 * Repeatability
 ** Open Stack Use Case
 *** Requirements

@@ -4,7 +4,7 @@ from multiprocessing import Process
 
 import requests
 import json
-
+import time
 
 
 def moulinette_json(json_file):
@@ -63,12 +63,14 @@ def get_built_openstacks(result_dict):
 def get_log_index_uris():
     """
         Get the uri beginnings for the recent logs for logstash
+        We take the days between current date - 1 (current date logs might be incomplete)
+        and current date - 6
         :return: an array of str
     """
     logstash_index_base = "http://logstash.openstack.org/elasticsearch/logstash-"
     logstash_indexes = []
     project = '"openstack/kolla-ansible"'
-    for i in range(6):
+    for i in range(5):
         date_to_add = datetime.datetime.now() - datetime.timedelta(days=i+1)
         month = date_to_add.month
         day = date_to_add.day
@@ -97,7 +99,6 @@ def save_results(res, filename):
 def get_info_for_one_uri(uri, post_request):
     """
         Processes calls to get the logstash information about kolla-ansible log messages
-
         :param uri:
         :param post_request: the information necessary to get the proper sized information
             (dict with "from" and "size" values
@@ -114,6 +115,7 @@ def get_info_for_one_uri(uri, post_request):
         request = requests.post("{uri}&filter_path=hits.hits._source".format(uri=uri), json.dumps(post_request))
         repeat_timeout = 0
         while request.status_code != 200 and repeat_timeout < 10:
+            time.sleep(1)
             # we don't want to repeat forever
             repeat_timeout += 1
             print("Reponse not 200: {resp}".format(resp=request.status_code))
@@ -122,10 +124,11 @@ def get_info_for_one_uri(uri, post_request):
             results = []
             if total_hits < post_request["size"]:
                 results = moulinette_json(request.json())
+                hits = total_hits
             else:
-                hits = post_request["size"]
+                hits = post_request["from"] + post_request["size"]
                 while hits < total_hits:
-                    if hits % (post_request["size"] * 10) == 0:
+                    if hits % (post_request["size"] * 100) == 0:
                         print("{date}: Hit it again, {hits} treated already".format(
                             date=date,
                             hits=hits))
@@ -133,6 +136,7 @@ def get_info_for_one_uri(uri, post_request):
                         # print("It's been {time}".format(time=time.strftime("%H:%M:%S", time.gmtime(end))))
                     post_request["from"] = post_request["from"] + post_request["size"]
                     request = requests.post(uri, json.dumps(post_request))
+                    time.sleep(1)
                     results.extend(moulinette_json(request.json()))
                     # time.sleep(0.05) -> the api already throttles the requests? it's already slow to answer,
                     # this sleep is not required
@@ -141,28 +145,42 @@ def get_info_for_one_uri(uri, post_request):
                     if hits % 100000 == 0:
                         save_results(results, "results_{date}_{i}".format(date=date,
                                                                           i=hits))
+                        save_total_hits_per_date_name = "hits_{date}".format(date=date)
+                        with open(save_total_hits_per_date_name, "w") as f:
+                            f.write("Total hits: ")
+                            f.write(str(total_hits))
+                            f.write("\nHits done: ")
+                            f.write(str(hits))
                         results = []
 
             post_request["from"] = 0
+            print("Hits treated {h} for date{date}".format(h=hits, date=date))
         else:
             print("Problem with the request results")
             print(request)
 
 
 if __name__ == "__main__":
-    """
-        This aims to get CI information on kolla-ansible deployments through logstash.openstack.org
+    """                                                                                                                                                      
+        This aims to get CI information on kolla-ansible deployments through logstash.openstack.org                                                          
     """
     logging.basicConfig(level=logging.DEBUG)
     from_element = 0
-    size = 500
+    size = 1000
     print("We're gonna get some Openstack CI info!")
     post_request = {
-        "from": 0,
+        "from": from_element,
         "size": size
     }
 
     uris = get_log_index_uris()
+    processes = []
     for uri in uris:
-        # use subprocess to
         process = Process(target=get_info_for_one_uri, args=(uri, post_request))
+        process.start()
+        time.sleep(0.3)
+        processes.append(process)
+    for p in processes:
+        p.join()
+
+
