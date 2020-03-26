@@ -10,10 +10,15 @@ def get_lines(date):
     filenames = []
     filenames = find(date, "results")
     count_builds = 0
+    builds_already_seen = []
     for i in filenames:
         path = i
         with open(path, "r") as reader:
-            count_builds += len(reader.readlines())
+            for line in reader.readlines():
+                current_build = line
+                if current_build not in builds_already_seen:
+                    builds_already_seen.append(current_build)
+                    count_builds += 1
     return count_builds
 
 
@@ -44,6 +49,7 @@ def make_figure(results):
 
 
 if __name__ == "__main__":
+    # changer ça pour adapter aux données récupérées
     results = {
         "20.02.19": 0,
         "20.02.20": 0,
