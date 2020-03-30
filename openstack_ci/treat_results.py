@@ -36,16 +36,15 @@ def make_figure(results):
     for element in results.keys():
         names.append(element[3:])
     values = list(results.values())
-    colors = ['r', 'b', 'y', 'g', 'c', 'm', 'k', 'tab:purple', 'tab:orange']
 
     fig = plt.figure()
     ax = fig.add_subplot(111)
     y_pos = [0, 2, 4, 6, 8, 10, 12, 14, 16]
     plt.xticks(y_pos, names)
-    ax.bar(y_pos, values, color=colors)
+    ax.bar(y_pos, values)
     plt.ylabel("Deployments of Kolla-ansible")
     # plt.show()
-    plt.savefig("kolla_deployments.png", format="png")
+    plt.savefig("kolla_deployments.svg", format="svg")
 
 
 if __name__ == "__main__":
