@@ -32,7 +32,7 @@ instead of code design.
 A \mad component is called a \emph{control} component as it is only
 intended to model the commissioning procedure of an already existing
 piece of software code (functional component, module or service). A
-\mad control component is a type containing a \net, \ie places that
+\mad control component is a type containing an \net, \CP{Dire que cela est inspiré des réseaux de Pétri ?}\ie places that
 represent milestones of the commissioning, and transitions that
 connect the places together and represent actions to be performed
 between milestones (\eg \texttt{apt-get install}, \texttt{docker
@@ -64,10 +64,11 @@ provide port is not enabled.
 commissioning procedures for complex distributed software systems.
 
 \begin{figure}[tbp]
+  \CP{L'exemple contient trop/pas assez d'information à ce stade du papier}
   \begin{center}
     \includegraphics[width=0.7\linewidth]{./images/apachebdd.pdf}
   \end{center}
-  \caption{Example of a commissioning assembly with two components
+  \caption{Example of a \mad commissioning assembly with two components
     Apache and MariaDB. Places are represented by circles, with attached
     docks represented by small squares. Transitions are represented
     by arrows between the docks, and service ports by small black circles and
@@ -77,8 +78,8 @@ commissioning procedures for complex distributed software systems.
   \label{fig:example}
 \end{figure}
 
-\paragraph{Example}{ Figure~\ref{fig:example} depicts the \mad
-  commissioning of an Apache web server and a MariaDB database. This
+\paragraph{Example}{ Figure~\ref{fig:example} depicts a \mad
+  commissioning assembly of an Apache web server and a MariaDB database. This
   example is based on a real container-based deployment described by
   RedHat\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_an_apache_web_server_container}}%
   $^,$%
@@ -89,12 +90,13 @@ commissioning procedures for complex distributed software systems.
   declared for each of the component and can be observed in the figure
   (parallel arrows). Both components have two ports. MariaDB provides
   both data and a service (once installed), while Apache uses a
-  service and data. Figure~\ref{fig:example} shows the assembly of one
+  service and data. \CP{redite} Figure~\ref{fig:example} shows the assembly of one
   Apache and one MariaDB instanciated from their component
   types. These instances are connected by their ports. Indeed, the
   Apache configuration depends on the IP adress of the MariaDB
-  component, and the testing phase for Apache, called \texttt{check},
-  uses the MariaDB service.}
+  component \CP{IP peu visible en Fig 2 -- comment on les configure?}, and the testing phase for Apache, called \texttt{check},
+  uses the MariaDB service.} \CP{Ne faut il pas dire quelque part que les ports ne passent que les info de synchro
+  et pas les données/services eux-même ? Par exemple est-ce \mad qui transfére les données comme l'@IP mdb?}
 
 In \mad, two kinds of \emph{actors} are considered. The first is the
 developer of a control component, who may be the author of the
@@ -223,6 +225,8 @@ of this execution is given in the next section.
 
 \input{./code/assembly.tex}
 
+\CP{Mentionner qu'il est straightforward de definir un ADL ??}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Execution}
 
@@ -301,9 +305,9 @@ the following behaviors:
 \end{figure}
 
 \paragraph{Example}{
-We now discuss the commissioning execution of the Apache/MariaDB
+Let detail the commissioning execution of the Apache/MariaDB
 example. The initial assembly, given in Figure~\ref{fig:example}, has
-already been described. Figure~\ref{fig:scenari} depicts three example
+already been described. Figure~\ref{fig:scenari} depicts three examples of
 configurations that may occur at different steps of the
 commissioning. In chronological order, the first configuration is
 represented by red tokens, the second one by blue tokens, and the
