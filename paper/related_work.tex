@@ -95,7 +95,7 @@ Finally, some recent tools go further by offering an
 running many services simultaneously to orchestrate. In this case,
 being able to deploy or install distributed software is only part of
 the problem, as services also need to be restarted in case of failure, or
-to be scaled in case of overload, etc. The famous
+to be scaled in case of overload, etc.
 \kubernetes~\cite{kubernetes:web} enters in this category, as well as
 \dockerswarm~\cite{dockerswarm:web}. If these tools are outside the
 scope of this paper, a subdivision of their architecture handles
@@ -106,6 +106,7 @@ In pratice, these tools are often combined by system administrators
 and operators to achieve both distributed software commissioning and
 infrastructure management.
 
+\CP[all]{Pourquoi mettre notre contrib  dans la section RW ?}
 \begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
   colback=black!5!white,colframe=black!30,colbacktitle=black!60,
   title=Contribution,fonttitle=\bfseries,
@@ -117,16 +118,18 @@ infrastructure management.
   composition and efficiency.
 \end{tcolorbox}
 
+\CP{Problem de transition -- le paragraphe suivant ne devrait pas être dans cette section}
+\CP{Fractal n'est pas introduit avant}
 Among the plethora of distributed software commissioning solutions, we
-have selected a subset of them for a deeper comparison. We have
-selected: two \emph{coding} or scripting solutions, \shell and
+have selected a subset of them for a deeper comparison, both production tools and
+academic contributions. Moreover, we have selected production tools
+with a significant opensource community.
+%
+The selection is made of 8 works: two \emph{coding} or scripting solutions, \shell and
 \fractal; three procedural-oriented solutions of the \emph{software
   configuration} class, \ansible, \deployware and \aeolus; two
 solutions of the \emph{infrastructure definition} class, \juju and
-\tosca; and finally one \emph{orchestration} solution, \kubernetes. In
-this selection we have deliberately selected both production tools and
-academic contributions. Moreover, we have selected production tools
-with a significant opensource community.
+\tosca; and finally one \emph{orchestration} solution, \kubernetes. 
 
 %----------------------------
 \subsection{Related work metrics}
@@ -144,10 +147,11 @@ with a significant opensource community.
 % 3. formalism
 % - formal model
 
-Before introducing the related works of this paper, some analysis
-metrics need to be introduced. These metrics are divided in three
-sets: software engineering (SE) metrics, metrics related to the
-parallelism level of commissioning, and metrics related to formal
+The analysis of these works is based on several metrics,
+%Before introducing the related works of this paper, some analysis
+%metrics need to be introduced.
+divided in three sets: i) software engineering (SE) metrics, ii) metrics related to the
+parallelism level of commissioning, and iii) metrics related to formal
 aspects of commissioning. For each metric, four levels will be
 considered and presented in Table~\ref{tab:comparison}: (1) supported,
 denoted with \checkmark, that counts for 3 points in the score; (2)
@@ -157,9 +161,9 @@ code manually the given metric, and that counts 1 point; and finally
 (4) not supported, denoted -.
 
 \paragraph{Software engineering}
-As introduced in the previous section, when automating distributed
+As introduced in the previous section \CP{laquelle? utilise un ref explicite, section x.y}, when automating distributed
 software commissioning, one important aspect is to promote software
-engineering properties. Indeed, when different actors are involved in
+engineering properties. Indeed, when several actors are involved in
 one given goal, software engineering techniques can help improving
 separation of concerns (\ie code reuse, maintainability
 etc.). Separation of concerns means that each actor is responsible for
@@ -178,7 +182,7 @@ three SE metrics to compare the related works:
 \item \emph{tasks}: if the work (tool, framework or scientific
   contribution) offers a way to divide the commissioning of each
   component in sub-elements that we call \emph{tasks} and that promote
-  an better structured procedural design;
+  a better structured procedural design;
 \item \emph{separation of concerns}: if the work (tool, framework or
   scientific contribution) offers a way to build distributed software
   commissionings by composing the commissioning of individual
@@ -187,7 +191,7 @@ three SE metrics to compare the related works:
 
 \paragraph{Parallelism level}
 A second important aspect of distributed software commissioning that
-has been introduced in the previous section is its efficiency and in
+has been introduced in the previous section \CP{redite+laquelle?} is its efficiency and in
 particular (in this paper) the level of parallelism offered by
 commissioning tools and frameworks. We consider four metrics to
 compare the related work:
@@ -214,18 +218,18 @@ or \emph{inter-comp-tasks} dependencies, more parallelism could be
 handled between components of different types.
 
 Figure~\ref{fig:parlevels} illustrates the four parallelism levels
-listed above through one example. In this example three components or modules are
-depicted. The component $C$ is deployed on two hosts while components
+listed above through an example with three components or modules:
+The component $C$ is deployed on two hosts while components
 $A$ and $B$ are deployed on a single host. Moreover, components $A$
 and $B$ need to be coordinated while the component $C$ is independent
-from both $A$ and $B$. First, Figure~\ref{fig:simh} displays
+from both $A$ and $B$. \CP{transition} First, Figure~\ref{fig:simh} displays
 the \emph{SIMH} level, where parallelism can be introduced for the
 component $C$. Second, Figure~\ref{fig:inter-comp} illustrates the
 \emph{inter-comp} parallelism level. Indeed, as $C$ is independent from
 $B$ both component commissionings can be performed
 simultaneously. However, as component $B$ depends on component $A$,
 and as the dependencies are only available at the component level,
-their commissioning still has to be performed one after the
+their commissioning has still to be performed one after the
 other. Third, Figure~\ref{fig:inter-comp-tasks} shows the
 \emph{inter-comp-tasks} parallelism level, where dependencies can be
 defined at the finer level of the tasks. In this case, the commissionings
@@ -238,7 +242,9 @@ a component can be performed in parallel. One can note that the
 higher the number of supported parallelism levels is, the shorter
 the commissioning time (represented by the height of the figures) is.
 
+
 \begin{figure*}[t!]
+  \CP{Réduide la taille des figures ??}
   \begin{center}
     \subfloat[SIMH]{
       \fcolorbox{black!20}{white}{
@@ -351,7 +357,7 @@ assembly written in Java. The membrane is handled by the \fractal
 runtime but the sub-assembly and its associated codes are entirely
 left to the user. That is why in Table~\ref{tab:comparison}, metrics
 not natively supported by \fractal can be handled manually using
-java. Both \emph{separation of concerns} and \emph{inter-comp} are well
+Java. Both \emph{separation of concerns} and \emph{inter-comp} are well
 handled by \fractal thanks to the notion of port (dependencies within
 the component or with an external component) adapted to the
 membrane. One can note that only \fractal components commissionings
@@ -426,6 +432,7 @@ thanks to a finite state machine. Each state can be connected to use,
 provide, or conflict ports to declare dependencies between the
 commissioning steps of different components. Hence, such ports enable
 coordination of the global deployment process.
+\CP{Et alors? pas de commentaire?}
 
 % Juju
 \paragraph{Juju}
@@ -482,6 +489,7 @@ stopped. As a consequence, the commissioning process is
 error-prone. For instance, a web server can be started before the
 required database and thus fail. For this reason, the metric
 \emph{inter-comp} is considered partially supported.
+\CP{K8S requires container to be started in any order, and thus any container must has a wait-procedure wrt his dependencies}
 % depend_on exists but limited to "container is started"
 % synchronization is possible but must be managed by internal script and not managed by k8s
 % good soc, download containers and run k8s deploy but without synchonization,
@@ -505,8 +513,7 @@ required database and thus fail. For this reason, the metric
 % - intra-task parallelism
 % - performance model and formal
 
-In the previous section, eight different related works have been
-compared according to software engineering metrics, parallelism
+We have compared eight related works according to software engineering metrics, parallelism
 metrics and one metric regarding the formal definition of the
 considered solution. Table~\ref{tab:comparison} summarizes this
 comparison and raises a few key points that we discuss in the
@@ -553,6 +560,7 @@ this reason, formalizing the commissioning solution is of high
 importance to guarantee properties such as attainability of
 commissionings.
 
+\CP{Idem, pas comprendre la boite colorée ci-après}
 \begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
   colback=black!5!white,colframe=black!30,colbacktitle=black!60,
   title=Contribution,fonttitle=\bfseries,
