@@ -452,6 +452,15 @@ concepts behind \juju are very close to those of \aeolus, the same
 metrics are available barring the formal aspect.
 % good soc, download charms and run juju deploy
 
+\begin{table*}[tp]
+  \centering
+  \small
+  \input{tables/tab_related_work.tex}
+  \caption{Comparison of commissioning solutions based on aspects
+  regarding parallelism (performance) and software engineering (SE).}
+  \label{tab:comparison}
+\end{table*}
+
 \paragraph{TOSCA}
 The \emph{Topology and Orchestration Specification for Cloud
   Applications} (TOSCA) is another component-oriented model that
@@ -494,15 +503,6 @@ required database and thus fail. For this reason, the metric
 % synchronization is possible but must be managed by internal script and not managed by k8s
 % good soc, download containers and run k8s deploy but without synchonization,
     % commissioning is error-prone
-
-\begin{table*}[tp]
-  \centering
-  \small
-  \input{tables/tab_related_work.tex}
-  \caption{Comparison of commissioning solutions based on aspects
-  regarding parallelism (performance) and software engineering (SE).}
-  \label{tab:comparison}
-\end{table*}
 
 %----------------------------
 \subsection{Discussions}
