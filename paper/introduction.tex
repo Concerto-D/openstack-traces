@@ -31,196 +31,31 @@
 %for improving the efficiency of the commissioning process (\ie
 %reducing deployment times, minimizing services interruptions etc.).
 
-\CP[all]{Intro est raide!}
-%correction: software is uncountable
-A distributed software is asoftware designed in a modular architectural style
-where each module, component, or service is responsible for a
-specific part of the overall objective, and collaborates at runtime
-with other components that are potentially hosted on distant nodes
-(\ie machines) in the network. In the rest of this paper we will
-use the generic term \emph{component} to refer
-indifferently to a module or a service.
+
+In contrast to monolithic software that runs locally on a single machine, distributed software is designed in a modular architectural style where each entity (\ie module, component, or service or micro-service) is responsible for a specific part of the overall objective, and collaborates at runtime with other entities that are potentially hosted on distant nodes (\ie machines) in the network. In the rest of this paper we will use the generic term \emph{component} to refer indifferently to a module, a service or a micro-service. Distributed software have become commonplace in our day-to-day life, sometimes hosted on the Cloud, on personal computers, on mobile phones, on objects etc. 
+
+However, deploying a large distributed software on infrastructures is a tedious task where components have to be chosen and mapped to the nodes of infrastructures, where components have to be chosen and configured, where dependencies have to be solved, where virtualization layers have to be handled etc. Furthermore, such procedure involves many different actors with different expertise and roles which increase the difficulty of the overall process: (1) \emph{developers} who are responsible for designing and coding a set of components or services; (2) \emph{sysadmins} and \emph{sysops} responsible for up-keeping, configuring, and testing multi-users computer systems such as servers or Clouds, and (3) in between \emph{devops} engineers that work with software developers, system operators (SysOps) and other production IT staff to oversee code releases and deployments. For these reasons, deployment procedures have to be automated and need adapted programming support (\ie languages, models).
+
+In this paper, among the difficulties related to the deployment of distributed software systems, we left apart the mapping between pieces of software and the nodes of the infrastructure, which is the result of an optimization problem and not in the scope of this paper~\cite{6409358, 10.1007/978-3-319-47677-3_15, cadorel:hal-02165835, ccgridemile}. Indeed, we restrict the scope of this paper to the \emph{software-commissioning} part of the deployment, \ie the procedure responsible for leading the set of components to a valid running state while guaranteeing correct configurations and interactions.
 %
-\CP[all]{Pb transition!}
+In particular, three metrics are considered important regarding the quality of
+the automation of distributed software commissioning in this paper: (1) a clear separation of concerns between the different actors of the commissioning procedure (\ie developers, sysadmins and devops) to enhance productivity, maintainability
+and re-usability of deployment codes; (2) the efficiency of the commissioning procedure in terms of parallelism expressiveness; and (3) the formalization of the solution such that formal properties can be proven on a given commissioning procedure. The contribution of this paper improves the related work by succeeding in the combination of these three metrics.
 %
-What is called distributed software commissioning in this paper could
-also be called \emph{deployment}. However, we have noticed that,
-according to the community, a different meaning could be given to the
-deployment wording. For this reason, we have deliberately chosen an
-unusual term that we clearly define hereafter.
-%
-\CP[all]{Ne faudrait il pas commencer l'intro avec une description approximative
-puis ensuite préciser le choix de nos termes?}
-%
-The commissioning procedure of a distributed software is the procedure
-responsible for leading the set of components to a valid running state
-while guaranteeing correct configurations and interactions. Thus,
-distributed software commissioning is somewhere between the
-components' development (functional part) and the running state of the
-distributed software on the infrastructure (management part). As a
-result, the particularity of a distributed software commissioning is
-that it needs information both from the components behaviors and from
-the underlying infrastructure on which each component will be
-executed. For this reason, multiple human actors are often involved in
-the commissioning procedure: developers, system administrators and
-system operators. This frontier is often called the DevOps domain
-where the commissioning fits in. Note that our definition of software
-commissioning does not include \CP[all]{pourquoi dynamic? reconf n'est pas suffisant?} dynamic reconfiguration aspects of the
-distributed software management that is left to future work.
 
-When designing distributed software, first, the code of each component
-is written by a given \emph{developer}, and this developer often also
-codes a set of \emph{control interfaces} to act on the
-component. Examples of control interfaces could be \texttt{start},
-\texttt{stop} or \texttt{update}, for instance. Most of the time such
-control interfaces take part in the component commissioning. However,
-they are not sufficient as they only serve the component level, not
-the infrastructure level, nor the configuration
-level. \emph{Configuration files} are often used additionally as
-\emph{configuration interfaces} to get information from system
-administrators or operators that cannot be known in advance when
-writing the functional code of the component. \CP{où est le second?} Thirdly, components
-often require a set of packages or libraries to be installed on the
-host operating system to work properly. Those requirements are
-directly related to the \emph{infrastructure management} as some of
-them may already be installed on machines.
-%In the end, the overall commissioning procedure
-%of a single software component is complex because it juggles with the
-%control interfaces, infrastructure interfaces and infrastructure
-%management information. In other words,
-In the end, the commissioning procedure of a single component is a
-\emph{coordination program} between different DevOps
-interfaces. Commissioning procedures are often explained in
-\texttt{README} files, or in
-documentation\footnote{\url{https://doc.ubuntu-fr.org/apache2}}.
-%
-% correction: documentations (plural) is very uncommon, the
-% uncountable form is preferred
-%
-When considering a complete distributed software composed of a set of
-components, the picture becomes even more complex as it is needed to
-coordinate the commissioning procedure of all the components together
-with their associated interactions. For instance, when installing a
-very basic Apache/MariaDB system, additional documentation is
-required\footnote{\url{https://doc.ubuntu-fr.org/lamp}}
-to combine the Apache component with the MariaDB component. Another
-example could be the commissioning of Spark on top of
-Yarn\footnote{\url{https://spark.apache.org/docs/latest/running-on-yarn.html}}.
-
-\CP{Cela me gène car les gens utilisent des distributions linux par exemple pour se simplifier la vie.}
-
-%ne pas mettre sous cette forme
-%\HC[Dim]{ce listing ne va sans doute pas ici (trop tôt ou top détaillé) mais je le laisse}
-%Many interesting challenges arise from the DevOps community and from
-%distributed software commissioning. The challenges studied in this
-%paper are the following:
-%\begin{itemize}
-%\item enhancing the automation of distributed software commissionings;
-%\item enhancing the separation of concerns between developers and
-%  operators in distributed software commissionings;
-%\item enhancing and adapting composition mechanisms in software
-%  commissionings;
-%\item enhancing the efficiency of distributed software commissionings;
-%\item promoting formal models and formal methods to have guarantees on
-%  distributed software commissionings.
-%\end{itemize}
-
-\CP[all]{Trop d'aspects sont abordés sans qu'on comprenne quel est l'objectif}
-\CP[all]{Il faudrait dire avant quel est l'objectif, genre automatiser le deploiement}
-
-%%% the three important metrics of this contribution
-In this paper, three metrics are considered important regarding the
-quality of the automation of distributed software commissioning: (1) a
-clear separation of concerns between the different actors of the
-commissioning procedure (\ie developers and system administrators) to
-enhance productivity, maintainability and reusability of commissioning
-codes; (2) the efficiency of the commissioning procedure in terms of
-parallelism expressivity; and (3) the formalization of \CP{the tool???} such
-that formal properties can be proven on a given commissioning
-procedure. The contribution of this paper improves the related work by
-suceeding in the combination of these three metrics.
-
-%%% precision on the efficiency
-Improving the efficiency of distributed software commissioning may
-seem useless as this procedure is executed once and for all. However,
-this claim does not consider the problem as a whole and needs
-clarification.
-%
-First, the commissioning procedure of complex distributed software
-such as OpenStack (Section~\ref{sec:use-cases}) can take from 15
-minutes to more than one hour to finish, thus gaining in speed is
-significant. Second, a system administrator does not perform the
-commissioning process only once. When new machines or new clusters are
-installed in their infrastructure, when errors occur, or when updates
-are needed, commissioning procedures are executed again. In addition
-to this, having an efficient commissioning procedure is a first step
-toward efficient reconfigurations of dynamic software systems (\eg
-self-adaptive systems) and dynamic infrastructures (\eg edge
-computing) where disruption time of services must be minimized.
-% experiments and continuous integration
-Furthermore, there are two specific contexts where distributed
-software commissionings are extensively executed: \emph{experiments}
-(research or industry) and \emph{continuous integration} of
-distributed software systems. For instance, by exploring the traces of
-the OpenStack CI
-platform\footnote{\url{http://logstash.openstack.org}}, we have
-observed that the OpenStack commissioning is often called, although
-irregularly. Figure~\ref{} shows the recorded deployments of OpenStack
-during a year where variations can be observed. The highest peak
-represents XXX commissionings of OpenStack in 24 hours.
-%
-\HC[Helene]{à terminer et améliorer avec nouvelles traces}
-
-Many different techniques could be studied to improve the efficiency
-of distributed software commissionings such as for instance: using
-optimized and adapted system commands in commissioning scripts and
-programs (\eg \texttt{rsync} instead of many \texttt{scp}); working on
-the optimization of a given system command (\eg \nix package manager
-instead of \texttt{apt-get}); if using virtual images or container
-images, improving the boot time of
-hypervisors~\cite{nguyen:hal-02172288}; if using \docker images,
-optimizing the placement of image layers on the
-network~\cite{darrous:hal-01745405}; exposing more parallelism in
-commissioning languages~\cite{dicosmo:hal-01233489}. The scope of this
-paper is to study this last option, in other words how to improve the
-parallelism expressivity of commissioning tools and languages.
-
-%%% automation of commissioning
-% Plus de détails ?
-%The automation of commissioning procedures has largely been
-%studied. First, industry and opensource DevOps communities have
-%contributed to the birth of a broad set of languages and tools such as
-%\ansible, \puppet or \kubernetes among many others. Second, academic
-%initiatives have lead to models and framework with interesting
-%software engineering properties and formalizations. However, none of
-%these contributions has suceeded in combining the three above
-%aspects.
-
-In~\cite{chardet:hal-01858150} we have presented a formal model for
-distributed software commissioning, namely \mad, that theoretically
-improves the parallelism level exposed to the user. This journal paper
-brings the following additional contributions compared to our previous
-publication:
-\begin{itemize}
-\item an extended study of the related work;
-\item a revised and streamlined \mad formal model that offers
-  strongers reachability guarantees;
-\item a theoretical performance prediction model of \mad;
-\item a concrete language, a prototype and an extended reproducible
-  evaluation on both synthetic use-cases and a large real use-case
-  on real infrastructures.
+In~\cite{chardet:hal-01858150} we have presented a formal model for distributed software commissioning, namely \mad, that theoretically improves the parallelism
+level exposed to the user. This journal paper brings the following additional
+contributions compared to our previous publication: 
+\begin{itemize} 
+	\item an extended study of the related work; 
+	\item a revised and streamlined \mad formal	model that offers stronger guarantees; 
+	\item a theoretical performance prediction model of \mad; 
+	\item a concrete language, a prototype and an extended reproducible evaluation on both synthetic use-cases and one large real use-case on real infrastructures.
 \end{itemize}
 
 %%% outline
-The rest of this paper is organized as
-follows. Section~\ref{sec:related_work} studies the related
-work. Section~\ref{sec:mad_model} gives an overview of \mad as well as
-its concrete language. Sections~\ref{sec:formal_model}
-and~\ref{sec:perf_model} respectively detail the formalization of \mad
-as well as its associated performance prediction
-model. Sections~\ref{sec:evaluations} and~\ref{sec:use-cases}
-respectively present an evaluation of the \mad prototype on synthetic
-use-cases and an evaluation of the contribution interests on the real
-use-case of OpenStack commissioning.  Finally, Section~\ref{sec:conc}
-concludes and gives some perspectives.
+The rest of this paper is organized as follows. Section~\ref{sec:motivation} presents the detailed motivations of the contribution. Section~\ref{sec:related_work} studies the related work. Section~\ref{sec:mad_model} gives an overview of \mad as well as its concrete language. Sections~\ref{sec:formal_model} and~\ref{sec:perf_model} respectively detail the formalization of \mad as well as its associated performance prediction model. Sections~\ref{sec:evaluations} and~\ref{sec:use-cases} respectively present an evaluation of the \mad prototype on synthetic use-cases and an evaluation of the contribution interests on the real use-case of OpenStack commissioning.  Finally, Section~\ref{sec:conc} concludes and gives some perspectives.
+
+
+
 
