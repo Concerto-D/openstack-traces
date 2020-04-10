@@ -60,9 +60,12 @@ if __name__ == "__main__":
         "20.02.26": 0,
         "20.02.27": 0
         }
+    total = 0
     for result in results:
         date_str = "results_20{date}_*".format(date=result)
         results[result] = get_lines(date_str)
         print("For the date 20{date}, there are {nb} results".format(date=result,
                                                                    nb=results[result]))
+        total += results[result]
+    print("Total deployments: {sum}".format(sum=total))
     make_figure(results)
