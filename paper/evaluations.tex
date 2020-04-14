@@ -1,17 +1,17 @@
 All results presented below can be reproduced by following the lab on
-the following publicly available repository:
-\footnote{\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal}}
+the publicly available repository\footnote{\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal}}.
+
 
 %--------------------------------------
 \subsection{Prototype implementation details}
 The prototype implementation was made in \python. As already
 illustrated in Listings~\ref{codemdb}, \ref{codeapache}
-and~\ref{codeass}, \mad' users declare components by creating a class,
+and~\ref{codeass} at Page~\pageref{codemdb}, \mad' users declare a component by creating a class,
 inheriting from the internal \emph{Component} class, containing the
 description of the \net as well as the actions associated to the
-transitions. These actions are \python functions which usually perform
+transitions. These actions are \python functions which can perform
 remote actions using SSH, Ansible or other tools. Users can then
-create an assembly by extending the appropriate class and listing the
+create an assembly by extending the appropriate classes and listing the
 components and how their ports are connected. This assembly can then
 be run, which means that the semantics of Madeus is executed in this
 assembly. The commissioning is over if the only elements holding a
@@ -120,6 +120,7 @@ readable scale of results.
     \caption{Results of the sequential benchmark.}
     \label{fig:seqres}
   \end{center}
+  \CP{En plus, plot ratio of two curves ? -- là on n'en voit qu'une}
 \end{figure}
 
 Figure~\ref{fig:seqres} presents the results of Benchmark (A). As (A)
@@ -193,7 +194,8 @@ large number of transitions.
 %number of transitions increases.
 
 These results allow us to point out that \mad does not by itself add a
-big overhead on the deployment. One can note though that according to
+significant overhead on the deployment --- at most 40 milliseconds in these synthetic experiments.
+One can note though that according to
 the type of commands performed in the transitions  an additional
 overhead could be observed. For instance, .
 \HC[Helene]{est-ce que c'est utile de donner l'exemple du surcoût SSH ?}
