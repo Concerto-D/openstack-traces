@@ -11,7 +11,7 @@
 
 \HC[Helene]{attention trop verbeux}
 
-In this section we give an overview of existing solutions for the automation of distributed software commissioning. Then, we select a few solutions, that we consider representative and interesting regarding our contribution, for a deeper analysis. To conduct this analysis we first introduce the metrics to consider and second present a detailed comparison of the selected solutions. Finally, a discussion section is added to conclude this related work.
+In this section we give an overview of existing solutions for the automation of distributed software commissioning. Then, we select a few solutions for a deeper analysis, that we consider representative and interesting regarding our contribution. To conduct this analysis we first introduce the metrics to consider and second present a detailed comparison of the selected solutions. Finally, a discussion section is added to conclude this related work.
 
 %----------------------------
 \subsection{Automation of distributed software commissioning}
@@ -26,7 +26,7 @@ In this section we give an overview of existing solutions for the automation of 
 % - generic solution that could use or not provisioning tools
 % - scripting/IaC but keep Kubernetes and Juju
 
-Four classes of tools and languages can be considered regarding automating and enhancing software engineering properties of commissioning procedures.
+Five classes of tools and languages can be considered regarding automating and enhancing software engineering properties of commissioning procedures. In practice, these tools are often combined by system administrators to achieve a good automation and satisfaction level. 
 
 \paragraph{Scripting/coding languages}
 First, a common way of automating commissioning procedures is to use
@@ -39,11 +39,11 @@ coordination mechanisms.
 
 \paragraph{Software configuration tools}
 A second class of languages and tools is called \emph{software configuration tools}. This class contains the set of quite recent tools such as \ansible~\cite{ansible:web}, \puppet~\cite{puppet:web}, \chef~\cite{chef:web},
-\salt~\cite{salt:web}, as well as some academic contributions \deployware~\cite{flissi2008ccgrid}, \aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of these tools is to enhance the productivity when defining components or services deployment and the coordination of their tasks. Most of the time these tools add an abstraction layer on top of scripting languages to hide some of their technical details (\eg SSH connections). These tools use different methods to achieve their goals. For instance, Ansible adopts a procedural imperative style in YAML as a series of tasks to execute, while Puppet adopts a declarative approach in Python by combining different instances of resources (\ie services, packages, etc.). In a declarative approach the user describes what is needed rather than how to get it, which is left to the tool. Such an approach enhances productivity but reduces flexibility for the user.
+\salt~\cite{salt:web}, as well as some academic contributions such as \smartfrog~\cite{10.1145/1496909.1496915}, \engage~\cite{DBLP:conf/pldi/FischerME12} \deployware~\cite{flissi2008ccgrid}, \aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of these tools is to enhance the productivity when defining components or services deployment and the coordination of their tasks. Most of the time these tools add an abstraction layer on top of scripting languages to hide some of their technical details (\eg SSH connections). These tools use different methods to achieve their goals. For instance, Ansible adopts a procedural imperative style in YAML as a series of tasks to execute, while Puppet adopts a declarative approach in Python by combining different instances of resources (\ie services, packages, etc.). In a declarative approach the user describes what is needed rather than how to get it, which is left to the tool. Such an approach enhances productivity but reduces flexibility for the user.
 
 \paragraph{Infrastructure definition tools}
 Some tools, that are sometimes called \emph{infrastructure definition tools}, or \emph{provisioning tools}, have been specifically designed to be able to handle complex distributed infrastructures composed of multiple clusters and multiple machines shared between users. Managing such infrastructure is very difficult and error prone as each application and each user may possibly need different requirements, different operating systems, different package versions, etc. Virtualization has partly been introduced to enhance infrastructure management (in addition to improving portability of applications, isolation between users, etc.). This type of tools, that includes \docker~\cite{docker:web}, \terraform~\cite{terraform:web}, \juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or \heat~\cite{heat:web} for instance, uses virtualization mechanisms (\eg virtual machines, containers) to reduce the commissioning process to a set of commands allowing to deploy a virtual resource (by using an image) on a physical machine. This technique potentially reduces the complexity of the commissioning procedures if the needed image is already available, otherwise the initial commissioning commands and coordination have to
-be done to create the image. Some of these tools are specific to a given virtualization technique (\eg \docker, \cloudformation and \heat), while others offer \emph{providers} for different kinds of Cloud infrastructures (\eg \terraform, \juju). The \tosca standard~\cite{tosca:web}, and its
+be done to create the image. Some of these tools are specific to a given virtualization technique or to a given Cloud provider (\eg \docker, \cloudformation and \heat), while others offer \emph{providers} for different kinds of Cloud infrastructures (\eg \terraform, \juju). The \tosca standard~\cite{tosca:web}, and its
 implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can be classified as a descriptive provisioning tool.
 % More precisely, \tosca is presented as a Cloud Modeling Language (CML).
 %By using
@@ -57,7 +57,11 @@ implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can be classi
 \paragraph{Orchestration tools}
 Finally, some recent tools go further by offering an \emph{orchestration} level to handle shared clusters of machines running many services simultaneously to orchestrate. In this case, being able to deploy or install distributed software is only part of the problem, as services also need to be restarted in case of failure, or to be scaled in case of overload, etc. \kubernetes~\cite{kubernetes:web} enters in this category, as well as \dockerswarm~\cite{dockerswarm:web}. If these tools are outside the scope of this paper, a subdivision of their architecture handles distributed software commissioning. For instance \kubernetes relies on \docker for deployments. 
 
-In pratice, these tools are often combined by system administrators to achieve both distributed software commissioning and infrastructure management. 
+\paragraph{The specific class of CBSE}
+Component-based software engineering (CBSE) is a domain that enhances (distributed) software implementation by dealing with code re-use, separation of concerns, and composability (thus maintainability) of software~\cite{Szyperski:2002:CSB:515228}. A component-based application is composed of a set of component instances connected together. Such composition of components is called an \emph{assembly}. A component is a black box that implements an independent functionality of an application, and that interacts with
+other components through well defined interfaces, called \emph{ports}. Ports are used to decouple the component internals from its interface. For instance, a port can be used to declare that the component either provides a service ---in this case the port is attached to an internal method--- or uses a service from another
+component. Many component models focus on the implementation of the functionalities and
+interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigot:inria-00388508,Coullon2017} of components, rather than on their commissioning. In the Object Management Group's (OMG) specification~\cite{ccmdeploy:omg06}, the commissioning model is rigid and fixed by the model. Though, a few component models have contributed to commissioning issues~\cite{Blair2009, baude:hal-01001043, flissi2008ccgrid, chardet:hal-01858150, dicosmo2014ic}. These CBSE solutions to deployment automation could be dispatched in the four previous classes.
 
 %----------------------------
 \subsection{Related work metrics}
@@ -75,11 +79,11 @@ In pratice, these tools are often combined by system administrators to achieve b
 % 3. formalism
 % - formal model
 
-The analysis of these works is based on several metrics, divided in three sets: i) software engineering (SE) metrics, ii) metrics related to the parallelism level of commissioning, and iii) metrics related to formal aspects of commissioning. For each metric, four levels will be considered and presented in Table~\ref{tab:comparison}: (1) supported, denoted with \checkmark, that counts for 3 points in the score; (2) partially supported, denoted (\checkmark), that counts for 2 points; (3) manually supported, denoted \emph{M}, meaning that the user may code manually the given metric, and that counts 1 point; and finally
+The analysis of the related work is based on several metrics, divided in three sets: i) software engineering (SE) metrics, ii) metrics related to the parallelism level of commissioning, and iii) metrics related to formal aspects of commissioning. For each metric, four levels will be considered and presented in Table~\ref{tab:comparison}: (1) supported, denoted with \checkmark, that counts for 3 points in the score; (2) partially supported, denoted (\checkmark), that counts for 2 points; (3) manually supported, denoted \emph{M}, meaning that the user may code manually the given metric, and that counts 1 point; and finally
 (4) not supported, denoted -.
 
 \paragraph{Software engineering}
-As introduced in the introduction and motivations, when automating distributed software commissioning, one important aspect is to promote software engineering properties. Indeed, when several actors are involved in one given goal, software engineering techniques can help improving separation of concerns (\ie code reuse, maintainability etc.). Separation of concerns means that each actor is responsible for her own specialism, \ie her own expertise domain. Such separation of concerns is improved as soon as a modular or component-based approach is adopted, \ie each actor could be responsible for one component. Furthermore, component-based architectures are also equipped with composition mechanisms that facilitate the interactions between the different entities implemented by different actors. One additional actor may also enter the picture to design this composition. We define three SE metrics to compare the related works:
+As introduced in the introduction and motivations, when automating distributed software commissioning, one important aspect is to promote software engineering properties. Indeed, when several actors are involved in one given goal, software engineering techniques can help improving separation of concerns (\ie code reuse, maintainability etc.). Separation of concerns means that each actor is responsible for her own specialism, \ie her own expertise domain. Such separation of concerns is improved as soon as a modular or component-based approach is adopted, \ie each actor could be responsible for one component. Furthermore, component-based architectures are also equipped with composition mechanisms that facilitate the interactions between the entities implemented by different actors. Additional actor may also enter the picture to design this composition. We define three SE metrics to compare the related works:
 \begin{itemize}
 	\item \emph{component}: if the work (tool, framework or scientific contribution) offers a component-oriented (\eg services, modules) structure of commissioning;
 	\item \emph{tasks}: if the work offers a way to divide the commissioning of each component in sub-elements that we call \emph{tasks} and that promote a better structured procedural design;
@@ -96,7 +100,7 @@ A second important aspect of distributed software commissioning that has been in
 \end{itemize}
 One can note that the level of parallelism offered by a given tool is directly correlated to the type of dependencies that can be declared by users. For instance, without any dependency mechanisms, the best possible level would be SIMH, while for \emph{inter-comp} or \emph{inter-comp-tasks} dependencies, more parallelism could be handled between components of different types.
 
-Figure~\ref{fig:parlevels} illustrates the four parallelism levels listed above through an example with three components or modules: The component $C$ is deployed on two hosts while components $A$ and $B$ are deployed on a single host. Moreover, components $A$ and $B$ need to be coordinated while the component $C$ is independent from both $A$ and $B$. In sub-figure~\ref{fig:simh} the \emph{SIMH} level is shown, where parallelism can be introduced for the component $C$. Second, sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp} parallelism level. Indeed, as $C$ is independent from $B$ both component commissioning can be performed simultaneously. However, as $B$ depends on $A$, and as the dependencies are only available at the component level, their commissioning has still to be performed one after the other. Third, sub-figure~\ref{fig:inter-comp-tasks} shows the \emph{inter-comp-tasks} parallelism level, where dependencies can be defined at the finer level of the tasks. In this case, the commissioning of $A$ and $B$ can be started in parallel until they reach their dependencies. Thus, $B$ has to wait for $A$ to perform needed tasks before continuing its deployment. Finally, sub-figure~\ref{fig:intra-comp-tasks} illustrates the \emph{intra-comp-tasks} parallelism level, where some tasks inside a component can be performed in parallel. One can note that, theoretically, the higher the number of supported parallelism levels is, the shorter the commissioning time is (represented by the height of the figures).
+Figure~\ref{fig:parlevels} illustrates the four parallelism levels listed above through an example with three components or modules: The component $C$ is deployed on two hosts while components $A$ and $B$ are deployed on a single host. Moreover, components $A$ and $B$ need to be coordinated while the component $C$ is independent from both $A$ and $B$. In sub-figure~\ref{fig:simh} the \emph{SIMH} level is shown, where parallelism can be introduced for the component $C$. Second, sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp} parallelism level. Indeed, as $C$ is independent from $B$ both component commissioning can be performed simultaneously. However, as $B$ depends on $A$, and as the dependencies are only available at the component level, their commissioning still has to be performed one after the other. Third, sub-figure~\ref{fig:inter-comp-tasks} shows the \emph{inter-comp-tasks} parallelism level, where dependencies can be defined at the finer level of the tasks. In this case, the commissioning of $A$ and $B$ can be started in parallel until they reach their dependencies. Thus, $B$ has to wait for $A$ to perform needed tasks before continuing its deployment. Finally, sub-figure~\ref{fig:intra-comp-tasks} illustrates the \emph{intra-comp-tasks} parallelism level, where some tasks inside a component can be performed in parallel. One can note that, theoretically, the higher the number of supported parallelism levels is, the shorter the commissioning time is (represented by the height of the figures).
 
 
 \begin{figure*}[t!]
@@ -147,16 +151,6 @@ procedural-oriented as they consider \emph{tasks} and not
 it is an approach with great advantages, declarative approaches are
 not considered in this paper.
 
-\CP[all]{Pourquoi mettre notre contrib  dans la section RW ?}
-\begin{tcolorbox}[enhanced,attach boxed title to top left={yshift=-3mm,yshifttext=-1mm},
-	colback=black!5!white,colframe=black!30,colbacktitle=black!60,
-	title=Scope,fonttitle=\bfseries,
-	boxed title style={size=small,colframe=black!60,boxrule=0.2mm},
-	boxrule=0.2mm]
-	The scope of this paper is to focus on enhancing the procedural-oriented \emph{software configuration tools} by improving separation of concerns,
-	composition and efficiency.
-\end{tcolorbox}
-
 \paragraph{Formalism}
 The last metric considered to compare the related work is the existence of a formal model for each commissioning solution. Indeed, we claim that studying formally commissioning models and their operational semantics is of high importance to open the door to verification and safety in deployments. For instance, even if this contribution is not presented in this paper, the formal model \mad has been successfully used to verify safety properties on distributed software commissioning by model checking~\cite{coullon:hal-02323641}.
 
@@ -164,10 +158,9 @@ The last metric considered to compare the related work is the existence of a for
 \subsection{Description and comparison of the related work}
 % ----------------------------
 
-\CP{Fractal n'est pas introduit avant}
 Among the distributed software commissioning solutions, we have selected a subset of them for a deeper comparison. We have selected both production and academic solutions. Moreover, we have selected production tools with a significant open source community.
 %
-The selection is made of 8 works selected from the four classes introduced in Section~\ref{sec:rwclasses}: \shell, \fractal, \ansible, \deployware, \aeolus, \juju, \tosca and \kubernetes.
+The selection is made of 8 works selected from the five classes introduced in Section~\ref{sec:rwclasses}: \shell, \fractal, \ansible, \deployware, \aeolus, \juju, \tosca and \kubernetes.
 
 % Shell-scripts
 \paragraph{Shell scripts}
@@ -177,11 +170,7 @@ metric introduced could potentially be implemented manually by using \shell. Of 
 % devstack is a set of shell script to deploy OpenStack on a single machine
 
 \paragraph{Fractal}
-Component-based software engineering (CBSE) is a domain that enhances (distributed) software implementation by dealing with code re-use, separation of concerns, and composability (thus maintainability) of software~\cite{Szyperski:2002:CSB:515228}. A component-based application is composed of a set of component instances connected together. Such composition of components is called an \emph{assembly}. A component is a black box that implements an independent functionality of an application, and that interacts with
-other components through well defined interfaces, called \emph{ports}. Ports are used to decouple the component internals from its interface. For instance, a port can be used to declare that the component either provides a service ---in this case the port is attached to an internal method--- or uses a service from another
-component. Many component models focus on the implementation of the functionalities and
-interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigot:inria-00388508,Coullon2017} of components, rather than on their commissioning. A few component models have contributed to commissioning issues. In the Object
-Management Group's (OMG) specification~\cite{ccmdeploy:omg06}, the commissioning model is rigid and fixed by the model. In \fractal~\cite{Blair2009} and its evolution GCM and GCM/ProActive~\cite{baude:hal-01001043}, the control of a component (\eg its commissioning) is decoupled from its functionalities into a
+In the Object Management Group's (OMG) specification~\cite{ccmdeploy:omg06}, the commissioning model is rigid and fixed by the model. In \fractal~\cite{Blair2009} and its evolution GCM and GCM/ProActive~\cite{baude:hal-01001043}, the control of a component (\eg its commissioning) is decoupled from its functionalities into a
 so called \emph{membrane} which is itself described as a component assembly written in Java. The membrane is handled by the \fractal runtime but the sub-assembly and its associated codes are entirely left to the user. That is why in Table~\ref{tab:comparison}, metrics not natively supported by \fractal can be handled manually using Java. Both \emph{separation of concerns} and \emph{inter-comp} are well handled by \fractal thanks to the notion of port (dependencies within the component or with an external one) adapted to the
 membrane. One can note that only \fractal components are supported, thus if writing the commissioning of existing modules they have to be encapsulated in a \fractal component.
 
@@ -201,10 +190,7 @@ For the DevOps who are used to shell scripts, \ansible has become a popular conf
 
 % Aeolus
 \paragraph{Aeolus}
-\citeauthor{dicosmo2014ic} proposed \aeolus, a formal component-based model for the cloud~\cite{dicosmo2014ic}. Their component model captures the internal states of a component commissioning process thanks to a finite state machine. Each state can be connected to use, provide, or conflict ports to declare dependencies between the commissioning steps of different components. Hence, such ports enable coordination of the global deployment process.
-%
-\CP{Et alors? pas de commentaire?}
-\HC[CP]{euh oui j'avais du oublier de l'écrire en fait}
+\citeauthor{dicosmo2014ic} proposed \aeolus, a formal component-based model for the cloud~\cite{dicosmo2014ic}. Their component model captures the internal states of a component commissioning process thanks to a finite state machine. Each state can be connected to use, provide, or conflict ports to declare dependencies between the commissioning steps of different components. Hence, such ports enable correct coordination of the global deployment process. The deployment procedure should then be written by the user or by an external tool~\cite{dicosmo:hal-01233489} as a sequence of changing state actions. As a result, the internal of each component should be known. For this reason, the separation of concerns is partially supported. Furthermore as the deployment procedure is a sequence and as parallel transitions cannot be defined the \emph{intra-comp-tasks} parallelism level is only possible in a manual way (not automated).
 
 % Juju
 \paragraph{Juju}
