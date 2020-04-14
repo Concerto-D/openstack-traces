@@ -1,7 +1,7 @@
 In this section, we present a theoretical performance prediction model
 for \mad that estimates the total execution time of the
 commissionning of a given assembly, according to the execution time of
-each transition. Three goals are pursued with such a tool. First, the
+each transition. Three goals are pursued with such a model. First, the
 theoretical execution time offers a way to evaluate the quality of the
 prototype of \mad. Second, for a system administrator or a developer,
 knowing the theoretical execution time of the commissioning procedure
@@ -17,7 +17,8 @@ precise execution times for the kind of actions used in a deployment
 can be difficult and is itself the subject of many studies, \eg using
 an analytical model or a statistical approach. However, for our
 application, we find that estimates are sufficient as long as they preserve
-the relative difference between different transitions.
+the relative difference between transitions. \CP{Cette phrase est un peu boiteuse car
+on ne sait pas ce que sont nos applications -- faire une ref à la bonne section??}
 %
 Intuitively, we automatically deduce the execution flow of a \mad
 assembly based on \mad' formal semantics. This is done by generating a
@@ -32,7 +33,8 @@ Thus, a dependency graph representing the execution of the whole
 assembly is obtained. By weighting the arcs corresponding to the transitions with
 the individual execution times of their actions (and the other ones with 0),
 we can compute the expected total execution time of the assembly as the
-longest path from the \emph{source} vertex to the \emph{sink} vertex.
+longest \CP{== en nombre d'arc ? N'est pas plutot le plus lourd/grand? heaviest?}
+path from the \emph{source} vertex to the \emph{sink} vertex.
 
 % By generating a graph modelling the execution flow of a \mad assembly,
 % capturing both intra-component and inter-component dependencies, we
@@ -179,8 +181,9 @@ represents the fact that a token may enter $\pi(d)$ only after
 $\theta$ has ended, which requires a time $t(\alpha)$ corresponding
 to the action.
 %
-Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to three
-transitions \emph{t1}, \emph{t2} and \emph{t3}.
+Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to an example
+made of three transitions \emph{t1}, \emph{t2} and \emph{t3}.
+\CP{transition? $E_\Theta$ non présenté :) iden pour les autres $E_X$}
 \[
   E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi(d)}^\text{reach}\right)\right\} 
 \]
@@ -196,7 +199,7 @@ transitions \emph{t1}, \emph{t2} and \emph{t3}.
 %% $\theta$ one arc from $v_p^\text{enable}$ to $v_\theta^\text{fire}$.
 
 For each provide port $p$ and each place $\pi$ such that
-$\{\pi\}$ is bound to $p$, we introduce one arc from
+$\{\pi\}$ is bound to $p$, we introduce an arc from
 $v_\pi^\text{reach}$ to $v_p^\text{enable}$. This represents the
 enabling of the port after all (sets of) places bound to the port
 have been reached.
@@ -206,7 +209,7 @@ E_{S_p}= \bigcup_{(p,\{\pi\})\in B_{S_p}^*}\left\{ \left(v_\pi^\text{reach},0,v_
 
 Additionally, for each provide port $p$ and each transition
 $\theta$ such that $p$ is connected to a use port that is bound
-to $\theta$, we introduce one arc from $v_p^\text{enable}$ to
+to $\theta$, we introduce an arc from $v_p^\text{enable}$ to
 $v_\theta^\text{fire}$. This represents the activation of the transitions
 bound to a use port, after the port is provided.
 \[
@@ -282,7 +285,7 @@ a use port \emph{u} which is bound to a transition \emph{c2t}.
 %%%%%%%%%%%%%%%
 %%\input{figures/servporttodag.tex}
 
-For each initial place $\pi$ we introduce one arc from $v^\text{source}$
+For each initial place $\pi$, we introduce an arc from $v^\text{source}$
 to $v_\pi^\text{reach}$, representing the fact that a token is placed in each
 initial place in the initial configuration.
 %% Figure~\ref{fig:source_sink_graph} depicts the dependency graph corresponding to two initial
@@ -291,7 +294,7 @@ initial place in the initial configuration.
 E_I=\bigcup_{\pi, \Delta_i(\pi) = \emptyset}\left\{ \left(v^\text{source},0,v_\pi^\text{reach}\right)\right\} 
 \]
 
-For each final place $\pi$ we introduce one arc from $v_\pi^\text{reach}$
+For each final place $\pi$, we introduce an arc from $v_\pi^\text{reach}$
 to $v^\text{sink}$. Intuitively, this represents the fact that the
 commissionning is over only after all components have reached the
 places without outgoing transitions.
@@ -317,7 +320,8 @@ corresponding to a small assembly.
 In the following, we denote $DG_A=(V,E)$ the dependency graph
 corresponding to an assembly $A=(C,L)$. We define the time estimation
 of the execution of the \mad assembly $A$ to be the length of the
-longest path from $v^\text{source}$ to $v^\text{sink}$ in
+longest path \CP{idem: longueur == nb d'arc ou somme des poids? (je connais la réponse ;>)}
+from $v^\text{source}$ to $v^\text{sink}$ in
 $DG_A$. Clearly, the size of $DG_A$ is linear in the size of
 $A$. Furthermore, the graph is either a DAG or has a path of infinite
 length, so the longest path can be computed in polynomial time.
