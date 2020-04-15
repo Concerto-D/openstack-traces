@@ -44,29 +44,11 @@ desired in her use-case. As defined in the large OpenStack
 documentation, each software module has its own commissioning process,
 and may depend on other modules commissionings.
 %
-The deployment of a typical OpenStack instance implies thus many
+Thus, the deployment of a typical OpenStack instance implies many
 software modules whose commissioning process is characterized by a
 large amount of tasks and interplays. As a consequence, the
 commissioning process of OpenStack is complex to understand and can be
 very long when tasks are executed sequentially.
-
-\CP{Après le paragraphe sur Kolla?}
-In the following, we show how the commissioning process of an
-OpenStack project can be transcribed as a \mad component. Leveraging
-\mad enables us to express tasks and components coordination. As a
-consequence, the \mad modeling improves the global commissioning
-process understandability, and can be used to reduce commissioning
-time by exploiting \emph{SIMH}, \emph{inter-comp}, \emph{inter-comp-tasks}
-and \emph{intra-taks} parallelism levels.
-
-\begin{table*}
-  \begin{center}
-    \input{tables/tab_kolla_components}
-    \caption{Number of places, transitions, ports and roles for each \mad component
-        of the OpenStack assembly of Figure~\ref{fig:full}.}
-    \label{tab:os}
-  \end{center}
-\end{table*}
 
 \kolla is one of the most popular tool for deploying OpenStack in
 production.  It relies on \ansible to deploy OpenStack's modules as
@@ -78,21 +60,34 @@ administrators. As a consequence, the use-case described in this
 section corresponds to the default \kolla deployment, which provides
 the essential mechanisms to operate an infrastructure with OpenStack.
 
+In the following, we show how the commissioning process of an
+OpenStack project can be transcribed as a \mad component. Leveraging
+\mad enables us to express tasks and components coordination. As a
+consequence, the \mad modeling improves the global commissioning
+process understandability, and can be used to reduce commissioning
+time by exploiting \emph{SIMH}, \emph{inter-comp}, \emph{inter-comp-tasks}
+and \emph{intra-comp-tasks} parallelism levels.
+
+\begin{table*}
+  \begin{center}
+    \input{tables/tab_kolla_components}
+    \caption{Number of places, transitions, ports and roles for each \mad component
+        of the OpenStack assembly of Figure~\ref{fig:full}. \emph{intra-comp-tasks} indicates if parallel transitions exist in the component.}
+    \label{tab:os}
+  \end{center}
+\end{table*}
+
 To compare the performance of \kolla and \mad, we have defined $11$
 \mad components based on the \ansible roles defined in \kolla's
-playbooks (\ie \ansible sequence of components to comission). Their
+playbooks (\ie \ansible sequence of components to deploy). Their
 names are built for most of them on the OpenStack project they deploy.
 \Cref{tab:os} lists these components and indicates which aspect of the
-Cloud management they are in charge of. Furthermore, some \mad metrics
-are displayed (\ie the number of places, transitions and ports).
+Cloud management they are in charge of. 
 %
-In this table, when the number of transitions is greater than the
-number of places plus one\CP{l'indiquer dans une colonne ???}, it means that \mad can be leveraged to
-express parallel transitions. Also, the more ports, the more \mad have
-to coordinate interplays during the commissioning. As depicted in
-\cref{tab:os}, Nova, Glance, Neutron and MariaDB are components of
-particular interests since they contain more transitions and ports
-than the others.
+
+Each of these control component has been designed such that \ansible roles and their associated tasks are divided into \mad transitions. \Cref{tab:os} displays some \mad metrics: the number of places, transitions and ports.
+%
+This table also indicates if parallel transitions exist, \ie \emph{intra-comp-tasks} parallelism, denoted \texttt{ICT}. Also, the more ports, the more \mad have to coordinate interplays during the commissioning. As depicted in \cref{tab:os}, Nova, Glance, Neutron and MariaDB are components of particular interests since they contain more transitions and ports than the others.
 
 %------------------------------------
 \subsection{Expressivity and Separation of Concerns}
@@ -108,20 +103,7 @@ than the others.
   \end{center}
 \end{figure*}
 
-Figure~\ref{fig:full} depicts the use-case from the operator viewpoint (\ie
-at the level of the \mad assembly). For the sake of simplicity and
-readability, the connections between data ports are not
-represented. This figure helps to understand the high-level of
-interplays between components. For instance, Neutron, Glance and Nova
-require Keystone, while Keystone requires itself a database (\ie
-MariaDB) for its commissioning process. Regarding the separation of
-concerns, the operator does not need to understand component
-internals. She just needs to compose the desired components by listing
-them and connecting their compatible ports. As a consequence, a
-component can be replaced by another one if they expose the same
-interfaces. For instance the operator could replace MariaDB with
-MySQL: another component which also implements a database by exposing
-the same ports.
+Figure~\ref{fig:full} depicts the use-case from the sysadmin or devops viewpoint (\ie at the level of the \mad assembly). For the sake of simplicity and readability, the connections between ports representing data (depicted by incoming or outgoing arrows in the figure) are not represented. This figure helps to understand the high-level of interplay between components. For instance, Neutron, Glance and Nova require Keystone, while Keystone requires itself a database (\ie MariaDB) for its commissioning process. Regarding the separation of concerns, the devops does not need to understand component internals. She just needs to compose the desired components by listing them and connecting their compatible ports. As a consequence, a component can be replaced by another one if they expose the same interfaces. For instance the operator could replace MariaDB with MySQL: another component which also implements a database by exposing the same ports.
 
 \begin{figure*}[t]
   \begin{center}
@@ -137,10 +119,7 @@ the same ports.
 %   2. Register est une transition liée à Keystone qui est très intéressante
 %   quand on examine Nova (transition indépendante des autres)
 
-We now study our use-case from the developer viewpoint, focusing on
-the three colored components from Figure~\ref{fig:full}: MariaDB, Nova and
-Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these
-components.
+We now study our use-case from the developer viewpoint, focusing on the three colored control components from Figure~\ref{fig:full}: MariaDB, Nova and Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these components.
 
 The dependencies previously observed at the assembly level are more
 detailed at the developer level. First, if we isolate Nova and Glance
@@ -351,7 +330,7 @@ result are depicted as blue, red and green horizontal lines, the
 related standard deviations are represented by vertical lines, while
 boxes represent the minimum and maximum values computed with the
 theoretical performance model of Section~\ref{sec:perf_model}.
-\CP{Vérifier d'où vient ces min \& max value}
+\CP{Vérifier d'où vient ces min max value}
 % 
 For the sake of readability, the scale of the lower parts are
 differents for each assembly. Each result corresponds to the average
@@ -363,7 +342,7 @@ also displayed in \cref{tab:openstack_results_ecotype} and \cref{tab:openstack_r
 % Et bien ça en fait un beau paragraphe pour seulement expliquer comment
 % fonctionne la figure ^^'...
 
-\CP{Les tableaux font doublons par rapports aux figures -- il y a juste besoin de presenter la difference par rapport aux 
+\CP{Les tableaux font doublons par rapports aux figures -- il y a juste besoin de presenter la difference par rapport aux }
 
 %-------
 \paragraph{Impact of assemblies}

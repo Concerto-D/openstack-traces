@@ -4,46 +4,12 @@ the publicly available repository\footnote{\url{https://gitlab.inria.fr/VeRDi-pr
 
 %--------------------------------------
 \subsection{Prototype implementation details}
-The prototype implementation was made in \python. As already
-illustrated in Listings~\ref{codemdb}, \ref{codeapache}
-and~\ref{codeass} at Page~\pageref{codemdb}, \mad' users declare a component by creating a class,
-inheriting from the internal \emph{Component} class, containing the
-description of the \net as well as the actions associated to the
-transitions. These actions are \python functions which can perform
-remote actions using SSH, Ansible or other tools. Users can then
-create an assembly by extending the appropriate classes and listing the
-components and how their ports are connected. This assembly can then
-be run, which means that the semantics of Madeus is executed in this
-assembly. The commissioning is over if the only elements holding a
-token are places without outgoing transitions. While this is not the
-case, the semantics is executed by attempting to apply each rule from
-the semantics on each component. When a transition is fired, the
-corresponding \python function is executed in a Python thread, which
-does not block the execution of the semantics. Note that \python
-threads do not take advantage of hardware parallelism capabilities,
-but because the functions usually run other (possibly remote)
-processes to do the heavy work, this is not an issue. The
-$\terminaction$ rule can be executed for the corresponding function
-when it has finished its execution.
+The prototype implementation was made in \python. As already illustrated in Listings~\ref{codemdb}, \ref{codeapache} and~\ref{codeass}, \mad' users declare a component by creating a class, inheriting from the internal \emph{Component} class, containing the description of the \net as well as the actions associated to the transitions. These actions are \python functions which can perform remote actions using SSH, Ansible or other tools. Users can then create an assembly by extending the appropriate classes and listing the components and how their ports are connected. This assembly can then be run, which means that the semantics of Madeus is executed. The commissioning is over if the only elements holding a token are places without outgoing transitions. The semantics is executed by attempting to apply each rule on each component until this ending case is reached. When a transition is fired, the corresponding \python function is executed in a Python thread, which does not block the execution of the semantics. Note that \python threads do not take advantage of hardware parallelism capabilities, but because the functions usually run other (possibly remote) processes to launch configuration commands, this is not an issue. The $\terminaction$ rule can be executed for the corresponding function when it has finished its execution.
 
 % --------------------------------------
 \subsection{Results}
 
-Madeus is a model that relies on the description of a control
-component for each software module of that will be deployed. It is a
-low-level model, therefore the developer is responsible for the
-choices of actions performed in the transitions.  This section
-evaluates the performance of Madeus' prototype with empty transitions
-in order to evaluate the \mad prototype independently of any specific
-transitions. This is why these experiments are called
-\emph{dry-runs}. It means the transitions do not contain any code or
-command for which the execution time is unknown or imprecise, thus
-allowing to measure the overhead caused by the prototype only. In
-addition to this, the experiments presented in this section are
-compared to the theoretical performance computed by the prediction
-model detailed in Section~\ref{sec:perf_model}. By doing so we both
-validate the theoretical performance model compared to the reality,
-and the expected performance of the prototype on the set of use-cases.
+Madeus is a model that relies on the description of a control component for each software module of that will be deployed. It is a low-level model, therefore the developer is responsible for the choices of actions performed in the transitions as well as data and service exchanges (\eg scp, VPN, REST API etc.).  This section evaluates the overhead of Madeus' prototype as well as its scalability when increasing the number of components and transitions. To do so empty transitions are used such that \mad is evaluated independently of any specific transitions and additional overhead. This is why these experiments are called \emph{dry-runs}. It means the transitions do not contain any code or command for which the execution time is unknown or imprecise, thus allowing to measure the overhead caused by the prototype only. In addition to this, the experiments presented in this section are compared to the theoretical performance computed by the prediction model detailed in Section~\ref{sec:perf_model}. By doing so we both validate the theoretical performance model compared to the reality, and the expected performance of the prototype on the set of use-cases.
 
 % figures to add for assemblies
 %Sequential
@@ -96,7 +62,7 @@ connected to the provider. Each \emph{user} component contains a first
 transition that uses the service provided by the provider component
 and $T$ parallel transitions. For Benchmark (B), the number of
 components varies from 1 to 40 components with a single transition per
-component $T=1$. For Benchmark (C), the number of component is fixed
+component $T=1$. For Benchmark (C), the number of components is fixed
 to $N-1=1$ and the number of transitions varies from 1 to 40.
 
 Experiments have been performed on a single node of the \ecotype
@@ -181,7 +147,7 @@ deploying 40 components or services on a single node is unusual.
 
 Figure~\ref{fig:partrans} shows the results for Benchmark (C). As for
 the previous benchmark, and because transitions are executed
-simultaneously in this benchmark, the theoretical expected curve is a
+simultaneously, the theoretical expected curve is a
 constant equal to the duration time of one of the $T$ transitions, \ie
 $5$ seconds. The results follow the ideal curve closely as well for a
 large number of transitions.
@@ -193,12 +159,7 @@ large number of transitions.
 %the \emph{ssh connections} curve has an overhead that grows as the
 %number of transitions increases.
 
-These results allow us to point out that \mad does not by itself add a
-significant overhead on the deployment --- at most 40 milliseconds in these synthetic experiments.
-One can note though that according to
-the type of commands performed in the transitions  an additional
-overhead could be observed. For instance, .
-\HC[Helene]{est-ce que c'est utile de donner l'exemple du surcoût SSH ?}
+These results allow us to point out that \mad does not by itself add a significant overhead on the deployment --- at most 40 milliseconds in these synthetic experiments. One can note though that according to the type of commands performed in the transitions  an additional overhead could be observed. For instance, a high number of simultaneous SSH connections could add an important overhead. In the experiments presented in this paper, this problem is handled by using Ansible within actions. Indeed, Ansible optimizes the number of SSH connections on a single host which limit this issue.
 %They also show the
 %importance of ssh connection and their impact on the deployment time.
 
