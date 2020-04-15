@@ -1,9 +1,9 @@
 In this section, we present a theoretical performance prediction model
 for \mad that estimates the total execution time of the
-commissionning of a given assembly, according to the execution time of
+commissioning of a given assembly, according to the execution time of
 each transition. Three goals are pursued with such a model. First, the
 theoretical execution time offers a way to evaluate the quality of the
-prototype of \mad. Second, for a system administrator or a developer,
+prototype of \mad. Second, for sysadmins, devops or developers,
 knowing the theoretical execution time of the commissioning procedure
 is useful. Third, in the case of a fully autonomic commissioning and
 reconfiguration process, which is left to future work, theoretical
@@ -15,26 +15,20 @@ the execution time of all the actions in the assembly, given as a
 function $t\,:\,\actions\rightarrow\mathbb{R}^+$.  Computing
 precise execution times for the kind of actions used in a deployment
 can be difficult and is itself the subject of many studies, \eg using
-an analytical model or a statistical approach. However, for our
-application, we find that estimates are sufficient as long as they preserve
-the relative difference between transitions. \CP{Cette phrase est un peu boiteuse car
-on ne sait pas ce que sont nos applications -- faire une ref à la bonne section??}
+an analytical model or a statistical approach. However, we find that estimations are sufficient as long as they preserve the relative difference between transitions~\cite{coullon:hal-02323641}. 
+%\CP{Cette phrase est un peu boiteuse car
+%on ne sait pas ce que sont nos applications -- faire une ref à la bonne section??}
 %
 Intuitively, we automatically deduce the execution flow of a \mad
 assembly based on \mad' formal semantics. This is done by generating a
 dependency graph representing the execution flow of each \mad
 component in the assembly and connecting them together according to their
-dependencies (the connections between their ports). Then, a
+dependencies (the connections between their coordination ports). Then, a
 \emph{source} vertex is connected to the vertices representing the beginning of
 the execution of each component, and a \emph{sink} vertex is connected to
 the vertices representing the end of the execution of each component.
 %
-Thus, a dependency graph representing the execution of the whole
-assembly is obtained. By weighting the arcs corresponding to the transitions with
-the individual execution times of their actions (and the other ones with 0),
-we can compute the expected total execution time of the assembly as the
-longest \CP{== en nombre d'arc ? N'est pas plutot le plus lourd/grand? heaviest?}
-path from the \emph{source} vertex to the \emph{sink} vertex.
+Thus, a dependency graph representing the execution of the whole assembly is obtained. By weighting the arcs corresponding to the transitions with the individual execution times of their actions (and the other ones with 0), we can compute the expected total execution time of the assembly as the weighted longest path from the \emph{source} vertex to the \emph{sink} vertex.
 
 % By generating a graph modelling the execution flow of a \mad assembly,
 % capturing both intra-component and inter-component dependencies, we
@@ -42,18 +36,7 @@ path from the \emph{source} vertex to the \emph{sink} vertex.
 
 \subsection{Assumptions}
 
-The performance model given here is valid only for assemblies such
-that any set of places bound to a provide port contains exactly one
-place. If a provide port is bound to a set containing multiple
-places, the requirement imposed by this binding is satisfied as soon
-as one of the places is reached. The total time then depends on the
-earliest time at which one of these places is reached, which cannot be
-modeled as a longest path. In practice this is not a severe
-restriction, as ports requirements very rarely include
-disjunctions. Indeed, none of our use-cases rely on this
-feature. However, we still consider the possibility of having multiple
-sets (of one place) bound to a port. In this case, the port is enabled
-when all the places are reached.
+The performance model given here is valid only for assemblies such that any set of places bound to a provide port contains exactly one place. Indeed, if a provide port is bound to a set containing multiple places, the requirement imposed by this binding is satisfied as soon as one of the places is reached. Thus, the total time then depends on the earliest time at which one of these places is reached, which cannot be modeled as a longest path. In practice this is not a severe restriction, as ports requirements very rarely include disjunctions. Indeed, none of our use-cases rely on this feature. %However, we still consider the possibility of having multiple sets (of one place) bound to a port. In this case, the port is enabled when all the places are reached.
 
 %% \MC{Préciser ici que dans la pratique ce n'est pas un problème ?}
 %% \HC[Maverick et Simon]{oui, j'ai commencé une phrase, il faut donner
@@ -61,10 +44,7 @@ when all the places are reached.
 %%   dans la pratique sur des cas réels nous n'avons jamais eu besoin de
 %%   disjonctions.}
 
-The estimation provided by the model is a best-case scenario: it
-assumes that all actions are started as soon as possible, and that the
-hardware has the capacity to run all possible parallel actions without
-affecting their execution times.
+The estimation provided by the model is a best-case scenario: it assumes that all actions are started as soon as possible, and that the hardware has the capacity to run all possible parallel actions without affecting their execution times.
 
 %--------------------------------------
 \subsection{Notations}
@@ -152,11 +132,7 @@ V=V_{\Pi}\cup V_{\Theta} \cup V_{S_p} \cup \left\{ v^\text{source},v^\text{sink}
 \subsection{Arcs}
 %--------------------------------------
 
-In the dependency graph, arcs represent time constraints: the event represented
-by the destination vertex must happen after the one represented by the source
-vertex, at least $w$ seconds apart where $w$ is the weight of the arc. In
-practice, arcs corresponding to actions are weighed with the corresponding
-time, while other arcs have a weight 0 and merely represent a dependency.
+In the dependency graph $\left(V,E\right)$, arcs represent time constraints: the event represented by the destination vertex must happen after the one represented by the source vertex, at least $w$ seconds apart where $w$ is the weight of the arc. In practice, arcs corresponding to actions are weighed with the corresponding time, while other arcs have a weight 0 and merely represent a dependency.
 
 %% For each place $\pi$ we introduce one arc from $v_\pi^\text{place}$ to
 %% $v_\pi^\text{leav}$. This represents the fact that a token may leave $\pi$
@@ -180,13 +156,12 @@ The second, from $v_\theta^\text{fire}$ to $v_{\pi(d)}^\text{reach}$
 represents the fact that a token may enter $\pi(d)$ only after
 $\theta$ has ended, which requires a time $t(\alpha)$ corresponding
 to the action.
-%
-Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to an example
-made of three transitions \emph{t1}, \emph{t2} and \emph{t3}.
-\CP{transition? $E_\Theta$ non présenté :) iden pour les autres $E_X$}
 \[
-  E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi(d)}^\text{reach}\right)\right\} 
+E_\Theta = \bigcup_{\theta=(s,\alpha,d)\in\Theta^*} \left\{ \left(v_{\pi(s)}^\text{reach},0,v_\theta^\text{fire}\right), \left(v_\theta^\text{fire},t(\alpha),v_{\pi(d)}^\text{reach}\right)\right\} 
 \]
+
+
+Figure~\ref{fig:transition_graph} depicts the dependency graph corresponding to an example made of three transitions \emph{t1}, \emph{t2} and \emph{t3}.
 
 %%%%%%%%%%%%%%%
 \input{figures/transtodag.tex}
@@ -307,9 +282,9 @@ Finally, we define $E$ as
 E= E_{\Theta} \cup E_{S_p}\cup E_{S_u}\cup E_{I}\cup E_{F}
 \]
 
-Figure~\ref{fig:source_sink_graph} depicts the dependency graph
-corresponding to a small assembly.
+Figure~\ref{fig:source_sink_graph} depicts a complete example with a \mad assembly and its associated dependency graph.
 %\SR{Ce serait bien d'avoir un port dans l'exemple}
+
 %%%%%%%%%%%%%%%
 \input{figures/exampletodag.tex}
 
@@ -317,21 +292,11 @@ corresponding to a small assembly.
 \subsection{Time estimation}
 %--------------------------------------
 
-In the following, we denote $DG_A=(V,E)$ the dependency graph
-corresponding to an assembly $A=(C,L)$. We define the time estimation
-of the execution of the \mad assembly $A$ to be the length of the
-longest path \CP{idem: longueur == nb d'arc ou somme des poids? (je connais la réponse ;>)}
-from $v^\text{source}$ to $v^\text{sink}$ in
-$DG_A$. Clearly, the size of $DG_A$ is linear in the size of
-$A$. Furthermore, the graph is either a DAG or has a path of infinite
-length, so the longest path can be computed in polynomial time.
+In the following, we denote $DG_A=(V,E)$ the dependency graph corresponding to an assembly $A=(C,L)$. We define the time estimation of the execution of the \mad assembly $A$ to be the length of the waighted longest path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$. Clearly, the size of $DG_A$ is linear in the size of $A$. Furthermore, the graph is either a DAG or has a path of infinite length, so the longest path can be computed in polynomial time.
 
-Since our execution model does not include a notion of time, proving
-the correctness of this performance model is outside the scope of this
-paper. However we show that the performance model can be used to
-assess reachability.
+Since our execution model does not include a notion of time, proving the correctness of this performance model is outside the scope of this paper. However we show that this performance model can be used to assess reachability.
 
-\begin{lemma}
+\begin{lemma}\label{thm:reachedass}
   Let $A$ be an assembly of well-formed components. If the longest
   path from $v^\text{source}$ to $v^\text{sink}$ in $DG_A$ has a
   finite length, then in any execution of $A$, all places in $A$ are
@@ -340,8 +305,7 @@ assess reachability.
 
 \begin{proof}
   By construction of $DG_A$, there exists no cycle formed only of arcs
-  of weight 0, and by the assumption, any path from $v^\text{source}$
-  to $v^\text{sink}$ does not feature of a cycle. Since every vertex
+  of weight 0. Together with the assumption that there are no paths of infinite length from $v^\text{source}$ to $v^\text{sink}$, this implies that no path from $v^\text{source}$ to $v^\text{sink}$ features a cycle. Since every vertex
   in $DG_A$ is located on some path from $v^\text{source}$ to
   $v^\text{sink}$, we have that $DG_A$ is acyclic.
 
@@ -352,6 +316,7 @@ assess reachability.
   Lemma~\ref{thm:reachedplaces}.
 \end{proof}
 
+To sum-up, from a given assembly without disjonctions on provide ports can be built an execution flow graph. If this graph does not contain infinite paths, which is easy to verify, and by Lemma~\ref{thm:reachedass}, the reachability of the deployement modeled by the assembly is verified. The disjonction case is time dependent and creates non-determinism. The reachability of such complex cases should be verified by other techniques such as Model-checking~\cite{coullon:hal-02323641}.
 
 %% \begin{lemma}
 %%  In $DG_A$, if $v^\text{sink}$ is reachable from $v^\text{source}$ and there

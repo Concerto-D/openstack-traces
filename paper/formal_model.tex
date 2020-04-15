@@ -1,11 +1,11 @@
-\CP{Une intro à la section? est une description complète du modèle ou juste un aperçu ?}
+In this section, the streamlined \mad formal model is presented compared to previous publication~\cite{chardet:hal-01858150}. First the concepts of control component and assembly are formally introduced, then the operational semantics is detailed, and finally a structural properties of the model are given.
 
 %--------------------------
-\subsection{Component}
+\subsection{Control component}
 \label{sec:mod:comp}
 %--------------------------
 
-Internally, a \mad component is comprised of a set of \emph{places}
+Internally, a \mad control component is comprised of a set of \emph{places}
 linked by \emph{transitions}. The outside interface of components is
 provided by their \emph{ports}, which can be bound to the internal
 elements.
@@ -94,30 +94,15 @@ associated to the transition, taken from the set of actions $\actions$.
   \label{tab:not}
 \end{table}
 
-\paragraph{Ports and bindings}{
+\paragraph{Coordination ports and bindings}{
 
-The ports of a component are divided between a set of \emph{provide
-  ports} denoted $S_p$ and a set of \emph{use ports} denoted
-$S_u$. Ports are given a type among a set of types $\types$. The type
-of a given port $p$ is denoted $\types(p)$. This simple typing
-discipline is a way to distinguish categories of services or data that
-ports may provide or use.
+The coordination ports of a control component are divided between a set of \emph{provide ports} denoted $S_p$ and a set of \emph{use ports} denoted $S_u$. Ports are given a type among a set of types $\types$. The type of a given port $p$ is denoted $\types(p)$. This simple typing discipline is a way to distinguish categories of services or data that ports may provide or use.
 
-A provide port may be bound to sets of place. A provide port becomes
-\emph{enabled} if all the sets of places to which it is bound include
-at least one place that has been reached.
-\CP{comment est definie une place qui a été 'reached' ?}
-This binding relation is denoted $B_{S_p} \subseteq S_p \times \mathcal{P}(G)$. Intuitively,
-bindings allow the modeling of conjunctions (all sets of places must
-be reached) and disjunctions (one set of place is reached if at least
-one of its place is reached) of constraints to control the enabling of
-provide ports. Note that once a port is enabled, it remains in that
-state forever \CP{même si plus de jeton dans aucune place?}.
+A provide port may be bound to sets of places. This binding relation is denoted $B_{S_p} \subseteq S_p \times \mathcal{P}(G)$. The binding concept is closely related to the operational semantics of \mad that will be detailed in Section~\ref{subsec:operational_semantics}. Intuitively, a provide port becomes \emph{enabled} if all the sets of places to which it is bound include at least one place that has been reached. Reaching a place means that a token has previously been holding in the place. Intuitively, bindings allow the modeling of conjunctions (all sets of places must be reached) and disjunctions (one set of place is reached if at least one of its place is reached) of constraints to control the enabling of provide ports. Note that once a port is enabled, it remains in that state forever. Thus, bindings represent places from which provide ports are provided.
+%\CP{même si plus de jeton dans aucune place?}.
+%\HC{oui}
 
-A use port may be bound to transitions, indicating that those
-transitions can be fired only if the port is \emph{provided}, \ie
-connected to an enabled provide port. This binding relation is denoted
-$B_{S_{u}} \subseteq S_u \times \Theta$.
+A use port may be bound to transitions, indicating that those transitions can be fired only if the port is \emph{provided}, \ie connected to an enabled provide port. This binding relation is denoted $B_{S_{u}} \subseteq S_u \times \Theta$.
 
 %% SR remove the distinctinction between data and "regular" ports, all 
 
@@ -154,16 +139,9 @@ $B_{S_{u}} \subseteq S_u \times \Theta$.
 \subsection{Assembly}
 %--------------------------
 
-An \emph{assembly} of components represents the instantiation of
-components as defined in Section~\ref{sec:mod:comp}, and their connections
-through their ports. In \mad, an assembly is defined as a pair $(C,
-L)$, where $C$ is a set of components, and $L \subseteq S_u^*
-\times S_p^*$ is the set of connections (links) between use ports and
-provide ports. For all the components $c_1,\dots,c_n \in C$, we denote
-with a star any union of the corresponding sets, for instance
-$\Pi^*=\bigcup_{i=1}^{n}\Pi_{i}$. Linked ports must be of compatible
-types, \ie $(u,p) \in L$ only if $\types(u) = \types(p)$ \CP{Contrainte forte: il n'y a donc pas de ``sous-typage''/''héritage''}.
-
+An \emph{assembly} of components represents the instantiation of components as defined in Section~\ref{sec:mod:comp}, and their connections through their coordination ports. In \mad, an assembly is defined as a pair $(C, L)$, where $C$ is a set of components, and $L \subseteq S_u^* \times S_p^*$ is the set of connections (links) between use ports and provide ports. For all the components $c_1,\dots,c_n \in C$, we denote with a star any union of the corresponding sets, for instance $\Pi^*=\bigcup_{i=1}^{n}\Pi_{i}$. Linked ports must be of compatible types, \ie $(u,p) \in L$ only if $\types(u) = \types(p)$. This simple typing system could be extended in future work with heritage and connectors for instance~\cite{reo}.
+%\CP{Contrainte forte: il n'y a donc pas de ``sous-typage''/''héritage''}.
+%\HC{non pas actuellement. J'ai ajouté une phrase future work}
 %--------------------------
 \subsection{Operational semantics}
 \label{subsec:operational_semantics}
@@ -178,7 +156,7 @@ tuple $\langle \mk, \reached, \exec \rangle$, where
     \Delta_{i}^{*}\cup\Delta_{o}^{*}\cup\Theta^{*}$ denotes the
     elements that hold a token;
   \item $\reached \subseteq \Pi^*$ denotes the places that have been
-    reached;
+    reached (have held a token);
   \item $\exec \subseteq A$ denotes the actions that are being executed.
 \end{itemize}
 
@@ -236,7 +214,6 @@ The initial configuration of an assembly is given by $\langle I, I,
 %% connection, while Figure~\ref{fig:disabled_data} gives an example of a
 %% disabled data connection.
 
-\CP{Créer une section pour la partie précédente, genre \mad configuration ?}
 We now formally present the operational semantics of the \mad model,
 given as a binary relation $\semstep$ over configurations. The rules
 describing this relation are given in Figure \ref{fig:rules}.
@@ -387,17 +364,17 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
 %------------
 
 %--------------------------
-%\subsection{Consistency rule}
+\subsection{Structural constraints}
 %--------------------------
 
-\paragraph{Structural constraints}{
+%\paragraph{Structural constraints}{
   A place $\pi_1$ is said to \emph{precede} a place $\pi_2$ if there
   exists $(s, \alpha, d) \in \Theta$ such that $\pi(s) = \pi_1$ and
   $\pi(d) = \pi_2$.  If there exists a sequence $(\pi_1, \pi_2, \dots,
   \pi_n)$, such that $\pi_{i}$ precedes $\pi_{i+1}$ for any $i$ where
   $1 \le i < n$, then we say that $\pi_n$ \emph{depends} on $\pi_1$.
 
-  A \mad component is said to be \emph{well-formed} if there exists no
+  A \mad control component is said to be \emph{well-formed} if there exists no
   place $\pi$ that depends on itself. Intuitively, the component,
   viewed as a directed graph, must be acyclic.
 
@@ -420,9 +397,10 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
     such that $\langle \mk, \reached, \exec \rangle_i = \langle \mk,
     \reached, \exec \rangle_j$.
 
-    Let us denote $\reached^+$ the set of places that are reached more
-    than once. By case analysis over the relation $\langle \mk,
-    \reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
+    \noindent Let us denote $\reached^+$ the set of places that are reached more
+    than once. By case analysis over the relation 
+    
+    \noindent $\langle \mk,\reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
     \rangle_{i+1}$, we can check that $\reached^+$ is non-empty.
     \begin{itemize}
     \item for the case of the rule $\leaveplace$, a token is removed
@@ -461,7 +439,7 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
   \end{proof}
 
   \begin{lemma}\label{thm:reachedplaces}
-    Let $c \in C$ be a component, and $\pi$ a place in it. In any
+    Let $c \in C$ be a control component, and $\pi$ a place in it. In any
     execution of $A$, if all places $\pi'$ that precede $\pi$ are
     eventually reached, and all use ports of $c$ are eventually
     provided, then $\pi$ is eventually reached.
@@ -488,7 +466,7 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
   \end{proof}
   
   \begin{lemma}
-    Let $c$ be a well-formed component. For any execution where all
+    Let $c$ be a well-formed control component. For any execution where all
     use ports $u \in S_u$ are eventually provided, all places of $c$
     will eventually be reached.
   \end{lemma}
@@ -508,31 +486,23 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
     \in \reached^\omega$, leading to a contradiction.
   \end{proof}
 
-  This lemma indicates that the \mad model provides, by construction,
-  a guarantee of reachability at the component level, \ie deadlocks
-  cannot occur within a component. At the level of an assembly, we
-  cannot enforce similar structural constraints, because the different
-  components are typically developed independently from each other,
-  often by different actors. For this reason, reachability guarantees
-  cannot be offered on assemblies. Instead we must rely on analysis of
-  a given assembly. One way to perform this analysis is to use
-  model-checking~\cite{coullon:hal-02323641}, but for most assemblies,
-  a simpler analysis tool can be used. \CP{Il faudrait expliciter
-  plus clairement ce que ce papier fournit et ce qui est des perspectives/future work}
-}
+  This lemma indicates that the \mad model provides, by construction, a guarantee of reachability at the component level, \ie deadlocks cannot occur within a control component. At the level of an assembly, we cannot enforce similar structural constraints, because the different components are typically developed independently from each other, often by different actors. For this reason, reachability guarantees cannot be offered on assemblies. Instead we must rely on analysis of a given assembly. One way to perform this analysis is to use model-checking~\cite{coullon:hal-02323641}, but for most assemblies, a simpler analysis tool can be used. Such solution is given in the next section. 
+  %\CP{Il faudrait expliciter
+  %plus clairement ce que ce papier fournit et ce qui est des perspectives/future work}
+%}
 
-\paragraph{Consistency}{
-
-  \SR{Keep? Move somewhere else?}
-  
-  In \mad, the maximum number of tokens that can be used is the
-  maximum number of possible parallel branches. A token can only be
-  created during a branching (rule $\leaveplace$), where one token is
-  created for each output dock of the place. Because components are
-  well-formed, places can be reached (and therefore, left) at most
-  once, so the maximum number of tokens that can be present in a
-  component is bounded. We plan in future work to support
-  reconfiguration to allow cycles in very specific settings to keep
-  control on the tokens and their creation. \CP{La partie sur la reconf
-  est à supprimer dans ce papier, non ? Juste à mentionner en perspective du papier.}
-}
+%\paragraph{Consistency}{
+%
+%  \SR{Keep? Move somewhere else?}
+%  
+%  In \mad, the maximum number of tokens that can be used is the
+%  maximum number of possible parallel branches. A token can only be
+%  created during a branching (rule $\leaveplace$), where one token is
+%  created for each output dock of the place. Because components are
+%  well-formed, places can be reached (and therefore, left) at most
+%  once, so the maximum number of tokens that can be present in a
+%  component is bounded. We plan in future work to support
+%  reconfiguration to allow cycles in very specific settings to keep
+%  control on the tokens and their creation. \CP{La partie sur la reconf
+%  est à supprimer dans ce papier, non ? Juste à mentionner en perspective du papier.}
+%}
