@@ -80,33 +80,32 @@ readable scale of results.
 %between components, so as to allow visualisation of the eventual
 %overhead of having these ssh connections.
 
-\begin{figure}[h]
-  \begin{center} 
-    \includegraphics[width=0.5\textwidth]{./images/evaluations_sequential.pdf}
-    \caption{Results of the sequential benchmark.}
-    \label{fig:seqres}
-  \end{center}
-  \CP{En plus, plot ratio of two curves ? -- là on n'en voit qu'une}
-\end{figure}
+%\begin{figure}[h]
+%  \begin{center} 
+%    \includegraphics[width=0.5\textwidth]{./images/evaluations_sequential.pdf}
+%    \caption{Results of the sequential benchmark.}
+%    \label{fig:seqres}
+%  \end{center}
+%  \CP{En plus, plot ratio of two curves ? -- là on n'en voit qu'une}
+%\end{figure}
 
-Figure~\ref{fig:seqres} presents the results of Benchmark (A). As (A)
-models a sequential assembly, the theoretical execution time is simply
-the sum of the execution time of each transition of each component
-($N$ components). The results show a linear increase in time and the
-\emph{dryrun} curve follows the \emph{ideal} curve closely.
+Table~\ref{tab:resultssynt} presents the results of Benchmarks (A), (B) and (C) with the theoretical execution time, the measured execution time as well as its standard deviation, and the difference proportion between them. As (A) models a sequential assembly, the theoretical execution time is simply the sum of the execution time of each transition of each component ($N$ components).
+%
+ 
+%The results show a linear increase in time and the \emph{dryrun} curve follows the \emph{ideal} curve closely.
 %The difference between the
 %\emph{ssh-connections} curve is hard to visualise but is slightly
 %higher than the \emph{ideal} and \emph{dryrun} curves, a logical
 %result as the number of ssh connections grows with each component
 %added, but there is always only one ssh connection at the same time.
 
-\begin{figure}[h]
-  \begin{center} 
-    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_component.pdf}
-    \caption{Results of the parallel assembly benchmark with varying component number}
-    \label{fig:parcompres}
-  \end{center}
-\end{figure}
+%\begin{figure}[h]
+%  \begin{center} 
+%    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_component.pdf}
+%    \caption{Results of the parallel assembly benchmark with varying component number}
+%    \label{fig:parcompres}
+%  \end{center}
+%\end{figure}
 
 % attention à comprendre si c'est systématique !
 %For the results on the parallel assembly benchmark, we had to remove
@@ -120,37 +119,33 @@ the sum of the execution time of each transition of each component
 %times.json and the modified times.json files to keep the original
 %results intact.
 
-Figure~\ref{fig:parcompres} depicts the results of Benchmark (B). The
-ideal theoretical performance for this benchmark is a constant equal
-to the duration time of the main transition of \emph{user} components,
-\ie $5$ seconds. Indeed as components are independent from each other
-(no ports) they are deployed simultaneously.
+For Benchmark (B), the ideal theoretical performance is a constant equal to the duration time of the main transition of \emph{user} components, \ie $5$ seconds. Indeed as components are independent from each other (no ports) they are deployed simultaneously.
 %value as components are commissioned in parallel. In \emph{dryrun}
 %our experimental benchmark
-One can note that the results observed with the \mad prototype is only
-very slightly above the ideal constant result, which shows that the
-prototype does not add significant overhead to the process even for a
-large number of parallel components on the same node. Indeed,
-deploying 40 components or services on a single node is unusual.
 %The \emph{ssh connection} curve allows us to see
 %that there is steady increase of time, adding almost 3 seconds to the
 %assembly deployment when reaching 40 parallel components. This show
 %that the overhead added by the SSH connections is not null.
 
-\begin{figure}[h]
-  \begin{center} 
-    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_transitions.pdf}
-    \caption{Results of the parallel assembly benchmark with varying parallel transition number}
-    \label{fig:partrans}
-  \end{center}
-\end{figure}
+%\begin{figure}[h]
+%  \begin{center} 
+%    \includegraphics[width=0.5\textwidth]{./images/evaluations_par_transitions.pdf}
+%    \caption{Results of the parallel assembly benchmark with varying parallel transition number}
+%    \label{fig:partrans}
+%  \end{center}
+%\end{figure}
 
-Figure~\ref{fig:partrans} shows the results for Benchmark (C). As for
-the previous benchmark, and because transitions are executed
-simultaneously, the theoretical expected curve is a
-constant equal to the duration time of one of the $T$ transitions, \ie
-$5$ seconds. The results follow the ideal curve closely as well for a
-large number of transitions.
+\begin{table}
+	\begin{center}
+		\input{tables/results-synthetic.tex}
+		\caption{Theoretical and measured results of our three synthetic benchmarks on \ecotype. The difference and the standard deviations are also represented.}
+		\label{tab:resultssynt}
+	\end{center}
+\end{table}
+
+For Benchmark (C), as for the previous benchmark (B), and because transitions are executed simultaneously, the theoretical expected curve is a constant equal to the duration time of one of the $T$ transitions, \ie $5$ seconds. 
+
+One can note that for all benchmarks results on the \mad prototype are only very slightly above the ideal theoretical result, which shows that the prototype does not add significant overheads to the process even for a large number of sequential components, parallel components and parallel transitions on the same node.  We may have increase the number of components and transitions but we claim that 40 parallel transitions and 40 components on a single node is already above the regular usage when deploying distributed software systems.
 
 %calculation for the ideal curve on the parallel assembly benchmark
 %when varying the number of parallel transitions has been done in the

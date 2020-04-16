@@ -85,7 +85,10 @@ names are built for most of them on the OpenStack project they deploy.
 Cloud management they are in charge of. 
 %
 
-Each of these control component has been designed such that \ansible roles and their associated tasks are divided into \mad transitions. \Cref{tab:os} displays some \mad metrics: the number of places, transitions and ports.
+Each of these control components has been designed such that \ansible roles and 
+their associated tasks are divided into \mad transitions. \Cref{tab:os} displays 
+some metrics of the \mad components designed from \ansible roles of 
+\kolla: the number of places, transitions and ports.
 %
 This table also indicates if parallel transitions exist, \ie \emph{intra-comp-tasks} parallelism, denoted \texttt{ICT}. Also, the more ports, the more \mad have to coordinate interplays during the commissioning. As depicted in \cref{tab:os}, Nova, Glance, Neutron and MariaDB are components of particular interests since they contain more transitions and ports than the others.
 
@@ -95,7 +98,7 @@ This table also indicates if parallel transitions exist, \ie \emph{intra-comp-ta
 
 \begin{figure*}
   \begin{center}
-    \includegraphics[width=0.7\textwidth]{./images/full.pdf}
+    \includegraphics[width=0.7\textwidth]{./images/full2.pdf}
     \caption{Simplified \mad assembly of the \kolla-based OpenStack deployment
     containing $11$ components. Connections between data ports are not depicted.
     Red components are detailed in \cref{fig:sub}.}
@@ -103,11 +106,22 @@ This table also indicates if parallel transitions exist, \ie \emph{intra-comp-ta
   \end{center}
 \end{figure*}
 
-Figure~\ref{fig:full} depicts the use-case from the sysadmin or devops viewpoint (\ie at the level of the \mad assembly). For the sake of simplicity and readability, the connections between ports representing data (depicted by incoming or outgoing arrows in the figure) are not represented. This figure helps to understand the high-level of interplay between components. For instance, Neutron, Glance and Nova require Keystone, while Keystone requires itself a database (\ie MariaDB) for its commissioning process. Regarding the separation of concerns, the devops does not need to understand component internals. She just needs to compose the desired components by listing them and connecting their compatible ports. As a consequence, a component can be replaced by another one if they expose the same interfaces. For instance the operator could replace MariaDB with MySQL: another component which also implements a database by exposing the same ports.
+Figure~\ref{fig:full} depicts the use-case from the sysadmin or devops viewpoint 
+(\ie at the level of the \mad assembly). For the sake of simplicity and 
+readability, the connections between ports representing data are not represented. 
+This figure helps to understand the high-level of interplay between components. 
+For instance, Neutron, Glance and Nova require Keystone, while Keystone requires 
+itself a database (\ie MariaDB) for its commissioning process. Regarding the 
+separation of concerns, the devops does not need to understand component 
+internals. She just needs to compose the desired components by listing them and 
+connecting their compatible ports. As a consequence, a component can be replaced 
+by another one if they expose the same interfaces. For instance the operator could 
+replace MariaDB with MySQL: another component which also implements a database by 
+exposing the same ports.
 
 \begin{figure*}[t]
   \begin{center}
-    \includegraphics[width=0.8\textwidth]{./images/sub.pdf}
+    \includegraphics[width=0.8\textwidth]{./images/sub2.pdf}
     \caption{A detailed sub-part of the previous component assembly to deploy
     OpenStack.}
     \label{fig:sub}
@@ -159,7 +173,7 @@ an OpenStack project. As we said previously, each OpenStack project
 contains multiples software modules. Hence, each component actually
 deploys different modules ($36$ in total). A basic multi-node \kolla
 deployment targets three nodes. First, the \emph{Control} node, which
-hosts control services, APIs and databases, commissioning $16$
+hosts control services, APIs and databases, deploying $16$
 services. The second one is the \emph{Network} node that hosts network
 agents and HAProxy, and contains $11$ services. Finally, the
 \emph{Compute} node, in charge of compute services and VMs placement,
@@ -236,7 +250,8 @@ described when presenting the use-case. All the components have their
 own internals definition, based on our understanding of the OpenStack
 commissioning process. As depicted previously in \cref{tab:os}, most
 components are built on multiple places and transitions. This assembly
-relies on \mad to handle the four parallelism levels.
+relies on all parallelism expressivness of \mad to handle thus handling the four 
+parallelism levels.
 
 \begin{table}
   \begin{center}
@@ -254,7 +269,7 @@ images has a significant impact on our results: images have to be
 downloaded, before being decompressed. To be as neutral as possible we
 have conducted experiments with three different modes for handling
 those images: (1) \emph{cached} mode, where images are previously
-placed on OpenStack nodes, so fetching \docker images has no impact on
+placed on OpenStack nodes, so fetching \docker images has very low impact on
 the results; (2) \emph{local} mode, where images are previously
 downloaded on a new dedicated node of the cluster, from which images
 can be loaded (\ie a local \docker registry); (3) \emph{remote} mode,
@@ -271,9 +286,9 @@ nodes.
 %------------------------------------
 
 In this section, we analyze the results of our benchmark through
-different aspects: (i) the performance of each assemblies; (ii) the
+different aspects: (i) the performance of each assembly; (ii) the
 adequation between the theoretical predicted performance and the
-observed results and (iii) the influence of registry modes on our
+measured results and (iii) the influence of registry modes on our
 results.
 
 \begin{figure}[t!]
@@ -325,12 +340,13 @@ each result is written on top of the bars, while the ratio compared to
 Furthermore, for each assembly on the X-axis, the results for the
 three \docker registry settings are displayed with different colors:
 blue, red and green respectively for \emph{remote}, \emph{local} and
-\emph{cached}. On the lower part, the means for each
+\emph{cached}. On the lower part of the figures, the means for each
 result are depicted as blue, red and green horizontal lines, the
 related standard deviations are represented by vertical lines, while
 boxes represent the minimum and maximum values computed with the
 theoretical performance model of Section~\ref{sec:perf_model}.
-\CP{Vérifier d'où vient ces min max value}
+%\CP{Vérifier d'où vient ces min max value}
+%\HC{expliqué plus tard}
 % 
 For the sake of readability, the scale of the lower parts are
 differents for each assembly. Each result corresponds to the average
@@ -342,48 +358,13 @@ also displayed in \cref{tab:openstack_results_ecotype} and \cref{tab:openstack_r
 % Et bien ça en fait un beau paragraphe pour seulement expliquer comment
 % fonctionne la figure ^^'...
 
-\CP{Les tableaux font doublons par rapports aux figures -- il y a juste besoin de presenter la difference par rapport aux }
+%\CP{Les tableaux font doublons par rapports aux figures -- il y a juste besoin de 
+%presenter la difference par rapport aux }
+% \HC{oui mais moi comme relecteur j'aime bien avoir les tableaux en plus des 
+%figures pour mieux apprécier les chiffres}
 
 %-------
 \paragraph{Impact of assemblies}
-
-\begin{figure*}[t]
-  \begin{center}
-    %\vspace{-3em}
-    \def\svgwidth{\columnwidth}
-    \scriptsize
-    \subfloat[\ansass with \emph{cached} registry]{
-      \scalebox{0.9}{\includegraphics[scale=0.5]{./images/use_case_gantt_cached_ansible.pdf}}
-      \label{fig:gantt_ansible}
-    }
-    %\vspace{-3em}
-    \def\svgwidth{\columnwidth}
-    \scriptsize
-    \subfloat[\aeoass with \emph{cached} registry]{
-      \scalebox{0.9}{\includegraphics[scale=0.5]{./images/use_case_gantt_cached_aeolus.pdf}}
-      \label{fig:gantt_aeolus}
-    }
-    %\vspace{-3em}
-    \def\svgwidth{\columnwidth}
-    \tiny
-    \subfloat[\madass with \emph{cached} registry]{
-      \includegraphics[scale=0.5]{./images/use_case_gantt_cached_mad.pdf}
-      \label{fig:gantt_madeus}
-    }
-    \def\svgwidth{\columnwidth}
-    \tiny
-    \subfloat[\madass with \emph{remote} registry]{
-      \includegraphics[scale=0.5]{./images/use_case_gantt_remote_madeus.pdf}
-      \label{fig:gantt_madeus_remote}
-    }
-    \caption{(a), (b) and (c) Gantt charts of the OpenStack
-      commissioning for the three different assemblies with the
-      registry set in \emph{cached}; (d) Gantt chart of the OpenStack
-      commissioning for \madass, with the registry set in
-      \emph{remote}.}
-    \label{}
-  \end{center}
-\end{figure*}
 
 We now compare the time measured to commission OpenStack regarding the
 three assemblies previously defined: \ansass, \aeoass and \madass (the
@@ -403,13 +384,36 @@ the OpenStack commissioning goes from almost 9 minutes to less than 3
 minutes.
 %
 
+\begin{figure*}[t]
+	\begin{center}
+		%\vspace{-3em}
+		\def\svgwidth{\columnwidth}
+		\scriptsize
+		\subfloat[\ansass with \emph{cached} registry]{
+			\scalebox{0.9}{\includegraphics[scale=0.5]{./images/use_case_gantt_cached_ansible.pdf}}
+			\label{fig:gantt_ansible}
+		}
+		%\vspace{-3em}
+		\def\svgwidth{\columnwidth}
+		\scriptsize
+		\subfloat[\aeoass with \emph{cached} registry]{
+			\scalebox{0.9}{\includegraphics[scale=0.5]{./images/use_case_gantt_cached_aeolus.pdf}}
+			\label{fig:gantt_aeolus}
+		}
+		\caption{(a), (b) Gantt charts of the OpenStack
+			commissioning for \ansass, \aeoass with the
+			registry set in \emph{cached}.}
+		\label{}
+	\end{center}
+\end{figure*}
+
 To go further in this analysis, we propose to analyze the
 commissioning process at the level of transitions (\ie tasks). To
 investigate this aspect, we implemented in \mad the ability to
 generate Gantt charts that display the execution time of the different
 transitions for each component.
 % Maybe something to put in the implementation part
-Figures~\ref{fig:gantt_ansible} \ref{fig:gantt_aeolus},
+Figures~\ref{fig:gantt_ansible}, \ref{fig:gantt_aeolus},
 and~\ref{fig:gantt_madeus} respectively represent the Gantt charts of
 the commissioning execution of \ansass, \aeoass and \madass, when the
 registry is set to \emph{cached} on \ecotype. Each line of these
@@ -422,8 +426,9 @@ shows that each component is deployed in a sequential way. The first
 level of parallelism (\ie \emph{SIMH}) is not visible in these figures
 since it is handled internally by \ansible playbooks executed in each
 transition of the assembly. One can note that Nova, MariaDB, Glance,
-Keystone and Neutron are particularly long to commission. \aeoass and
-\madass accelerate the process by combining (i) splitting the
+Keystone and Neutron are particularly long to commission. 
+
+\aeoass and \madass accelerate the process by combining (i) splitting the
 transition of components into smaller ones and (ii) managing more or
 less dependencies between them (depending on the ability to express
 \emph{inter-comp}, \emph{inter-comp-tasks} and \emph{intra-comp-tasks}
@@ -438,7 +443,31 @@ different tasks of these components (\eg \texttt{glance.pull} and
 \texttt{haproxy.deploy}) are executed in parallel. As a consequence,
 the commissioning time drops from $5$ minutes and $31$ seconds to $3$
 minutes and $49$ seconds.
-%
+
+\begin{figure*}[t]
+	\begin{center}
+		%\vspace{-3em}
+		\def\svgwidth{\columnwidth}
+		\tiny
+		\subfloat[\madass with \emph{cached} registry]{
+			\includegraphics[scale=0.6]{./images/use_case_gantt_cached_mad.pdf}
+			\label{fig:gantt_madeus}
+		}
+		\def\svgwidth{\columnwidth}
+		\tiny
+		\subfloat[\madass with \emph{remote} registry]{
+			\includegraphics[scale=0.6]{./images/use_case_gantt_remote_madeus.pdf}
+			\label{fig:gantt_madeus_remote}
+		}
+		\caption{(a) Gantt charts of the OpenStack
+			commissioning for \madass with the
+			registry set in \emph{cached}; (b) Gantt chart of the OpenStack
+			commissioning for \madass, with the registry set in
+			\emph{remote}.}
+		\label{}
+	\end{center}
+\end{figure*}
+
 Finally, Figure~\ref{fig:gantt_madeus} clearly shows how \mad
 leverages the fourth level of parallelism (\ie \emph{intra-comp-tasks}
 parallelism) by displaying multiple transitions executed in
@@ -536,17 +565,61 @@ additional way to exploit their high performance level.
 \paragraph{OpenStack Continuous Integration}
 
 To highlight the possible gain in reality, we apply the above results
-to the traces of the OpenStack CI. As already mentionned,
-Figure~\ref{} has been extracted from the traces of the OpenStack CI
-and represent the set of OpenStack commissionings. To extract this
-information we have used the filtering mechanism by adding a filter on
-the following message \texttt{+ ./stack.sh:main:1477 : openstack
-  complete}. This message is printed as soon as an OpenStack
-commissioning ends. We have chosen three periods in these traces to
-illustrate the projected gain. This projection is presented in
-Table~\ref{missingref}.
-%
-\HC[Helene]{à terminer améliorer avec nouvelles traces}
+to the traces of the OpenStack CI. As mentioned in Section~\ref{sec:motivation}, 
+traces of the OpenStack Continuous Integration 
+platform\footnote{\url{http://logstash.openstack.org}} have been recorded through 
+an automated \python script over nine days from Februrary 19$^th$ to February 
+27$^th$ 2020 with specific requests regarding the \kolla project. The script, as 
+well as well as the raw data obtained from the requests, are available in the 
+reproducible lab of the paper. Figure~\ref{fig:oci} shows the accumulated number 
+of \kolla deployments for each day. Exactly 2963 deployments have been recorded in 
+nine days. While being irregular this represents an average of 329 runs per day.
+
+\begin{figure}[tbp]
+	\begin{center}
+		\includegraphics[width=0.9\linewidth]{./images/kolla_deployments.pdf}
+	\end{center}
+	\caption{Traces recorded from the OpenStack CI platform over nine days on the 
+	deployment of the \kolla project.}
+	\label{fig:oci}
+\end{figure}
+
+\HC[Charlène]{Merci de donner quelques détails techniques sur les requêtes 
+effectuées, le fait qu'on a pas accès à des log vieux de plus de X jours etc.}
+
+Table~\ref{tab:projection} illustrates the projection of the gain based on these 
+traces when considering deployment times of our experiments in \emph{remote} mode. 
+Of course the OpenStack CI traces probably also include additional tests, and 
+probably deploy more complex versions of OpenStack, but we only illustrate the 
+possible gain according to our results. 
+
+\begin{table}
+\begin{center}
+	\begin{tabular}{lccc}
+		\toprule
+		& \kolla & \mad & gain\\
+		\midrule
+		\emph{reference time}(s) & 529 & 150 & 71\%\\
+		\emph{projection on 9 days}(h) & 435 & 123 & 71\%\\
+		\emph{projection on av./day}(h) & 48 & 14 & 71\%\\
+		\bottomrule
+	\end{tabular}
+	\caption{Projection of the OpenStack CI traces with our reference experimental 
+			measured time in \emph{remote} mode on \ecotype 		
+			(Table~\ref{tab:openstack_results_ecotype}). Traces of 			
+			Figure~\ref{fig:oci} on the deployment of \kolla over nine days in 
+			Frebruary 2020 are used with a total of 2963 \kolla run in 9 days and 
+			an average of 329 runs per day.}
+			\label{tab:projection}
+	\end{center}
+\end{table}
+
+One can note that in nine days a total of 312 hours of computations could have 
+been saved on the CI platform, which represents 34 hours a day in average. 
+Finally, one can note that the recorded period was not particularly active as no 
+OpenStack release was close to our record period. It's likely that the closer we 
+get to a release, the higher the number of \kolla runs will be recorded on the CI 
+platform. This could be verified in for the next release 9.0.2 of OpenStack.
 
 %-------
 % \paragraph{Impact of underlying clusters}
