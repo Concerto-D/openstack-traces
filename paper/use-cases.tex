@@ -71,8 +71,10 @@ and \emph{intra-comp-tasks} parallelism levels.
 \begin{table*}
   \begin{center}
     \input{tables/tab_kolla_components}
-    \caption{Number of places, transitions, ports and roles for each \mad component
-        of the OpenStack assembly of Figure~\ref{fig:full}. \emph{intra-comp-tasks} indicates if parallel transitions exist in the component.}
+    \caption{Number of places, transitions and ports for each \mad component
+        of the OpenStack assembly of Figure~\ref{fig:full}. 
+        \emph{intra-comp-tasks} (\texttt{ICT}) indicates if parallel transitions 
+        exist in the component.}
     \label{tab:os}
   \end{center}
 \end{table*}
@@ -605,7 +607,7 @@ possible gain according to our results.
 		\bottomrule
 	\end{tabular}
 	\caption{Projection of the OpenStack CI traces with our reference experimental 
-			measured time in \emph{remote} mode on \ecotype 		
+			measurements with \emph{remote} mode on \ecotype 		
 			(Table~\ref{tab:openstack_results_ecotype}). Traces of 			
 			Figure~\ref{fig:oci} on the deployment of \kolla over nine days in 
 			Frebruary 2020 are used with a total of 2963 \kolla run in 9 days and 

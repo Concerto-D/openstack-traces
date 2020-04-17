@@ -14,7 +14,9 @@ of the performance model is accurate. Finally, the benefits of \mad regarding
 separation of concerns and efficiency have been evaluated and
 discussed on a real complex use-case: the commissioning procedure of
 OpenStack. Results have been extensively studied and have shown that
-\mad outperforms both \ansible and \aeolus in terms of efficiency.
+\mad outperforms both \ansible and \aeolus in terms of efficiency, and that a 
+projection on the traces of the OpenStack CI could save 34 hours of computation a 
+day.
 
 As future work, first, \mad is currently not equipped with mechanisms to handle faults during the commissioning procedure. Notably, the rule $\terminaction$
 does not consider the possibility of a failure during the action

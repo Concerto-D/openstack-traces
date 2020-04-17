@@ -12,11 +12,11 @@
   % distributed software commissioning
   % parallelism
   % separation of concerns
-  \title{Enhancing Separation of Concerns and Parallelism Expressiveness\\ in
-    Distributed Software Deployment with \mad}
+  \title{Enhancing Separation of Concerns, Parallelism Expressiveness and 
+  Formalism\\ in Distributed Software Deployment with \mad}
 
   \author[label1]{Maverick Chardet}
-  \ead{maverick.chardet@imt-atlantique.fr}
+  \ead{maverick.chardet@inria.fr}
   \author[label1]{Hélène Coullon}
   \ead{helene.coullon@imt-atlantique.fr}
   \author[label2]{Christian Perez}
@@ -33,7 +33,29 @@
 
 
 \begin{abstract}
- \CP[all]{TBD}
+Complex distributed software systems are built by connecting software components 
+(\eg modules, services, micro-services) across a large number of physical machines 
+or virtual machines. Deploying such systems is a challenging domain that is often 
+identified as a DevOps problem, \ie somewhere in between the development and the 
+running phases in the life-cycle of distributed software systems. 
+%
+For many years the automation of the deployment process is recognized as a 
+difficult problem that need coordination mechanisms and programming support. In 
+recent years, though, this domain has experienced strong growth, together with the 
+DevOps community, mainly because of the emergence of large-scale distributed 
+infrastructures used for instance in Cloud, Fog and Edge computing, or IoT and CPS 
+paradigms. In this paper three particular metrics are extensively studied and 
+enhanced compared to the related work: (1) the separation of concerns between 
+actors of a deployment process (developers, DevOps engineers, systems 
+administrators etc.); (2) the performance in terms of parallelism expressiveness; 
+and (3) the ability of the solution to be formalized which opens to formal 
+verification and guarantees on deployment procedures.
+%
+The paper introduces and evaluates \mad: its formal model; its performance 
+prediction model; and its concrete language and prototype. \mad is evaluated on a 
+real complex use-case, \ie the deployment of the de-facto open-source solution to 
+address the IaaS level of the Cloud paradigm: OpenStack. Its deployment time is 
+reduced up to 71\% compared to the related work.
 \end{abstract}
 
 \begin{keyword}

@@ -51,7 +51,19 @@ commissioning procedures for complex distributed software systems.
 \end{figure}
 
 \paragraph{Example}{
-	Figure~\ref{fig:example} depicts a \mad commissioning assembly of an Apache web server and a MariaDB database. This example is based on a real container-based deployment described by RedHat\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_an_apache_web_server_container}}\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_a_mariadb_container}}. Two \mad control components are declared in this example: Apache and MariaDB. Apache contains four places (white circles), or milestones, while MariaDB contains five places. Some parallel transitions are declared for each of the component and can be observed in the figure (parallel arrows). Both components have two coordination ports. MariaDB provides both data and a service, while Apache uses a service and data. These instances are connected by their ports. Indeed, the Apache configuration depends on the IP adress of the MariaDB component, and the testing phase for Apache, called \texttt{check}, uses the MariaDB service.
+	Figure~\ref{fig:example} depicts a \mad commissioning assembly of an Apache 
+	web server and a MariaDB database by using the graphical notation of \mad. 
+	This example is based on a real container-based deployment described by 
+	RedHat\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_an_apache_web_server_container}}\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_a_mariadb_container}}.
+	 Two \mad control components are declared in this example: Apache and MariaDB. 
+	Apache contains four places (white circles), or milestones, while MariaDB 
+	contains five places. Some parallel transitions are declared for each of the 
+	component and can be observed in the figure (parallel arrows). Both components 
+	have two coordination ports. MariaDB provides both data and a service, while 
+	Apache uses a service and data. These instances are connected by their ports. 
+	Indeed, the Apache configuration depends on the IP address of the MariaDB 
+	component, and the testing phase for Apache, called \texttt{check}, uses the 
+	MariaDB service.
 } %\CP{Ne faut il pas dire quelque part que les ports ne passent que les info de synchro et pas les données/services eux-même ? Par exemple est-ce \mad qui transfére les données comme l'@IP mdb?}
 
 In \mad, two kinds of \emph{actors} are considered. The first is the \emph{developer} of a control component, who may be the author of the associated existing piece of code, another developer, or even a system operator or administrator. The second is the \emph{devops} engineer who designs an assembly, \ie writes the overall commissioning procedure of a distributed software system to deploy on their infrastructure. One important benefit of \mad is its clear separation of concerns between the commissioning of a single component on the one hand, and the composition of an assembly, without having to care about the detailed commissioning of each component on the other hand. For instance, even if Ansible offers properties close to composition (\eg roles, playbooks, tasks, etc.), the devops still has to determine the correct order of composition. By contrast, the correct coordination, hence the correct order of execution, is automatically guaranteed by the \mad semantics and the composition of the component instances. The composition viewpoint is illustrated in Figure~\ref{fig:simple} where the details of each component, not needed for composition, are omitted. This type of property has also been offered by Aeolus~\cite{dicosmo2014ic}, albeit without parallelism within components.
