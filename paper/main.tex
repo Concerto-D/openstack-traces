@@ -34,28 +34,32 @@
 
 \begin{abstract}
 Complex distributed software systems are built by connecting software components 
-(\eg modules, services, micro-services) across a large number of physical machines 
-or virtual machines. Deploying such systems is a challenging domain that is often 
+(\eg modules, services, micro-services) across a large number of physical or virtual
+machines.
+% SR: the following two paragraphs are too verbose for an abstract
+Deploying such systems is a challenging domain that is often 
 identified as a DevOps problem, \ie somewhere in between the development and the 
 running phases in the life-cycle of distributed software systems. 
 %
-For many years the automation of the deployment process is recognized as a 
-difficult problem that need coordination mechanisms and programming support. In 
+For many years, the automation of the deployment process has been recognized as a 
+difficult problem, requiring coordination mechanisms and programming support. In 
 recent years, though, this domain has experienced strong growth, together with the 
 DevOps community, mainly because of the emergence of large-scale distributed 
 infrastructures used for instance in Cloud, Fog and Edge computing, or IoT and CPS 
-paradigms. In this paper three particular metrics are extensively studied and 
-enhanced compared to the related work: (1) the separation of concerns between 
+paradigms.
+% SR: we introduce "metrics" before Madeus, hard to follow at first. I would switch the two paragraphs
+In this paper, three particular metrics are extensively studied and 
+enhanced compared to the related work: (1) separation of concerns between 
 actors of a deployment process (developers, DevOps engineers, systems 
-administrators etc.); (2) the performance in terms of parallelism expressiveness; 
-and (3) the ability of the solution to be formalized which opens to formal 
+administrators, etc.); (2) performance in terms of parallelism expressiveness; 
+and (3) ability of the solution to be formalized which opens to formal 
 verification and guarantees on deployment procedures.
-%
+% SR: we never really say what Madeus is
 The paper introduces and evaluates \mad: its formal model; its performance 
 prediction model; and its concrete language and prototype. \mad is evaluated on a 
-real complex use-case, \ie the deployment of the de-facto open-source solution to 
-address the IaaS level of the Cloud paradigm: OpenStack. Its deployment time is 
-reduced up to 71\% compared to the related work.
+real complex use case, the deployment of OpenStack, the de facto standard open-source solution to 
+address the IaaS level of the Cloud paradigm. Its deployment time is
+reduced by up to 71\% compared to the related work.
 \end{abstract}
 
 \begin{keyword}
