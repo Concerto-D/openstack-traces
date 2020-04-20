@@ -31,35 +31,100 @@
 %for improving the efficiency of the commissioning process (\ie
 %reducing deployment times, minimizing services interruptions etc.).
 
-% SR: "(IoT, CPUs, GPUs, Raspberry Pis, etc.)": this enumeration mixes different things (one rather vague concept, two types of processing units, one brand)
-In contrast to monolithic software that runs locally on a single machine, distributed software is designed in a modular architectural style where each entity (\ie module, component, or service or micro-service) is responsible for a specific part of the overall objective, and collaborates at runtime with other entities that are potentially hosted on distant nodes (\ie machines). In the rest of this paper we will use the generic term \emph{component} to refer indifferently to a module, a service or a micro-service. With the advents of IT hardware (IoT, CPUs, GPUs, Raspberry Pis, etc.), distributed software has become commonplace in our day-to-day life, whether it be executed in the Cloud, on personal computers, mobile phones or objects. 
+% SR: "IT hardware (IoT, CPUs, GPUs, Raspberry Pis, etc.)": this enumeration mixes different things (one rather vague concept, two types of processing units, one brand)
+In contrast to monolithic software running on a single machine,
+distributed software is designed in a modular architectural style
+where each component (a term that, in this paper, refers indifferently
+to a module, a service, or a microservice) is responsible for a
+specific part of the overall objective, and collaborates at runtime
+with other components that are potentially hosted on distant
+machines. With the advents of IT hardware, distributed software has
+become commonplace, whether it be executed in the Cloud, on personal
+computers, mobile phones or objects.
 
-% SR: we also need to show the need for efficiency, since this is one of the things that Madeus solves
-However, deploying a large distributed software system on infrastructures is a tedious task. Components have to be chosen, configured and mapped to the nodes of infrastructures, dependencies have to be solved, virtualization layers have to be handled, etc. Furthermore, such procedures involve many actors with different roles and areas of expertise, which increases the difficulty of the overall process: (1) \emph{developers} are responsible for designing and coding a set of components or services, (2) \emph{sysadmins} and \emph{sysops} are responsible for maintaining, configuring, and testing multi-user computer systems such as servers or Clouds, and between the two (3) \emph{devops} engineers work with software developers, system operators and other production IT staff to oversee code releases and deployments. For these reasons, deployment procedures have to be automated and need adapted programming support such as languages and models.
+However, deploying a large distributed software system on
+infrastructures poses multiple challenges. Firstly, deployment
+involves a variety of actors with different roles and areas of
+expertise, from \emph{developers} who are responsible for designing
+and coding the components, to \emph{sysadmins} and \emph{sysops} who
+are responsible for maintaining, configuring, and testing multi-user
+computer systems, with \emph{devops} engineers working between them to
+oversee code releases and deployments. Secondly, deployment is a
+complex task: components must be chosen, configured and mapped to
+infrastructure nodes, dependencies have to be solved, virtualization
+layers handled, etc. The process is error-prone, and difficult to test
+because faults can be caused by very specific hardware or software
+conditions in a heterogeneous environment. Lastly, deployment is an
+often time-consuming process, owing to the scale of the systems. This
+last point has largely been neglected in the literature. As a result,
+complex systems such as OpenStack can require in excess of one hour to
+deploy with existing solutions that do not take full advantage of the
+distributed nature of the underlying hardware. This becomes especially
+problematic in the context of continuous integration, with systems
+being deployed up to several hundreds of times every day.
 
-% SR: The intro tells us about what we DON'T DO before it even mentions Madeus!
-In this paper, among the difficulties related to the deployment of distributed software systems, we left aside the mapping between pieces of software and the nodes of infrastructure, which is the result of an optimization problem and not in the scope of this paper~\cite{6409358, 10.1007/978-3-319-47677-3_15, cadorel:hal-02165835, ccgridemile, 10.5555/2432523.2432528}. Indeed, we restrict the scope of this paper to the \emph{software-commissioning} part of the deployment, \ie procedure responsible for leading the set of components to a valid running state while guaranteeing correct configurations and interactions.
-% SR: like the abstract, we talk about these metrics before mentioning Madeus
-In particular, three metrics are considered to measure the quality of automation of distributed software commissioning: (1) separation of concerns between the different actors of the commissioning procedure to enhance productivity, maintainability
-and reusability of deployment code; (2) efficiency of the commissioning procedure in terms of parallelism expressiveness; and (3) formalization of the solution, such that formal properties can be proven on a given commissioning procedure. The contribution of this paper improves upon the related work by succeeding in the combination of these three metrics.
-%
+For these reasons, programming models and tools need to be developed
+to facilitate documented, verifiable and efficient deployment
+procedures. To this end, we propose \mad, a tool that relies on a
+declarative description of dependencies to automate the execution of
+deployments with a high level of parallelism, both between components
+and with them. Prior to execution, \mad deployments can also be
+analyzed for the purpose of verification and performance estimation,
+making it a useful tool during the conception of the deployment.
+% SR: this description of Madeus can be extended
 
-% SR: The intro needs to tell us more about Madeus, its characteristics, what makes it different from existing solutions.
-% SR: "theoretically improves the parallelism level exposed to the user": almost sounds like a low-level model.
-In~\cite{chardet:hal-01858150} we have presented \mad, a formal model for distributed software commissioning that theoretically improves the parallelism
-level exposed to the user. This journal paper brings the following additional
-contributions compared to our previous publication: 
+% SR: not really sure how to fit this paragraph in the rest of the intro
+In this paper, among the difficulties related to the deployment of
+distributed software systems, we left aside the mapping between pieces
+of software and the nodes of infrastructure, which is the result of an
+optimization problem and not in the scope of this paper~\cite{6409358,
+  10.1007/978-3-319-47677-3_15, cadorel:hal-02165835, ccgridemile,
+  10.5555/2432523.2432528}. Indeed, we restrict the scope of this
+paper to the \emph{software-commissioning} part of the deployment, \ie
+procedure responsible for leading the set of components to a valid
+running state while guaranteeing correct configurations and
+interactions.  In particular, three metrics are considered to measure
+the quality of automation of distributed software commissioning: (1)
+separation of concerns between the different actors of the
+commissioning procedure to enhance productivity, maintainability and
+reusability of deployment code; (2) efficiency of the commissioning
+procedure in terms of parallelism expressiveness; and (3)
+formalization of the solution, such that formal properties can be
+proven on a given commissioning procedure. The contribution of this
+paper improves upon the related work by succeeding in the combination
+of these three metrics.
+
+We have previously presented \mad in~\cite{chardet:hal-01858150}. This
+journal paper brings the following additional contributions compared
+to our previous publication:
 \begin{itemize}
-	\item an extended study of the related work; % SR: is this worth listing in the paper's contributions? 
-	\item a revised and streamlined \mad formal model that offers stronger guarantees; 
-	\item a theoretical performance prediction model of \mad; 
-	\item a concrete language and a prototype;
-	\item an extended reproducible evaluation on both synthetic use-cases and one large real use-case on real infrastructures.
+%\item an extended study of the related work (Section~\ref{sec:related_work}); % SR: is this worth listing in the paper's contributions? 
+\item a concrete language and a prototype (presented in
+  Section~\ref{sec:mad_model}, along with the overview of \mad);
+\item a revised and streamlined formal model that offers stronger
+  guarantees (Section~\ref{sec:formal_model});
+\item a theoretical performance prediction model
+  (Section~\ref{sec:perf_model});
+\item an extended reproducible evaluation on both synthetic use-cases
+  (Section~\ref{sec:evaluations}) and one large use case on real
+  infrastructures (Section~\ref{sec:use-cases}).
 \end{itemize}
 
-% SR: instead of a dry paper outline, we can present the sections while we list the contributions
+% SR: merged with the list of contributions
 %%% outline
-The rest of this paper is organized as follows. Section~\ref{sec:motivation} presents the detailed motivations of the contribution. Section~\ref{sec:related_work} studies the related work. Section~\ref{sec:mad_model} gives an overview of \mad as well as its concrete language. Sections~\ref{sec:formal_model} and~\ref{sec:perf_model} respectively detail the formalization of \mad as well as its associated performance prediction model. Sections~\ref{sec:evaluations} and~\ref{sec:use-cases} respectively present an evaluation of the \mad prototype on synthetic use-cases and an evaluation of the contribution interests on the real use-case of OpenStack commissioning.  Finally, Section~\ref{sec:conc} concludes and gives some perspectives.
+%% The rest of this paper is organized as
+%% follows. Section~\ref{sec:motivation} presents the detailed
+%% motivations of the contribution. Section~\ref{sec:related_work}
+%% studies the related work. Section~\ref{sec:mad_model} gives an
+%% overview of \mad as well as its concrete
+%% language. Sections~\ref{sec:formal_model} and~\ref{sec:perf_model}
+%% respectively detail the formalization of \mad as well as its
+%% associated performance prediction
+%% model. Sections~\ref{sec:evaluations} and~\ref{sec:use-cases}
+%% respectively present an evaluation of the \mad prototype on synthetic
+%% use-cases and an evaluation of the contribution interests on the real
+%% use-case of OpenStack commissioning.  Finally, Section~\ref{sec:conc}
+%% concludes and gives some perspectives.
 
 
 
