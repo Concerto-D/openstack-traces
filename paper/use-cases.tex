@@ -577,6 +577,7 @@ reproducible lab of the paper. Figure~\ref{fig:oci} shows the accumulated number
 of \kolla deployments for each day. Exactly 2963 deployments have been recorded in 
 nine days. While being irregular this represents an average of 329 runs per day.
 
+
 \begin{figure}[tbp]
 	\begin{center}
 		\includegraphics[width=0.9\linewidth]{./images/kolla_deployments.pdf}
@@ -588,6 +589,16 @@ nine days. While being irregular this represents an average of 329 runs per day.
 
 \HC[Charlène]{Merci de donner quelques détails techniques sur les requêtes 
 effectuées, le fait qu'on a pas accès à des log vieux de plus de X jours etc.}
+\CS[Hélène]{J'ai rajouté le paragraphe suivant, est-ce que c'est trop/pas assez?}
+The Openstack CI log servers process a large amount of data coming from all
+the Openstack projects and only store up to 7 days of logs. The script makes
+requests for all the logs coming from the kolla-ansible project and aggregates
+them by build uuid, a unique identifier for each build on the Openstack CI,
+allowing us to count the number of CI operations related to the project.
+Because some CI operations do not generate a full Openstack deployment, we filter
+these results to gather the CI events from the kolla-ansible project that are
+longer than 15 minutes, which is a good indicator that an Openstack deployment
+happened.
 
 Table~\ref{tab:projection} illustrates the projection of the gain based on these 
 traces when considering deployment times of our experiments in \emph{remote} mode. 
