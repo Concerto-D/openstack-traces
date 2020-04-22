@@ -12,7 +12,10 @@
 \HC[Helene]{encore trop verbeux, si vous voyez des simplifications possibles merci 
 de l'annoter}
 
-In this section we give an overview of existing solutions for the automation of distributed software commissioning. Then, we select a few solutions for a deeper analysis, that we consider representative and interesting regarding our contribution. To conduct this analysis we first introduce the metrics to consider and second present a detailed comparison of the selected solutions. Finally, a discussion section is added to conclude this related work.
+In this section we give an overview of existing solutions for the
+automation of distributed software commissioning. Then, we select the
+most relevant solutions for deeper analysis, and we compare them
+according to a specific set of metrics.
 
 %----------------------------
 \subsection{Automation of distributed software commissioning}
@@ -27,25 +30,61 @@ In this section we give an overview of existing solutions for the automation of 
 % - generic solution that could use or not provisioning tools
 % - scripting/IaC but keep Kubernetes and Juju
 
-Five classes of tools and languages can be considered regarding automating and enhancing software engineering properties of commissioning procedures. In practice, these tools are often combined by system administrators to achieve a good automation and satisfaction level. 
+We consider five classes of tools and languages to automate
+commissioning procedures. In practice, these tools are often used in
+combination.
 
 \paragraph{Scripting/coding languages}
-First, a common way of automating commissioning procedures is to use
-\emph{scripting languages} such as \shell or \ruby for instance. Such
-languages are very flexible and well known by system administrators
-and operators but suffer from many limitations, particularly from a
-software engineering standpoint. In particular, they are not well
-suited to deal with separation of concerns, composition and complex
+Languages such as \shell or \ruby are commonly used to automate
+commissioning procedures. They are very flexible, and well known among
+system administrators and operators. However, in terms of software
+engineering, they suffer from many limitations, including poor
+separation of concerns, limited compositionality and complexity of
 coordination mechanisms.
 
 \paragraph{Software configuration tools}
-A second class of languages and tools is called \emph{software configuration tools}. This class contains the set of quite recent tools such as \ansible~\cite{ansible:web}, \puppet~\cite{puppet:web}, \chef~\cite{chef:web},
-\salt~\cite{salt:web}, as well as some academic contributions such as \smartfrog~\cite{10.1145/1496909.1496915}, \engage~\cite{DBLP:conf/pldi/FischerME12} \deployware~\cite{flissi2008ccgrid}, \aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489} etc. The goal of these tools is to enhance the productivity when defining components or services deployment and the coordination of their tasks. Most of the time these tools add an abstraction layer on top of scripting languages to hide some of their technical details (\eg SSH connections). These tools use different methods to achieve their goals. For instance, Ansible adopts a procedural imperative style in YAML as a series of tasks to execute, while Puppet adopts a declarative approach in Python by combining different instances of resources (\ie services, packages, etc.). In a declarative approach the user describes what is needed rather than how to get it, which is left to the tool. Such an approach enhances productivity but reduces flexibility for the user.
+This class contains tools such as \ansible~\cite{ansible:web},
+\puppet~\cite{puppet:web}, \chef~\cite{chef:web},
+\salt~\cite{salt:web}, and some academic contributions such as
+\smartfrog~\cite{10.1145/1496909.1496915},
+\engage~\cite{DBLP:conf/pldi/FischerME12}
+\deployware~\cite{flissi2008ccgrid},
+\aeolus~\cite{dicosmo2014ic,dicosmo:hal-01233489}. Their goal is to
+enhance productivity when defining the deployment of components or
+services, and the coordination between their tasks. They typically add
+an abstraction layer on top of scripting languages, thus hiding some
+technical details (\eg SSH connections), but may use different methods
+to achieve their goals. For instance, Ansible adopts a procedural
+imperative style in YAML, with a series of tasks to execute, while
+Puppet adopts a declarative approach in Python, which combines
+different instances of resources (\ie services, packages, etc.). In a
+declarative approach, the user describes what is needed rather than how
+to get it, which is instead determined by the tool. This approach
+increases productivity at the expense of flexibility.
 
 \paragraph{Infrastructure definition tools}
-Some tools, that are sometimes called \emph{infrastructure definition tools}, or \emph{provisioning tools}, have been specifically designed to be able to handle complex distributed infrastructures composed of multiple clusters and multiple machines shared between users. Managing such infrastructure is very difficult and error prone as each application and each user may possibly need different requirements, different operating systems, different package versions, etc. Virtualization has partly been introduced to enhance infrastructure management (in addition to improving portability of applications, isolation between users, etc.). This type of tools, that includes \docker~\cite{docker:web}, \terraform~\cite{terraform:web}, \juju~\cite{juju:web}, \cloudformation~\cite{cloudf:web} or \heat~\cite{heat:web} for instance, uses virtualization mechanisms (\eg virtual machines, containers) to reduce the commissioning process to a set of commands allowing to deploy a virtual resource (by using an image) on a physical machine. This technique potentially reduces the complexity of the commissioning procedures if the needed image is already available, otherwise the initial commissioning commands and coordination have to
-be done to create the image. Some of these tools are specific to a given virtualization technique or to a given Cloud provider (\eg \docker, \cloudformation and \heat), while others offer \emph{providers} for different kinds of Cloud infrastructures (\eg \terraform, \juju). The \tosca standard~\cite{tosca:web}, and its
-implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can be classified as a descriptive provisioning tool.
+Also known as \emph{provisioning tools}, these tools are specifically
+designed to handle complex distributed infrastructures composed of
+multiple clusters and machines shared between users. Managing such
+infrastructures is very difficult and error-prone, as each application
+and each user may have different requirements, operating systems,
+package versions, etc. Virtualization has been introduced to solve
+this issue (in addition to improving portability, isolation between
+users, etc.). Tools such as \docker~\cite{docker:web},
+\terraform~\cite{terraform:web}, \juju~\cite{juju:web},
+\cloudformation~\cite{cloudf:web} or \heat~\cite{heat:web} use
+virtualization mechanisms (\eg virtual machines, containers) to reduce
+the commissioning process to a set of commands that deploy a virtual
+resource on a physical machine, by using an image. If a suitable image
+is available, this reduces the complexity of the
+commissioning procedure. Otherwise, the image must be created by
+executing the commissioning commands. Some of these tools target a given virtualization
+technique or Cloud provider (\eg \docker, \cloudformation and
+\heat), while others offer \emph{providers} for different
+Cloud infrastructures (\eg \terraform, \juju). The \tosca
+standard~\cite{tosca:web}, and its
+implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can
+be classified as a descriptive provisioning tool.
 % More precisely, \tosca is presented as a Cloud Modeling Language (CML).
 %By using
 %\tosca, a set of cloud-based services is modeled as a graph where each
@@ -56,13 +95,38 @@ implementations~\cite{Binz2013,cloudify:web,opentosca:web,8599581} can be classi
 %encapsulated in \emph{artifacts}.
 
 \paragraph{Orchestration tools}
-Finally, some recent tools go further by offering an \emph{orchestration} level to handle shared clusters of machines running many services simultaneously to orchestrate. In this case, being able to deploy or install distributed software is only part of the problem, as services also need to be restarted in case of failure, or to be scaled in case of overload, etc. \kubernetes~\cite{kubernetes:web} enters in this category, as well as \dockerswarm~\cite{dockerswarm:web}. If these tools are outside the scope of this paper, a subdivision of their architecture handles distributed software commissioning. For instance \kubernetes relies on \docker for deployments. 
+Recent tools such as \kubernetes~\cite{kubernetes:web} and
+\dockerswarm~\cite{dockerswarm:web} go further, offering an
+\emph{orchestration} level to handle shared clusters of machines
+running many services simultaneously. In this case, deploying or
+installing distributed software is only part of the problem, as
+services also need to be restarted after failures, scaled to avoid
+overload, etc. These tools are outside the scope of this paper, but a
+subdivision of their architecture handles commissioning. For instance,
+\kubernetes relies on \docker for deployments.
 
 \paragraph{The specific class of CBSE}
-Component-based software engineering (CBSE) is a domain that enhances (distributed) software implementation by dealing with code re-use, separation of concerns, and composability (thus maintainability) of software~\cite{Szyperski:2002:CSB:515228}. A component-based application is composed of a set of component instances connected together. Such composition of components is called an \emph{assembly}. A component is a black box that implements an independent functionality of an application, and that interacts with
-other components through well defined interfaces, called \emph{ports}. Ports are used to decouple the component internals from its interface. For instance, a port can be used to declare that the component either provides a service ---in this case the port is attached to an internal method--- or uses a service from another
-component. Many component models focus on the implementation of the functionalities and
-interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigot:inria-00388508,Coullon2017} of components, rather than on their commissioning. In the Object Management Group's (OMG) specification~\cite{ccmdeploy:omg06}, the commissioning model is rigid and fixed by the model. Though, a few component models have contributed to commissioning issues~\cite{Blair2009, baude:hal-01001043, flissi2008ccgrid, chardet:hal-01858150, dicosmo2014ic}. These CBSE solutions to deployment automation could be dispatched in the four previous classes.
+Component-based software engineering (CBSE) focuses on (distributed)
+software implementation and improves code re-use, separation of
+concerns, and composability (thus
+maintainability)~\cite{Szyperski:2002:CSB:515228}. A component-based
+application, called an \emph{assembly}, includes a set of component
+instances connected together. Each component is a black box that
+implements a functionality of the application, and interacts with
+other components through \emph{ports} that are used to decouple the
+component internals from its interface. For instance, a port can be
+used to declare that the component either provides a service ---in
+this case the port is attached to an internal method--- or uses a
+service from another component. Many component models focus on the
+implementation of functionalities and
+interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigot:inria-00388508,Coullon2017}
+of components, rather than on their commissioning. In the Object
+Management Group's (OMG) specification~\cite{ccmdeploy:omg06}, the
+commissioning model is rigid and fixed by the model. However, a few
+component models have considered commissioning issues~\cite{Blair2009,
+  baude:hal-01001043, flissi2008ccgrid, chardet:hal-01858150,
+  dicosmo2014ic}. These CBSE solutions to deployment automation can be
+categorized in some of the four previous classes.
 
 %----------------------------
 \subsection{Related work metrics}
@@ -80,28 +144,88 @@ interfaces~\cite{corba:omg06,Blair2009,baude:hal-01001043,Bernholdt01052006,bigo
 % 3. formalism
 % - formal model
 
-The analysis of the related work is based on several metrics, divided in three sets: i) software engineering (SE) metrics, ii) metrics related to the parallelism level of commissioning, and iii) metrics related to formal aspects of commissioning. For each metric, four levels will be considered and presented in Table~\ref{tab:comparison}: (1) supported, denoted with \checkmark, that counts for 3 points in the score; (2) partially supported, denoted (\checkmark), that counts for 2 points; (3) manually supported, denoted \emph{M}, meaning that the user may code manually the given metric, and that counts 1 point; and finally
+Our analysis of the related work is based on several metrics that
+measure: (i) software engineering (SE) aspects, (ii) level of
+parallelism, and (iii) formal aspects. For each metric, we define four
+levels, presented in Table~\ref{tab:comparison}: (1) supported, denoted
+\checkmark and counting for 3 points in the score; (2) partially
+supported, denoted (\checkmark) and counting for 2 points; (3)
+manually supported, denoted \emph{M}, indicating a feature that can be
+manually coded by the user, and counting for 1 point; and finally
 (4) not supported, denoted -.
 
 \paragraph{Software engineering}
-As introduced in the introduction and motivations, when automating distributed software commissioning, one important aspect is to promote software engineering properties. Indeed, when several actors are involved in one given goal, software engineering techniques can help improving separation of concerns (\ie code reuse, maintainability etc.). Separation of concerns means that each actor is responsible for her own specialism, \ie her own expertise domain. Such separation of concerns is improved as soon as a modular or component-based approach is adopted, \ie each actor could be responsible for one component. Furthermore, component-based architectures are also equipped with composition mechanisms that facilitate the interactions between the entities implemented by different actors. Additional actor may also enter the picture to design this composition. We define three SE metrics to compare the related works:
+Software engineering properties are of prime importance when
+automating distributed software commissioning. Indeed, when several
+actors are involved in one given goal, software engineering techniques
+can help improve separation of concerns, meaning that each actor is
+responsible for her own expertise domain. This is improved by modular
+or component-based approaches, as each actor can be responsible for
+one component. Furthermore, component-based architectures also feature
+composition mechanisms that facilitate interactions between entities
+implemented by different actors. Additional actors may also be
+responsible for the composition. We define three SE metrics:
 \begin{itemize}
-	\item \emph{component}: if the work (tool, framework or scientific contribution) offers a component-oriented (\eg services, modules) structure of commissioning;
-	\item \emph{tasks}: if the work offers a way to divide the commissioning of each component in sub-elements that we call \emph{tasks} and that promote a better structured procedural design;
-	\item \emph{separation of concerns}: if the work offers a way to build distributed software commissioning by composition of individual components without needing to know their internal behaviors.
+\item \emph{component}: whether the solution (tool, framework or scientific
+  contribution) offers a component-oriented (\eg services, modules)
+  structure;
+\item \emph{tasks}: whether the solution offers a way to divide the
+  commissioning of each component in sub-elements that we call
+  \emph{tasks}, for a better structured procedural design;
+\item \emph{separation of concerns}: whether the solution offers a way to
+  build distributed software commissioning by composing components
+  without the need to know their internal behaviors.
 \end{itemize}
 
 \paragraph{Parallelism level}
-A second important aspect of distributed software commissioning that has been introduced in the motivations is its efficiency and in particular (in this paper) the level of parallelism offered. We consider four metrics to compare the related work:
+A second important aspect of distributed software commissioning that
+has been introduced in the motivations is its efficiency and in
+particular (in this paper) the level of parallelism offered. We
+consider four metrics:
 \begin{itemize}
-	\item \emph{SIMH}: if the work offers a transparent way to perform the same instruction or set of instructions on multiple hosts simultaneously, meaning that there are no dependencies between the instructions to be performed on the different hosts;
-	\item \emph{inter-comp}: if the work offers a transparent way to simultaneously execute the commissioning of multiple components when no dependency exists between those;
-  \item \emph{inter-comp-tasks}: if the work offers a transparent way to     simultaneously execute the commissioning tasks of multiple components until a dependency between tasks is reached;
-  \item \emph{intra-comp-tasks}: if the work offers a way to simultaneously    execute two commissioning tasks of a given component, in other words if a partial order of tasks can be given for a component.
+\item \emph{SIMH}: whether the solution offers a transparent way to
+  perform the same instruction or set of instructions on multiple
+  hosts simultaneously, when no dependencies exist between them;
+\item \emph{inter-comp}: whether the solution offers a transparent way
+  to simultaneously execute the commissioning of multiple components
+  when no dependency exists between those;
+\item \emph{inter-comp-tasks}: whether the solution offers a
+  transparent way to simultaneously execute the commissioning tasks of
+  multiple components until a dependency between tasks is reached;
+\item \emph{intra-comp-tasks}: whether the solution offers a way to
+  simultaneously execute two commissioning tasks of a given component,
+  in other words whether a partial order on tasks can be given for a
+  component.
 \end{itemize}
-One can note that the level of parallelism offered by a given tool is directly correlated to the type of dependencies that can be declared by users. For instance, without any dependency mechanisms, the best possible level would be SIMH, while for \emph{inter-comp} or \emph{inter-comp-tasks} dependencies, more parallelism could be handled between components of different types.
+The level of parallelism offered by a given tool is correlated to the
+type of dependencies that can be declared. For instance, without any
+dependency mechanism, only the SIMH level is achievable, while
+\emph{inter-comp} or \emph{inter-comp-tasks} dependencies allow more
+parallelism between components of different types.
 
-Figure~\ref{fig:parlevels} illustrates the four parallelism levels listed above through an example with three components or modules: The component $C$ is deployed on two hosts while components $A$ and $B$ are deployed on a single host. Moreover, components $A$ and $B$ need to be coordinated while the component $C$ is independent from both $A$ and $B$. In sub-figure~\ref{fig:simh} the \emph{SIMH} level is shown, where parallelism can be introduced for the component $C$. Second, sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp} parallelism level. Indeed, as $C$ is independent from $B$ both component commissioning can be performed simultaneously. However, as $B$ depends on $A$, and as the dependencies are only available at the component level, their commissioning still has to be performed one after the other. Third, sub-figure~\ref{fig:inter-comp-tasks} shows the \emph{inter-comp-tasks} parallelism level, where dependencies can be defined at the finer level of the tasks. In this case, the commissioning of $A$ and $B$ can be started in parallel until they reach their dependencies. Thus, $B$ has to wait for $A$ to perform needed tasks before continuing its deployment. Finally, sub-figure~\ref{fig:intra-comp-tasks} illustrates the \emph{intra-comp-tasks} parallelism level, where some tasks inside a component can be performed in parallel. One can note that, theoretically, the higher the number of supported parallelism levels is, the shorter the commissioning time is (represented by the height of the figures).
+Figure~\ref{fig:parlevels} illustrates the four parallelism levels
+listed above through an example with three components or modules:
+component $C$ is deployed on two hosts while components $A$ and $B$
+are deployed on a single host. Moreover, components $A$ and $B$ need
+to be coordinated while component $C$ is independent from both $A$ and
+$B$. Sub-figure~\ref{fig:simh} illustrates the \emph{SIMH} level,
+where parallelism can be introduced for component
+$C$. Sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp}
+parallelism level: as $C$ is independent from $B$, both commissionings
+can be performed simultaneously. However, $B$ depends on $A$, and
+because the dependencies are only available at the component level,
+their commissionings have to be performed
+sequentially. Sub-figure~\ref{fig:inter-comp-tasks} shows the
+\emph{inter-comp-tasks} parallelism level, where dependencies can be
+defined at the finer level of tasks. In this case, the commissionings
+of $A$ and $B$ can be started in parallel until they reach their
+dependencies. Thus, $B$ has to wait until $A$ performs needed tasks
+before continuing its deployment. Finally,
+sub-figure~\ref{fig:intra-comp-tasks} illustrates the
+\emph{intra-comp-tasks} parallelism level, where some tasks inside a
+component can be performed in parallel. Increased support in
+parallelism leads to a shorter expected commissioning time, as
+represented by the height of the figures.
 
 
 \begin{figure*}[t!]
@@ -146,14 +270,21 @@ Figure~\ref{fig:parlevels} illustrates the four parallelism levels listed above 
   \end{center}
 \end{figure*}
 
-One can note that presented metrics for both SE and parallelism are
-procedural-oriented as they consider \emph{tasks} and not
-\emph{resources}, thus excluding \puppet or \salt for instance. While
-it is an approach with great advantages, declarative approaches are
-not considered in this paper.
+\SR{Give a reason to exclude declarative approaches, \eg worse parallelism}
+
+Metrics for SE and parallelism are suitable for procedural approaches,
+as they consider \emph{tasks} and not \emph{resources}. This excludes
+\puppet or \salt, for instance. While declarative approaches have great
+advantages, they are not considered in this paper.
 
 \paragraph{Formalism}
-The last metric considered to compare the related work is the existence of a formal model for each commissioning solution. Indeed, we claim that studying formally commissioning models and their operational semantics is of high importance to open the door to verification and safety in deployments. For instance, even if this contribution is not presented in this paper, the formal model \mad has been successfully used to verify safety properties on distributed software commissioning by model checking~\cite{coullon:hal-02323641}.
+The metric considered here is the existence of a formal model for each
+commissioning solution. Indeed, we claim that formal study of
+commissioning models and of their semantics is required for
+verification and safety in deployments. For instance, the formal model
+of \mad has been successfully used to verify safety properties on
+distributed software commissioning by model checking, as presented
+in~\cite{coullon:hal-02323641}.
 
 %----------------------------
 \subsection{Description and comparison of the related work}
@@ -225,7 +356,7 @@ The \emph{Topology and Orchestration Specification for Cloud Applications} (TOSC
 
 % Kubernetes
 \paragraph{Kubernetes}
-Initiated by Google, \kubernetes (K8S) is a popular framework to commission distributed software in the form of micro-services that are packaged as a hierarchy of Docker containers and \emph{pods}. A software component in \kubernetes is thus defined as a Docker container. Such components have no ports to manage coordination, and their internals are fixed, since containers can only be started and stopped. As a consequence, the commissioning process is error-prone. For instance, a web server can be started before the required database and thus fail. For this reason, the metric \emph{inter-comp} is considered partially supported. \kubernetes requires container to be started in any order, thus any container must embed a wait-procedure wrt his dependencies. If the deployment of a container fails \kubernetes automatically retry. For stateless micro-services architectures such deployment strategy is popular.
+Initiated by Google, \kubernetes (K8S) is a popular framework to commission distributed software in the form of micro-services that are packaged as a hierarchy of Docker containers and \emph{pods}. A software component in \kubernetes is thus defined as a Docker container. Such components have no ports to manage coordination, and their internals are fixed, since containers can only be started and stopped. As a consequence, the commissioning process is error-prone. For instance, a web server can be started before the required database and thus fail. For this reason, the metric \emph{inter-comp} is considered partially supported. \kubernetes requires container to be started in any order, thus any container must embed a wait-procedure w.r.t.\ its dependencies. If the deployment of a container fails \kubernetes automatically retry. For stateless micro-services architectures such deployment strategy is popular.
 
 %----------------------------
 \subsection{Discussions}
