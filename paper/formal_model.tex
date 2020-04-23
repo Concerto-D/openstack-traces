@@ -1,4 +1,9 @@
-In this section, the streamlined \mad formal model is presented compared to previous publication~\cite{chardet:hal-01858150}. First the concepts of control component and assembly are formally introduced, then the operational semantics is detailed, and finally a structural properties of the model are given.
+In this section, the \mad formal model is presented, in a streamlined
+version compared to our previous
+publication~\cite{chardet:hal-01858150}. First the concepts of control
+component and assembly are formally introduced, then the operational
+semantics is detailed, and finally a structural properties of the
+model are given.
 
 %--------------------------
 \subsection{Control component}
@@ -98,7 +103,7 @@ associated to the transition, taken from the set of actions $\actions$.
 
 The coordination ports of a control component are divided between a set of \emph{provide ports} denoted $S_p$ and a set of \emph{use ports} denoted $S_u$. Ports are given a type among a set of types $\types$. The type of a given port $p$ is denoted $\types(p)$. This simple typing discipline is a way to distinguish categories of services or data that ports may provide or use.
 
-A provide port may be bound to sets of places. This binding relation is denoted $B_{S_p} \subseteq S_p \times \mathcal{P}(G)$. The binding concept is closely related to the operational semantics of \mad that will be detailed in Section~\ref{subsec:operational_semantics}. Intuitively, a provide port becomes \emph{enabled} if all the sets of places to which it is bound include at least one place that has been reached. Reaching a place means that a token has previously been holding in the place. Intuitively, bindings allow the modeling of conjunctions (all sets of places must be reached) and disjunctions (one set of place is reached if at least one of its place is reached) of constraints to control the enabling of provide ports. Note that once a port is enabled, it remains in that state forever. Thus, bindings represent places from which provide ports are provided.
+A provide port may be bound to sets of places. This binding relation is denoted $B_{S_p} \subseteq S_p \times \mathcal{P}(G)$. The binding concept is closely related to the operational semantics of \mad that will be detailed in Section~\ref{subsec:operational_semantics}. A provide port is \emph{enabled} if all the sets of places to which it is bound include at least one place that is reached. A place is reached if it holds \emph{or} has previously held a token. Intuitively, bindings allow the modeling of conjunctions (all sets of places must be reached) and disjunctions (one set of place is reached if at least one of its place is reached) of constraints to control the enabling of provide ports. Note that once a port is enabled, it remains in that state forever. Thus, bindings represent places from which provide ports are provided.
 %\CP{même si plus de jeton dans aucune place?}.
 %\HC{oui}
 
@@ -486,7 +491,17 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
     \in \reached^\omega$, leading to a contradiction.
   \end{proof}
 
-  This lemma indicates that the \mad model provides, by construction, a guarantee of reachability at the component level, \ie deadlocks cannot occur within a control component. At the level of an assembly, we cannot enforce similar structural constraints, because the different components are typically developed independently from each other, often by different actors. For this reason, reachability guarantees cannot be offered on assemblies. Instead we must rely on analysis of a given assembly. One way to perform this analysis is to use model-checking~\cite{coullon:hal-02323641}, but for most assemblies, a simpler analysis tool can be used. Such solution is given in the next section. 
+  This lemma indicates that the \mad model provides, by construction,
+  a guarantee of reachability at the component level, \ie deadlocks
+  cannot occur within a control component. At the level of an
+  assembly, we cannot enforce similar structural constraints, because
+  the different components are typically developed independently from
+  each other, often by different actors. For this reason, generic
+  reachability guarantees cannot be offered on assemblies. Instead we
+  must analyze a given assembly. One way to perform this
+  analysis is to use model-checking~\cite{coullon:hal-02323641}, but
+  for most assemblies, a simpler analysis tool can be used. Such a
+  solution is given in the next section.
   %\CP{Il faudrait expliciter
   %plus clairement ce que ce papier fournit et ce qui est des perspectives/future work}
 %}
