@@ -32,7 +32,8 @@
 %reducing deployment times, minimizing services interruptions etc.).
 
 % SR: "IT hardware (IoT, CPUs, GPUs, Raspberry Pis, etc.)": this enumeration mixes different things (one rather vague concept, two types of processing units, one brand)
-In contrast to monolithic software running on a single machine,
+%In contrast to monolithic software running on a single machine => CP: FAUX
+Because of it is distributed,
 distributed software is designed in a modular architectural style
 where each component (a term that, in this paper, refers indifferently
 to a module, a service, or a microservice) is responsible for a
@@ -43,7 +44,7 @@ become commonplace, whether it be executed in the cloud, on personal
 computers, mobile phones or objects.
 
 However, deploying a large distributed software system on
-infrastructures poses multiple challenges. Firstly, deployment
+distributed infrastructures poses multiple challenges. Firstly, deployment
 involves a variety of actors with different roles and areas of
 expertise, from \emph{developers} who are responsible for designing
 and coding the components, to \emph{sysadmins} and \emph{sysops} who
@@ -56,7 +57,7 @@ layers handled, etc. The process is error-prone, and difficult to test
 because faults can be caused by very specific hardware or software
 conditions in a heterogeneous environment. Lastly, deployment is an
 often time-consuming process, owing to the scale of the systems. This
-last point has largely been neglected in the literature. As a result,
+last point is usually neglected in the literature. As a result,
 complex systems such as OpenStack can require in excess of one hour to
 deploy with existing solutions that do not take full advantage of the
 distributed nature of the underlying hardware. This becomes especially
@@ -65,7 +66,7 @@ being deployed up to several hundreds of times every day.
 
 For these reasons, programming models and tools need to be developed
 to facilitate documented, verifiable and efficient deployment
-procedures. To this end, we propose \mad, a tool that relies on a
+procedures. To this end, we propose \mad, a model that relies on a
 declarative description of dependencies to automate the execution of
 deployments with a high level of parallelism, both between components
 and with them. Prior to execution, \mad deployments can also be
