@@ -1,26 +1,57 @@
-Distributed software deployment occurs between the development of components (functional part) and the execution of the distributed software on the infrastructure (management part). As a result, the particularity of a distributed software commissioning is that it relies on information about both the behaviors of the components and the underlying infrastructure on which each component will be executed. This frontier is often called the DevOps domain, where the commissioning fits in. Note that our definition of software commissioning does not include placement and scheduling optimization problems, nor reconfiguration aspects of the distributed software management.
+Distributed software deployment occurs between the development of
+components (functional part) and the execution of the distributed
+software on the infrastructure (management part). As a result,
+commissioning relies on information about both the behavior of the
+components and the infrastructure on which they will be executed, a
+frontier that is often called the DevOps domain. Note that our
+definition of software commissioning does not include placement and
+scheduling optimization problems, nor reconfiguration aspects of the
+distributed software management.
 
-% SR: The beginning of this paragraph suggests that it describes the lifecycle of the software ("first the code is written") but later it turns out that its purpose is to list three types of interfaces. Make this more explicit
-% SR: remove qualifiers such as "often", "most of the time"for consiceness and clarity
-When designing distributed software, first, the code of each component is written by a given \emph{developer} who often also codes a set of \emph{control interfaces} to act on the component, \eg \texttt{start}, \texttt{stop} or \texttt{update}. Most of the time, these control interfaces are used during the component commissioning. However, they are not sufficient as they only serve the component level, not the infrastructure and configuration levels. Second, configuration files are often used additionally as \emph{configuration interfaces} to get information from system administrators or operators that cannot be known in advance when writing the functional code of the component. Thirdly, components often require a set of packages or libraries to be installed on the host operating system to work properly. Those requirements are directly related to the \emph{infrastructure management} and may be handled through virtualization or on physical nodes by sysadmins.
+\SR{It's not entirely clear that the footnotes are examples. Is there
+  a better way to integrate them?}
+
+Commissioning distributed software requires coordinated interaction
+with various interfaces. Firstly, components have \emph{control
+  interfaces} provided by their developers, \eg \texttt{start},
+\texttt{stop} or \texttt{update}. Secondly, configuration files are
+used as \emph{configuration interfaces} to obtain, from system
+administrators or operators, information that is not known when
+writing the functional code of the component. Thirdly, components may
+require a packages or libraries to be installed on the host in order
+to work properly. Those requirements are directly related to
+\emph{infrastructure management} and may be handled through
+virtualization or on physical nodes by sysadmins.
 %
-In the end, the commissioning procedure of a single component is a \emph{coordination program} between these three kind of interfaces. Commissioning
-procedures are often explained in \texttt{README} files, or in documentation\footnote{\url{https://doc.ubuntu-fr.org/apache2}}. The deployment coordination of a single component can be simplified, \eg by using deployment scripts or ready-to-use virtual images. In such cases, the deployment is automated and written once. However, this should be parametric, as information related to infrastructures cannot be known in advance.
-% SR: the next sentence is not clear (especially the "without them" subclause)
-Furthermore, it is often difficult to find required scripts and images without them being fully parametric to be reusable in many cases. For this reason, deployment coordination procedures remain difficult even for a single component.
+In the end, the commissioning procedure of a single component is a
+\emph{coordination program} between these three kinds of
+interfaces. Commissioning procedures are often explained in
+\texttt{README} files, or in
+documentation\footnote{\url{https://doc.ubuntu-fr.org/apache2}}. The
+deployment coordination of a single component can be simplified, \eg
+by using deployment scripts or ready-to-use virtual images. In these
+cases, the deployment is automated and written once. However, because
+of the specificities of each infrastructure and application, these
+tools need to be parametric. Finding suitable scripts and images is
+often a challenge. For this reason, deployment coordination procedures
+remain difficult even for a single component.
 %
 When considering a complete distributed software composed of a set of
-components, the picture becomes even more complex, because
-the commissioning procedures of various components, designed by different developers and interacting with each other, must be coordinated.
-For instance, when installing a very basic Apache/MariaDB system, additional documentation is
-required\footnote{\url{https://doc.ubuntu-fr.org/lamp}} to combine the components. Another example could be the commissioning of Spark on top of Yarn\footnote{\url{https://spark.apache.org/docs/latest/running-on-yarn.html}}. %One can note that in this case, virtual images do not necessarily simplify the coordination as configuration parameters and additional configurations are needed, \eg such as virtual network configuration.
+components, the picture becomes even more complex, because the
+commissioning procedures of various components, designed by different
+developers and interacting with each other, must be coordinated. For
+instance, when installing a very basic Apache/MariaDB system,
+additional documentation is
+required\footnote{\url{https://doc.ubuntu-fr.org/lamp}} to combine the
+components. The commissioning of Spark on top of
+Yarn\footnote{\url{https://spark.apache.org/docs/latest/running-on-yarn.html}}
+is another example.
+%One can note that in this case, virtual images do not necessarily simplify the coordination as configuration parameters and additional configurations are needed, \eg such as virtual network configuration.
 %
-This complex coordination is usually the work of a \emph{devops} engineer. With the increasing complexity of distributed software deployment, the number of languages and tools for the devops community has grown considerably in recent years.
-
-%%% the three important metrics of this contribution
-% SR: The enumeration of the metrics occurs 3 times, with the exact same wording. Better to have one good place for it.
-As already mentioned, in this paper, three metrics are considered to gauge the quality of the automation of distributed software commissioning: (1) separation of concerns between the different actors of the commissioning procedure; (2) efficiency of commissioning procedures in terms of parallelism expressiveness; and (3) formalization of the solution, such that formal properties can be proven on a given commissioning procedure.
-If both separation of concerns and formalization are clearly important in any procedure involving multiple actors and subject to errors, the efficiency of a deployment needs to be motivated a bit more.
+This complex coordination is usually the work of a \emph{devops}
+engineer. With the increasing complexity of distributed software
+deployment, the number of languages and tools for the devops community
+has grown considerably in recent years.
 
 %%% precision on the efficiency
 % SR: "needs to be motivated more", "may seem useless": this
@@ -28,17 +59,59 @@ If both separation of concerns and formalization are clearly important in any pr
 % make. Instead we could say that "efficiency has been neglected in
 % previous work". And the importance of efficiency should appear in
 % the intro.
-Indeed, improving the efficiency of distributed software deployments may seem useless as this procedure is executed once and for all. However, this claim does not consider the problem as a whole and needs clarification. %
-First, the commissioning procedure of complex distributed software such as OpenStack (Section~\ref{sec:use-cases}) can require in excess of
-one hour, and significant opportunities for speedup exist. Second, a system
-administrator does not perform the commissioning process only once. When new
-machines or new clusters are installed in their infrastructure, when errors
-occur, or when updates are needed, deployments are executed again.
+Efficiency is an often neglected aspect of commissioning, but we show
+that its importance is not to be underestimated. First, the
+commissioning of complex distributed software is very
+time-consuming. For example OpenStack (Section~\ref{sec:use-cases})
+can require in excess of one hour to deploy, because existing
+solutions do not favor parallelism, and therefore exploit only a
+fraction of the capabilities of the infrastructures that they
+target. Second, although common sense would dictate that commissioning
+occurs only once, this is not the case. System administrators perform
+the commissioning process every time a new machine or new cluster is
+installed in their infrastructure, when errors occur, or when updates
+are needed.
 %
-Furthermore, with Continuous Integration (CI), Continuous Delivery (CD), and Continuous Deployment (CDep) of companies, research or open source projects, software commissioning are executed repeatedly, so that new features may be tested continuously. For instance, by exploring the traces of the OpenStack Continuous Integration platform\footnote{\url{http://logstash.openstack.org}}, we have observed over nine days, from Februrary 19 to February 27, 2020, during which the Kolla\footnote{\url{https://wiki.openstack.org/wiki/Kolla}} deployment of OpenStack has been executed almost 3000 times. While being irregular this represents an average of 300 runs per day.
+Furthermore, with Continuous Integration (CI), Continuous Delivery
+(CD), and Continuous Deployment (CDep) of companies, research or open
+source projects, software commissioning is executed repeatedly in
+order to test new features continuously. For instance, the traces of
+the OpenStack Continuous Integration
+platform\footnote{\url{http://logstash.openstack.org}} show that over
+a nine-day period, from Februrary 19 to February 27, 2020, the
+Kolla\footnote{\url{https://wiki.openstack.org/wiki/Kolla}} deployment
+of OpenStack was executed almost 3000 times, an average of more than
+300 time per day. This period did not precede a release, so even
+higher numbers could be expected.
 % SR: next sentence not needed
-Moreover, this period was not a release period where we could expect more calls to Kolla. These numbers will be detailed in Section~\ref{sec:use-cases} and are available on the reproducible lab of the paper.
+%% These numbers will be detailed in
+%% Section~\ref{sec:use-cases} and are available on the reproducible lab
+%% of the paper.
 % SR: this seem unmotivated and out of context
-Finally, having an efficient deployment procedure is a first step toward efficient reconfiguration (\eg self-adaptive systems) and dynamic infrastructures (\eg edge computing) where disruption time of services must be minimized.
+%% Finally, having an efficient deployment procedure is a first step
+%% toward efficient reconfiguration (\eg self-adaptive systems) and
+%% dynamic infrastructures (\eg edge computing) where disruption time of
+%% services must be minimized.
 
-Of course, many different techniques could be studied to improve the efficiency of distributed software deployments, notably using optimized and adapted system commands in commissioning scripts and programs (\eg \texttt{rsync} instead of many \texttt{scp}); working on the optimization of a given system command (\eg \nix package manager instead of \texttt{apt-get}); if using virtual images or container images, improving the boot time of hypervisors~\cite{nguyen:hal-02172288}; if using \docker images, optimizing the placement of image layers on the network~\cite{darrous:hal-01745405}; exposing more parallelism in commissioning languages~\cite{dicosmo:hal-01233489}. The scope of this paper is to study this last option, in other words how to improve the parallelism expressiveness of commissioning tools and languages.
+Many different techniques can be studied to improve the
+efficiency of distributed software deployments, notably using
+optimized and adapted system commands in commissioning scripts and
+programs (\eg \texttt{rsync} instead of many \texttt{scp}); working on
+the optimization of a given system command (\eg \nix package manager
+instead of \texttt{apt-get}); if using virtual images or container
+images, improving the boot time of
+hypervisors~\cite{nguyen:hal-02172288}; if using \docker images,
+optimizing the placement of image layers on the
+network~\cite{darrous:hal-01745405}; facilitating parallelism through
+commissioning languages~\cite{dicosmo:hal-01233489}. This paper
+focuses on the last option.
+
+\SR{The motivation section doesn't really focus on the formalization aspect}
+
+%%% the three important metrics of this contribution
+Ultimately, we pay particular attention to three factors to
+assess the quality of the automation of distributed software
+commissioning: (1) separation of concerns between the different
+actors; (2) efficiency, \ie level of parallelism; and (3)
+formalization of the solution. We give an overview of the related work
+based on these aspects.
