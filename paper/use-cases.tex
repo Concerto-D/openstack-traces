@@ -40,7 +40,7 @@ operator. The chosen modules then cooperate to respond to the operator
 requirements. For instance, the operator may need services to manage
 virtual rather than bare-metal machines, object storage rather than
 file-systems, while VLAN networks and billing services may not be
-desired in her use-case. As defined in the large OpenStack
+desired in her use case. As defined in the large OpenStack
 documentation, each software module has its own commissioning process,
 and may depend on other modules commissionings.
 %
@@ -56,7 +56,7 @@ production.  It relies on \ansible to deploy OpenStack's modules as
 rest of this section. It is highly opinionated out-of-the-box,
 allowing operators to quickly deploy a basic OpenStack instance, but
 also enabling the complete customization for advanced
-administrators. As a consequence, the use-case described in this
+administrators. As a consequence, the use case described in this
 section corresponds to the default \kolla deployment, which provides
 the essential mechanisms to operate an infrastructure with OpenStack.
 
@@ -108,7 +108,7 @@ This table also indicates if parallel transitions exist, \ie \emph{intra-comp-ta
   \end{center}
 \end{figure*}
 
-Figure~\ref{fig:full} depicts the use-case from the sysadmin or devops viewpoint 
+Figure~\ref{fig:full} depicts the use case from the sysadmin or devops perspective 
 (\ie at the level of the \mad assembly). For the sake of simplicity and 
 readability, the connections between ports representing data are not represented. 
 This figure helps to understand the high-level of interplay between components. 
@@ -135,7 +135,7 @@ exposing the same ports.
 %   2. Register est une transition liée à Keystone qui est très intéressante
 %   quand on examine Nova (transition indépendante des autres)
 
-We now study our use-case from the developer viewpoint, focusing on the three colored control components from Figure~\ref{fig:full}: MariaDB, Nova and Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these components.
+We now study our use case from the perspective of the developer, focusing on the three colored control components from Figure~\ref{fig:full}: MariaDB, Nova and Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these components.
 
 The dependencies previously observed at the assembly level are more
 detailed at the developer level. First, if we isolate Nova and Glance
@@ -155,7 +155,7 @@ executed in parallel while \emph{register} waits for Keystone (\eg for
 Nova, this transition is independent for all the other
 ones). Similarly, Figure~\ref{fig:sub} depicts for each component many
 parallel transitions showing how \mad can be leveraged for
-\emph{intra-comp-tasks} parallelism in this use-case.
+\emph{intra-comp-tasks} parallelism in this use case.
 
 %------------------------------------
 \subsection{Experimental Setup and Parameters}
@@ -204,7 +204,7 @@ Grid5000, LibVirt), and
 Execo\footnote{\url{http://execo.gforge.inria.fr/doc/latest-stable/index.html}},
 another library for prototyping experiments. Since \kolla, our
 reference, does not manage resource provisioning, we do not include
-this phase in the use-case, nor in our benchmark. Even if resource
+this phase in the use case, nor in our benchmark. Even if resource
 provisioning could be managed by \mad, this step is left to EnosLib
 and not counted in execution times.
 
@@ -248,7 +248,7 @@ component.
 
 The third assembly, called \madass, leverages our contribution to
 commission OpenStack. It corresponds to the one we previously
-described when presenting the use-case. All the components have their
+described when presenting the use case. All the components have their
 own internals definition, based on our understanding of the OpenStack
 commissioning process. As depicted previously in \cref{tab:os}, most
 components are built on multiple places and transitions. This assembly
@@ -279,7 +279,7 @@ in which images are fetched from an Internet repository (\ie the
 DockerHub registry). \Cref{tab:images} gives for each OpenStack node
 (\ie Compute, Network and Control) the number of \docker images to
 download and their compressed size.  As depicted in this table, more
-than $10$GB must be downloaded in our use-case.  Furthermore, the
+than $10$GB must be downloaded in our use case.  Furthermore, the
 control node has to download almost twice as much data than the other
 nodes.
 

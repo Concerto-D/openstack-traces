@@ -20,18 +20,48 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Principles}
 
-\mad is a formal component model inspired by \aeolus that enhances the automation, the separation of concerns and the parallelism level of distributed software commissioning. \mad is a procedural-oriented \emph{configuration tools} and a component-based coordination model for commissioning procedures. Usually, component models are used to write distributed software in a modular fashion while having guarantees on its composition, thus improving separation of concerns between developers, easing the reusability of existing pieces of code, and enhancing flexibility and maintainability of code. \mad makes use of these properties for the design of distributed software commissioning instead of functional code design.
+\mad is a procedural \emph{configuration tool} relying on a
+component-based coordination model for commissioning
+procedures. Inspired by \aeolus, it enhances automation, separation of
+concerns and level of parallelism for distributed software
+commissioning. Usually, component models are used to write distributed
+software in a modular fashion with guarantees on composition,
+thus improving separation of concerns between developers, promoting
+reuse of existing pieces of code, and enhancing flexibility and
+maintainability of code. \mad brings these properties to commissioning
+design instead of functional code design.
 
-A \mad component is called a \emph{control} component as it is only intended to model the commissioning procedure of an already existing piece of software code (functional component, module or service). A \mad control component is a type containing an \net inspired from Petri nets, where places represent milestones of the commissioning, and transitions connect the places together and represent actions to be performed between milestones (\eg \texttt{apt-get install}, \texttt{docker pull}, etc.). If multiple transitions leave a place, their parallel execution is automatically handled and synchronized by \mad. A component may have dependencies towards other components. Such dependencies are declared through a well-known object in component-based software engineering: ports. Two types of ports, working in pairs, are available in \mad: \emph{provide} and \emph{use} ports. However, both of these are \emph{coordination} ports, \ie they model dependencies or synchronization but do not implement them. By using coordination ports, each component type can be defined independently and component instances can be connected later by another developer, thus improving the separation of concerns and the reusability of commissioning procedures. A provide coordination port is bound to sets of places that represents the milestones from which the service or the data is offered. Finally, use coordination ports are bound to one or multiple transitions where data and service requirements are actually used.
+A \mad component is called a \emph{control} component, as it is only
+intended to model the commissioning procedure of an already existing
+piece of software code (functional component, module or service). A
+\mad control component is a type containing an \net inspired by Petri
+nets, where places represent milestones of the commissioning, and
+transitions between places represent actions to be performed (\eg
+\texttt{apt-get install}, \texttt{docker pull}, etc.). If multiple
+transitions leave a place, their parallel execution is automatically
+handled and synchronized by \mad. A component may have dependencies
+with other components. These dependencies are declared through ports,
+a well-known concept in component-based software engineering. Two
+types of ports, working in pairs, are available in \mad:
+\emph{provide} and \emph{use} ports. However, both are
+\emph{coordination} ports, \ie they model dependencies or
+synchronization but do not implement them. By using coordination
+ports, each component type can be defined independently and component
+instances can be connected later by another developer, thus improving
+separation of concerns and reusability of commissioning procedures. A
+provide coordination port is bound to sets of places that represents
+the milestones that have to be reached for the service or data to be
+offered. Finally, use coordination ports are bound to one or multiple
+transitions where data and service is actually required.
 
 The overall commissioning procedure of a distributed software system
-is built by composition in an \emph{assembly}, where component
-types are instantiated and connected. All control components execute
-simultaneously, thus introducing more parallelism (in addition to
-parallel transitions). Intuitively, two components connected by their
-respective compatible ports will automatically be coordinated so
-that a component cannot use a service or data if the associated
-provide port is not enabled.
+is built by composition in an \emph{assembly}, where component types
+are instantiated and connected. All control components execute
+simultaneously, thus introducing inter-component parallelism, in
+addition to the intra-component parallelism offered by parallel
+transitions. Two components connected by their respective compatible
+ports will automatically be coordinated so that a component cannot use
+a service or data if the associated provide port is not enabled.
 
 \mad offers the expressiveness required to design composable and parallel
 commissioning procedures for complex distributed software systems.
@@ -52,7 +82,7 @@ commissioning procedures for complex distributed software systems.
 
 \paragraph{Example}{
 	Figure~\ref{fig:example} depicts a \mad commissioning assembly of an Apache 
-	web server and a MariaDB database by using the graphical notation of \mad. 
+	web server and a MariaDB database, using the graphical notation of \mad. 
 	This example is based on a real container-based deployment described by 
 	RedHat\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_an_apache_web_server_container}}\footnote{\url{https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux_atomic_host/7/html/getting_started_with_containers/install_and_deploy_a_mariadb_container}}.
 	 Two \mad control components are declared in this example: Apache and MariaDB. 
@@ -66,7 +96,26 @@ commissioning procedures for complex distributed software systems.
 	MariaDB service.
 } %\CP{Ne faut il pas dire quelque part que les ports ne passent que les info de synchro et pas les données/services eux-même ? Par exemple est-ce \mad qui transfére les données comme l'@IP mdb?}
 
-In \mad, two kinds of \emph{actors} are considered. The first is the \emph{developer} of a control component, who may be the author of the associated existing piece of code, another developer, or even a system operator or administrator. The second is the \emph{devops} engineer who designs an assembly, \ie writes the overall commissioning procedure of a distributed software system to deploy on their infrastructure. One important benefit of \mad is its clear separation of concerns between the commissioning of a single component on the one hand, and the composition of an assembly, without having to care about the detailed commissioning of each component on the other hand. For instance, even if Ansible offers properties close to composition (\eg roles, playbooks, tasks, etc.), the devops still has to determine the correct order of composition. By contrast, the correct coordination, hence the correct order of execution, is automatically guaranteed by the \mad semantics and the composition of the component instances. The composition viewpoint is illustrated in Figure~\ref{fig:simple} where the details of each component, not needed for composition, are omitted. This type of property has also been offered by Aeolus~\cite{dicosmo2014ic}, albeit without parallelism within components.
+\mad involves two kinds of actors. First is the \emph{developer} of a
+control component, who may be the author of the associated existing
+piece of code, another developer, or even a system operator or
+administrator. Second is the \emph{devops} engineer who designs an
+assembly, \ie writes the overall commissioning procedure of a
+distributed software system to deploy on an infrastructure. \mad
+offers clear separation of concerns between the commissioning of a
+single component on the one hand, and the composition of an assembly
+on the other. The latter does not require detailed information about
+the commissioning of each component. This is a benefit compared to
+existing solution. For instance, even if Ansible offers properties
+close to composition (\eg roles, playbooks, tasks, etc.), the devops
+still has to determine the correct order of composition. By contrast,
+the correct coordination, hence the correct order of execution, is
+automatically guaranteed by the \mad semantics and the composition of
+the component instances. Composition is illustrated in
+Figure~\ref{fig:simple} where the details of each component, since
+they are not needed, are omitted. This type of property is also
+offered by Aeolus~\cite{dicosmo2014ic}, albeit without parallelism
+within components.
 
 \begin{figure}[tbp]
   \begin{center}
@@ -129,26 +178,52 @@ Section~\ref{sec:formal_model}.
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Concrete language}
 
-\mad also comes with a prototype and a concrete syntax that has been implemented in \python. \mad is a declarative language that follows the model previously presented to define control component types and assemblies of components. \python has been chosen to prototype \mad because it is a very well known language from the DevOps community. Furthermore by using \python parametric components and assemblies can easily be defined. One can note though that we could also have designed a descriptive language closer to TOSCA or Ansible by using YAML for instance. This is simply an implementation choice. 
+\mad also comes with a prototype and a concrete syntax that are
+implemented in \python. \mad is a declarative language that follows
+the model previously presented to define control component types and
+assemblies of components. \python has been chosen to prototype \mad
+because it is a widely known language within the DevOps
+community. Furthermore, with \python, parametric components and
+assemblies can easily be defined. Note however that another
+implementation choice could have been to design a descriptive language
+closer to TOSCA or Ansible, for instance using YAML.
 
-Listing~\ref{codemdb} shows the declaration of the MariaDB component type of Figure~\ref{fig:example}. Lines 3 to 8 declare the places of the component type. A place is identified by a unique \texttt{string}. Lines 9 to 15 declare the transitions of the component type. A transition is identified by a unique key (a \texttt{string}), and is associated through a dictionary with a source and a destination place. Moreover, each transition is associated with a function to call to perform corresponding actions. For instance, the function \texttt{f\_pull} of transition \texttt{pull} is declared on line 20, and provides the code to execute during this transition. Finally lines 16 to 19 declare the coordination ports of the control component type. A port is identified by a unique key (a \texttt{string}), and is associated with a type (use or provide) and the elements to which it is bound. As already described, provide ports are bound to sets of places, and use ports to a set of transitions. In the case of MariaDB one provide port, namely \texttt{serv}, is provided both from the \texttt{std} place, and another (data) provide port, namely \texttt{ip} is provided from the first place \texttt{wtg}.
+Listing~\ref{codemdb} shows the declaration of the MariaDB component
+type of Figure~\ref{fig:example}. Lines 3 to 8 declare the places of
+the component type. A place is identified by a unique
+\texttt{string}. Lines 9 to 15 declare the transitions of the
+component type. A transition is identified by a unique key (a
+\texttt{string}), and is associated through a dictionary with a source
+and a destination place. Moreover, each transition is associated with
+a function to call to perform corresponding actions. For instance, the
+function \texttt{f\_pull} of transition \texttt{pull} is declared on
+line 20, and provides the code to execute during this
+transition. Finally lines 16 to 19 declare the coordination ports of
+the control component type. A port is identified by a unique key (a
+\texttt{string}), and is associated with a type (use or provide) and
+the elements to which it is bound. As described previously, provide
+ports are bound to sets of places, and use ports to a set of
+transitions. In the case of MariaDB, one provide port, namely
+\texttt{serv}, is provided from the place \texttt{std}, and
+another (data) provide port, namely \texttt{ip} is provided from the
+first place \texttt{wtg}.
 
 \input{./code/mariadb.tex}
 
-Similarly, Listing~\ref{codeapache} shows the declaration of the Apache control component of Figure~\ref{fig:example} which has one less place and one less transition compared to the MariaDB component. Furthermore, the Apache component type contains two use coordination ports, one modeling data and one modeling a service (lines 18 to 21).
+Similarly, Listing~\ref{codeapache} shows the declaration of the Apache control component of Figure~\ref{fig:example}. The Apache component type contains two use coordination ports, one modeling data and one modeling a service (lines 18 to 21).
 
 \input{./code/apache.tex}
 
-Finally, the Listing~\ref{codeass} shows the declaration of the assembly of components of Figure~\ref{fig:example}. First, lines 6 and 7 respectively instantiate component types MariaDB and Apache previously declared. Second, line 9 to 13 are as follows: the creation of an assembly, the addition of component instances to the assembly, the connections of the components. Finally, lines 15 and 16 run the assembly to perform the commissioning of MariaDB/Apache. An overview of this execution is given in the next section.
+Finally, Listing~\ref{codeass} shows the declaration of the assembly of components of Figure~\ref{fig:example}. Lines 6 and 7 respectively instantiate the component types MariaDB and Apache previously declared. Line 9 to 13 perform the creation of an assembly, the addition of component instances to the assembly, and the connections of the components. Finally, lines 15 and 16 run the assembly to perform the commissioning of MariaDB/Apache. An overview of this execution is given in the next section.
 
 \input{./code/assembly.tex}
 
-In this work we consider the placement optimization problem as solved. Thus, there is no particular need for a way to specify the infrastructure on which the deployment will be performed. In our use-cases the placement information is given exactly as in Ansible, \ie by using inventory files (Section~\ref{sec:related_work}).
+In this work, we assume that the placement optimization problem is solved. Thus, there is no particular need for a way to specify the infrastructure on which the deployment will be performed. In our use cases, the placement information is given exactly as in Ansible, \ie using inventory files (Section~\ref{sec:related_work}).
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Execution}
 
-In \mad, executing a commissioning procedure requires the execution of an assembly. The \mad execution model is governed by operational semantics rules to move from one configuration to another. The concept of configuration, which is introduced formally in Section~\ref{sec:formal_model}, intuitively corresponds to a snapshot of the execution of an assembly. It is composed of the location of the tokens (modeling the evolution of the process), a history of places that have been reached, and the set of actions (transitions) under execution. In practice, semantics rules move tokens from places to transitions within components. Those rules are inspired by those of Petri nets, yet have a specific semantics for docks, transitions, bindings and ports. Details of the transformation from a \mad assembly to a Petri net have been given in~\cite{coullon:hal-02323641}.
+In \mad, executing a commissioning procedure requires the execution of an assembly. The \mad execution model is governed by operational semantics rules to move from one configuration to another. The concept of configuration, which is introduced formally in Section~\ref{sec:formal_model}, intuitively corresponds to a snapshot of the execution of an assembly. It is composed of the location of the tokens (modeling the evolution of the process), a history of places that have been reached, and the set of actions (transitions) under execution. In practice, semantics rules move tokens from places to transitions within components. Those rules are inspired by those of Petri nets, yet have a specific semantics for docks, transitions, bindings and ports. Details of the transformation from a \mad assembly to a Petri net are given in~\cite{coullon:hal-02323641}.
 
 %% In this paper, the execution of a \mad assembly has been streamlined
 %% compared to our previsous work~\cite{chardet:hal-01858150} and is
@@ -179,9 +254,9 @@ the following behaviors:
 
 \begin{enumerate}
 \item \emph{Reaching a place}: when all the actions required by a place have finished, the place can be reached. Note that the enabling of provide ports depends on place reached, so this event may enable additional ports.
-\item \emph{Leaving a place}: after a place of the deployment has been reached, new actions can be started. Thus tokens are moved to output docks (\ie source docks of next transitions).
+\item \emph{Leaving a place}: after a place of the deployment has been reached, new actions can be started. Thus tokens are moved to output docks (\ie source docks of outgoing transitions).
 \item \emph{Firing a transition}: if the source dock of a transition contains a token, and all use ports bound to this transition are enabled, the action associated with the transition may be initiated.
-\item \emph{Terminating an action}: an ongoing action may terminate at any point during the execution. This captures the fact that, after an action has been initiated, its execution and termination are outside of the control of the \mad model. However, our notion of execution is limited to non-terminating actions.
+\item \emph{Terminating an action}: an ongoing action may terminate at any point during the execution. This captures the fact that, after an action has been initiated, its execution and termination are outside of the control of the \mad model. However, our notion of execution excludes non-terminating actions.
 \item \emph{Ending a transition}: after an action terminates, a token is placed on the output dock of the corresponding transition.
 \end{enumerate}
 
@@ -196,7 +271,7 @@ the following behaviors:
 \end{figure}
 
 \paragraph{Example}{
-Let detail the commissioning execution of the Apache/MariaDB
+Let us detail the commissioning execution of the Apache/MariaDB
 example. The initial assembly, given in Figure~\ref{fig:example}, has
 already been described. Figure~\ref{fig:scenari} depicts three examples of
 configurations that may occur at different steps of the
