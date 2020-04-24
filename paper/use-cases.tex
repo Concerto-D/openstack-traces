@@ -1,12 +1,12 @@
 \graphicspath{{images/}}
 
-In this section an evaluation of \mad on a real case-study is
-presented, the commissioning of OpenStack. As in the previous section,
-all results presented below can be reproduced by following the lab on
-the publicly available repository\footnote{\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal/lab}}. First
+This section present an evaluation of \mad on a real case, the
+commissioning of OpenStack. As in the previous section, all results
+presented below can be reproduced by following a publicly available
+lab\footnote{\url{https://gitlab.inria.fr/VeRDi-project/madeus-journal/lab}}. First,
 this lab offers the possibility to reproduce the figures presented in
 this section from the raw data obtained in our experiments on
-Grid'5000. Second, the lab redraws the complete process to reproduce
+Grid'5000. Second, the lab outlines the complete process to reproduce
 the experiments on the Grid'5000 platform.
 
 %------------------------------------
@@ -14,58 +14,61 @@ the experiments on the Grid'5000 platform.
 \label{subsec:openstack}
 %------------------------------------
 
-OpenStack is the de-facto open-source solution to address the IaaS
-level of the Cloud paradigm, in other words OpenStack can be seen as
-the open-source operating system of the Cloud. Since $2010$, its
+OpenStack is the de facto standard open-source solution to address the
+IaaS level of the Cloud paradigm, in other words OpenStack can be seen
+as the open-source operating system of the Cloud. Since $2010$, its
 community has gathered nearly $700$ organizations (such as Google, IBM
 or Intel) and has produced more than $20$ million lines of code. Its
 adoption is still growing in various domains such as public
-administrations, e-commerce and science\footnote{See
-  \url{http://superuser.openstack.org/} for further information.}.
+administrations, e-commerce and
+science\footnote{See \url{http://superuser.openstack.org/} for further
+information.}.
 
 OpenStack is a large distributed software system that brings together
-almost $100$ software projects. Each project is in charge of a
-specific aspect of the infrastructure management (\eg provision
-virtual machines, provide them with storage, interconnect them through
-networks), and their cooperation is the key to providing the features
-required by Cloud management.
+almost $100$ software projects. Various projects are in charge of
+specific aspects of the infrastructure management (\eg provisioning
+virtual machines, providing them with storage, interconnecting them
+through networks), and their cooperation is the key to providing the
+features required by Cloud management.
 %
 Those projects are themselves composed of several software modules
 that are responsible for very specific tasks (\eg placement,
-hypervisors etc.). While they are not all mandatory to deploy an
+hypervisors, etc.). While they are not all mandatory to deploy an
 operable IaaS, $250$ software modules are available in those projects.
 %
 An OpenStack instance is a composition of some of those modules by the
 operator. The chosen modules then cooperate to respond to the operator
 requirements. For instance, the operator may need services to manage
 virtual rather than bare-metal machines, object storage rather than
-file-systems, while VLAN networks and billing services may not be
+file systems, while VLAN networks and billing services may not be
 desired in her use case. As defined in the large OpenStack
 documentation, each software module has its own commissioning process,
 and may depend on other modules commissionings.
 %
-Thus, the deployment of a typical OpenStack instance implies many
+Thus, the deployment of a typical OpenStack instance involves many
 software modules whose commissioning process is characterized by a
 large amount of tasks and interplays. As a consequence, the
 commissioning process of OpenStack is complex to understand and can be
 very long when tasks are executed sequentially.
 
-\kolla is one of the most popular tool for deploying OpenStack in
+\kolla is one of the most popular tools for deploying OpenStack in
 production.  It relies on \ansible to deploy OpenStack's modules as
-\docker containers, and will be considered as our reference in the
-rest of this section. It is highly opinionated out-of-the-box,
-allowing operators to quickly deploy a basic OpenStack instance, but
-also enabling the complete customization for advanced
+\docker containers, and will our reference in the
+rest of this section.
+% SR: not sure what is meant
+%It is highly opinionated out-of-the-box,
+It allows operators to quickly deploy a basic OpenStack instance, but
+also offers complete customization for advanced
 administrators. As a consequence, the use case described in this
 section corresponds to the default \kolla deployment, which provides
 the essential mechanisms to operate an infrastructure with OpenStack.
 
 In the following, we show how the commissioning process of an
-OpenStack project can be transcribed as a \mad component. Leveraging
+OpenStack project can be translated into a \mad component. Leveraging
 \mad enables us to express tasks and components coordination. As a
-consequence, the \mad modeling improves the global commissioning
-process understandability, and can be used to reduce commissioning
-time by exploiting \emph{SIMH}, \emph{inter-comp}, \emph{inter-comp-tasks}
+consequence, the \mad modeling improves the clarity of the global
+commissioning process, and can be used to reduce commissioning time by
+exploiting \emph{SIMH}, \emph{inter-comp}, \emph{inter-comp-tasks}
 and \emph{intra-comp-tasks} parallelism levels.
 
 \begin{table*}
@@ -82,17 +85,23 @@ and \emph{intra-comp-tasks} parallelism levels.
 To compare the performance of \kolla and \mad, we have defined $11$
 \mad components based on the \ansible roles defined in \kolla's
 playbooks (\ie \ansible sequence of components to deploy). Their
-names are built for most of them on the OpenStack project they deploy.
+names usually indicate the OpenStack project they deploy.
 \Cref{tab:os} lists these components and indicates which aspect of the
-Cloud management they are in charge of. 
+Cloud management they are responsible for.
 %
 
 Each of these control components has been designed such that \ansible roles and 
 their associated tasks are divided into \mad transitions. \Cref{tab:os} displays 
-some metrics of the \mad components designed from \ansible roles of 
+some metrics for the \mad components designed from \ansible roles of 
 \kolla: the number of places, transitions and ports.
 %
-This table also indicates if parallel transitions exist, \ie \emph{intra-comp-tasks} parallelism, denoted \texttt{ICT}. Also, the more ports, the more \mad have to coordinate interplays during the commissioning. As depicted in \cref{tab:os}, Nova, Glance, Neutron and MariaDB are components of particular interests since they contain more transitions and ports than the others.
+This table also indicates whether parallel transitions
+exist, \ie \emph{intra-comp-tasks} parallelism,
+denoted \texttt{ICT}. Additionally, the higher the number of ports, the
+more coordination must be performed by \mad during the commissioning. As
+depicted in \cref{tab:os}, Nova, Glance, Neutron and MariaDB are
+components of particular interest since they contain more transitions
+and ports than the others.
 
 %------------------------------------
 \subsection{Expressivity and Separation of Concerns}
@@ -108,18 +117,18 @@ This table also indicates if parallel transitions exist, \ie \emph{intra-comp-ta
   \end{center}
 \end{figure*}
 
-Figure~\ref{fig:full} depicts the use case from the sysadmin or devops perspective 
+Figure~\ref{fig:full} depicts the use case from the perspective of the sysadmin or devops engineer 
 (\ie at the level of the \mad assembly). For the sake of simplicity and 
 readability, the connections between ports representing data are not represented. 
-This figure helps to understand the high-level of interplay between components. 
-For instance, Neutron, Glance and Nova require Keystone, while Keystone requires 
-itself a database (\ie MariaDB) for its commissioning process. Regarding the 
-separation of concerns, the devops does not need to understand component 
+This figure helps to understand the high level of interplay between components. 
+For instance, Neutron, Glance and Nova require Keystone, while Keystone itself requires 
+a database (\ie MariaDB) for its commissioning process. Regarding
+separation of concerns, the devops engineer does not need to understand component 
 internals. She just needs to compose the desired components by listing them and 
 connecting their compatible ports. As a consequence, a component can be replaced 
 by another one if they expose the same interfaces. For instance the operator could 
-replace MariaDB with MySQL: another component which also implements a database by 
-exposing the same ports.
+replace MariaDB with MySQL, another component that also implements a database and
+exposes the same ports.
 
 \begin{figure*}[t]
   \begin{center}
@@ -138,30 +147,30 @@ exposing the same ports.
 We now study our use case from the perspective of the developer, focusing on the three colored control components from Figure~\ref{fig:full}: MariaDB, Nova and Glance. Figure~\ref{fig:sub} depicts the internals and interplays of these components.
 
 The dependencies previously observed at the assembly level are more
-detailed at the developer level. First, if we isolate Nova and Glance
-for instance, while Figure~\ref{fig:full} let us think that Glance
-must be deployed before Nova, it is clear here that once Nova obtains
+detailed at the developer level. For instance, if we isolate Nova and Glance,
+Figure~\ref{fig:full} lets us think that Glance
+must be deployed before Nova, but it is clear here that once Nova obtains
 Glance's IP address (provided by the first place in Glance), both
 components can be deployed in parallel. This shows how \mad can be
 leveraged for \emph{inter-comp} and \emph{inter-comp-tasks}
-parallelism.  Second, as we discussed before, it seemed in
-Figure~\ref{fig:full} that MariaDB must be deployed before Keystone,
-and Keystone before Neutron/Glance/Nova. However, with the \mad
-representation depicted in Figure~\ref{fig:sub}, we understand that
+parallelism. In addition, as discussed previously,
+Figure~\ref{fig:full} suggests that MariaDB must be deployed before Keystone,
+and Keystone before Neutron/Glance/Nova. However, the \mad
+representation depicted in Figure~\ref{fig:sub} shows that
 only the \emph{register} transition of Glance and Nova requires the
-service catalog Keystone to be available (\ie to register themselves
-in the catalog). We can see on the figure that other tasks can be
-executed in parallel while \emph{register} waits for Keystone (\eg for
-Nova, this transition is independent for all the other
-ones). Similarly, Figure~\ref{fig:sub} depicts for each component many
-parallel transitions showing how \mad can be leveraged for
+Keystone catalog service to be available (\ie to register themselves
+in the catalog). We see on the figure that other tasks can be
+executed in parallel, while \emph{register} waits for Keystone (\eg for
+Nova, this transition is independent from all others).
+Similarly, Figure~\ref{fig:sub} depicts many
+parallel transitions for each component, showing how \mad can be leveraged for
 \emph{intra-comp-tasks} parallelism in this use case.
 
 %------------------------------------
 \subsection{Experimental Setup and Parameters}
 % ------------------------------------
 
-This section defines first the experimental setup: (i) how modules are
+This section first defines the experimental setup: (i) how modules are
 distributed among nodes (\ie servers or machines) and (ii) the testbed
 characteristics. Then we describe the parameters used during
 our experimentation: (iii) the assemblies we designed to compare our
@@ -171,7 +180,7 @@ fetched by nodes.
 %-------
 \paragraph{Node roles and module distribution}
 Each of the $11$ components defined earlier in \kolla is in charge of
-an OpenStack project. As we said previously, each OpenStack project
+an OpenStack project. As mentioned, each OpenStack project
 contains multiples software modules. Hence, each component actually
 deploys different modules ($36$ in total). A basic multi-node \kolla
 deployment targets three nodes. First, the \emph{Control} node, which
@@ -192,19 +201,18 @@ hosts $9$ services.
 
 %-------
 \paragraph{Testbed and resource provisioning}
-Our evaluations have been conducted on two clusters from the
+Our evaluations have been conducted on two clusters of the
 experimental platform Grid'5000: \ecotype and \nova. \Cref{tab:g5k}
 shows the hardware configuration for both clusters. The cluster
-\ecotype has a better hardware configuration than the latter,
-regarding CPU, memory and network interfaces, as detailed in the
-table. To design reproducible benchmarks, we used
+\ecotype has better hardware (CPU, memory, networkinterfaces) than \nova,
+as exposed in the table. To design reproducible benchmarks, we used
 EnosLib\footnote{\url{https://gitlab.inria.fr/discovery/enoslib}}, a
 library to build experimental frameworks on multiple testbeds (\eg
 Grid5000, LibVirt), and
 Execo\footnote{\url{http://execo.gforge.inria.fr/doc/latest-stable/index.html}},
 another library for prototyping experiments. Since \kolla, our
 reference, does not manage resource provisioning, we do not include
-this phase in the use case, nor in our benchmark. Even if resource
+this phase in the use case, nor in our benchmark. Although resource
 provisioning could be managed by \mad, this step is left to EnosLib
 and not counted in execution times.
 
@@ -213,15 +221,15 @@ and not counted in execution times.
 Our performance evaluation compares three assemblies that
 are designed to capture the behavior of \ansible, \aeolus and \mad. To
 that end, the component internals for each assembly vary with regards
-to the number of places, transitions and ports. It is also important
-to understand that we re-used the \ansible files already provided by
-\kolla by splitting them into component transitions. By using \mad to
+to the number of places, transitions and ports. Importantly, we re-used
+the \ansible files provided by
+\kolla and split them into component transitions. By using \mad to
 coordinate \ansible execution, it is possible for us to provide a way
-to fairly compare these solutions. Moreover, by using splitted \kolla
-roles the \emph{SIMH} parallelism level is handled by \ansible in the
+to fairly compare these solutions. Moreover, by using divided \kolla
+roles, the \emph{SIMH} parallelism level is handled by \ansible in the
 three assemblies.
 
-The first assembly, called \ansass matches the \kolla-ansible
+The first assembly, called \ansass, matches the \kolla-\ansible
 commissioning process. Each component is triggered sequentially, in
 the same way and order as \ansible triggers sequentially the roles
 defined in \kolla. Since there is simply a sequential coordination
