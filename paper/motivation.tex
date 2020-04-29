@@ -110,7 +110,27 @@ network~\cite{darrous:hal-01745405}; facilitating parallelism through
 commissioning languages~\cite{dicosmo:hal-01233489}. This paper
 focuses on the last option.
 
-\SR{The motivation section doesn't really focus on the formalization aspect}
+%\SR{The motivation section doesn't really focus on the formalization aspect}
+Parallelism generally adds to the complexity of execution models,
+because a parallel program can execute in many different ways based on
+non-deterministic interleavings of instructions. This can create
+difficulties in the development of parallel programs, including
+software commissioning procedures. Since added performance should not
+come at the cost of correctness, it is important to mitigate this
+issue. Various strategies can be used, notably good programming
+practices and software verification, but all require an unambiguous
+definition of the semantics of the programming model. Developers need
+to understand the various possible behaviors of the software,
+independenly of the order of execution, which can be affected by
+factors outside of their control, \eg implementation, communications,
+execution speed, etc. Software verification techniques for their part
+operate entirely on abstract models that need to accurately reflect
+the ultimate implementation of the software. For these reasons, we
+argue the importance of providing formal semantics for a distributed
+software commissioning tool, as they provide better precision than
+natural language descriptions. Indeed, conceiving the formal semantics
+along with the model, as opposed to providing semantics for an
+existing solution, allows for better integration.
 
 %%% the three important metrics of this contribution
 Ultimately, we pay particular attention to three factors to
