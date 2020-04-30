@@ -242,13 +242,13 @@ one token is placed on $\pi$, as illustrated in Figure~\ref{fig:r3}.
 \begin{minipage}[h]{0.45\columnwidth}%
   \centering
   \includegraphics[width=0.65\columnwidth]{./images/inputdocks_to_place.pdf}
-  \captionof{figure}{\label{fig:r3}Illustration of the rule of $\reachplace$.}
+  \captionof{figure}{\label{fig:r3}Rule $\reachplace$.}
 \end{minipage}
 \hfill
 \begin{minipage}[h]{0.45\columnwidth}%
   \centering
   \includegraphics[width=0.65\columnwidth]{./images/place_to_outputdocks.pdf}
-  \captionof{figure}{\label{fig:r4}Illustration of the rule $\leaveplace$.}
+  \captionof{figure}{\label{fig:r4}Rule $\leaveplace$.}
 \end{minipage}
 \end{figure}
 
@@ -273,7 +273,7 @@ action $\alpha$ is executed, as illustrated in Figure~\ref{fig:r1}
 \begin{center}
   \includegraphics[width=0.55\columnwidth]{./images/firing.pdf}
 \end{center}
-\caption{Illustration of the rule $\firetrans$.}
+\caption{Rule $\firetrans$.}
 \label{fig:r1}
 \end{figure}
 
@@ -296,15 +296,11 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
 \begin{center}
   \includegraphics[width=0.55\columnwidth]{./images/ending_transition.pdf}
 \end{center}
-\caption{Illustration of the rule $\leavetrans$.}
+\caption{Rule $\leavetrans$.}
 \label{fig:r2}
 \end{figure}
   
 }
-
-%% \MC{Pour moi il faut séparer la fin des actions et des transitions et
-%% ajouter une règle ``l'action se termine'' avec précondition ``l'action est en cours''}
-%% SR : fait
 
 %------------
 \begin{figure*}[tp]
@@ -326,14 +322,13 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
   \begin{prooftree}
     \AxiomC{$\theta = \left(s,\alpha,d\right) \in \Theta^*$}
     \AxiomC{$s \in \mk$}
-    \AxiomC{$\forall p. \; (p,\theta) \in B_{S_u}^* \implies provided(p)$}
+    \AxiomC{$\forall p. \; (p,\theta) \in B_{S_u}^* \implies \provided(p)$}
     \RightLabel{$\firetrans$}
     \TrinaryInfC{$\langle \mk, \reached, \exec \rangle \semstep \langle (\mk \setminus \{ s \}) \cup \{\theta\}, \reached, \exec \cup \{ \alpha \}\rangle$}
   \end{prooftree}
   %
-  where
   \[
-  provided(p) \equiv \exists u. \; (u,p) \in L \land (\forall G. \; (p, G) \in B_{S_p}^* \implies G \cap \reached \neq \emptyset)
+  \text{where } \provided(p) \equiv \exists u. \; (u,p) \in L \land (\forall G. \; (p, G) \in B_{S_p}^* \implies G \cap \reached \neq \emptyset)
   \]
   %% \begin{align*}
   %%   \text{where: }provided(p) \equiv &\, \exists u \, (u,p) \in L \land enabled_c\left((u,p)\right) \\
@@ -406,7 +401,7 @@ $d$. Figure~\ref{fig:r2} illustrates this rule.
     than once. By case analysis over the relation 
     
     \noindent $\langle \mk,\reached, \exec \rangle_i \semstep \langle \mk, \reached, \exec
-    \rangle_{i+1}$, we can check that $\reached^+$ is non-empty.
+    \rangle_{i+1}$, we can check that $\reached^+$ is non-empty:
     \begin{itemize}
     \item for the case of the rule $\leaveplace$, a token is removed
       from the place $\pi$, therefore a token must be placed back on
