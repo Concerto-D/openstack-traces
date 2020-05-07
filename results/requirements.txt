@@ -1,0 +1,5 @@
+pyyaml
+click
+matplotlib
+git+https://gitlab.inria.fr/VeRDi-project/concerto@old_madeus#egg=Concerto
+execo

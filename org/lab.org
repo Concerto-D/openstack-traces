@@ -32,15 +32,32 @@ This lab will allow the reproduction of the various graphs of the paper and the 
 * Reproducibility
 ** Openstack Deployment Graphs
 *** Requirements
-Python 3.7+ and git are required.
+Python 3.7+, and git are required.
 First, you need to recover the code on the [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][Gitlab]] repository.
 #+BEGIN_SRC sh
 git clone https://gitlab.inria.fr/VeRDi-project/madeus-journal.git
 #+END_SRC
-The results directories are also on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][repository]] in the =results= directory. There are two Open Stack deployment result directories,
-=ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments. The benchmark results are found in the =ssh_bench= directory.
+The results directories are also on the paper [[https://gitlab.inria.fr/VeRDi-project/madeus-journal][repository]] in the =results= directory. 
+There are two Open Stack deployment result directories,
+=ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments. 
+The benchmark results are found in the =ssh_bench= directory.
+All commands in this sections are launched from the =results= directory of the repository.
+
+*** Starting a virtual environment and getting the requirements
+It is recommended to run experiments in a virtual environment to keep your python installation clean.
+If virtualenv is not installed on your machine, simply use to get it:
+#+BEGIN_SRC sh
+sudo apt install python3-virtualenv
+#+END_SRC
+And then you can activate it and install the required dependencies.
+#+BEGIN_SRC sh
+virtualenv -p python3 venv
+source venv/bin/activate
+pip install -r results/requirements.txt
+#+END_SRC
 
 *** Plotting the Gantt charts
+In the =results= directory, you can launch the following command.
 #+BEGIN_SRC sh
 python graph_os_results.py creategantt -f [filename] -n [name] -nb [number]
 #+END_SRC
