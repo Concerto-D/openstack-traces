@@ -143,7 +143,8 @@ taking the kolla-ansible data and processing it to find which processes took mor
 which is a good sign that there has been a kolla-ansible deployment during this.
 It saves up all the build_uuids in the results directory.
 *** Plot the curve
-To plot the curve, we used [[https://matplotlib.org/][matplotlib]] and they can be reproduced by launching the *treat_results.py* script
+To plot the curve, we used [[https://matplotlib.org/][matplotlib]] and they can be reproduced by launching the *treat_results.py* script.
+The script reproduces the results for the logs from 2020-02-19 to 2020-02-27.
 #+BEGIN_SRC sh
 python3 treat_results.py
 #+END_SRC
