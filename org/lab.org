@@ -41,9 +41,10 @@ The results directories are also on the paper [[https://gitlab.inria.fr/VeRDi-pr
 There are two Open Stack deployment result directories,
 =ecotype= and =nova=, named from the Grid'5000 clusters we used to run the experiments. 
 The benchmark results are found in the =ssh_bench= directory.
-All commands in this sections are launched from the =results= directory of the repository.
+All commands in this section are launched from the =results= directory of the repository.
 
 *** Starting a virtual environment and getting the requirements
+#+NAME: requirement_sec
 It is recommended to run experiments in a virtual environment to keep your python installation clean.
 If virtualenv is not installed on your machine, simply use to get it:
 #+BEGIN_SRC sh
@@ -57,9 +58,9 @@ pip install -r results/requirements.txt
 #+END_SRC
 
 *** Plotting the Gantt charts
-In the =results= directory, you can launch the following command.
+In the =results= directory, you can launch the following command to create a gantt graph for the results from the ecotype cluster experiments.
 #+BEGIN_SRC sh
-python graph_os_results.py creategantt -f [filename] -n [name] -nb [number]
+python graph_os_results.py creategantt -f ecotype/results/ -n results_remote_dag_nt4 -nb 10
 #+END_SRC
 This command takes in entry the resulting json file *[filename]* of the times resulting from one of our experiments and allows to draw the gantt curves
 corresponding to it. It outputs a svg file as a result, with the *[name]* given in input and the *[number]* of files corresponding to the name (number of experiments).
@@ -70,10 +71,11 @@ The gantt graph displays the deployment of the various transitions, with all tra
 For sequential assemblies, the transitions are ordered by starting order.
 *** Plotting the performance comparison charts
 #+BEGIN_SRC sh
-python graph_os_results.py performcomparison -rp [result_path] -f [filename]
+python graph_os_results.py performcomparison -rp nova/results -f use_case_nova_perf.svg
 #+END_SRC
 This command takes in entry the path as *[result_path]* where the resulting json file from the experiments are and draw a performance comparison
-between the different assemblies and the remote, local and cached version of their deployment. It outputs an svg file *[filename]* of this chart.
+between the different assemblies and the remote, local and cached version of their deployment.
+It outputs an svg file *[filename]* of this chart.
 #+CAPTION: Performance comparison example
 [[./img/perform_ecotype.png]]
 *** Recreating tables from the paper
@@ -89,7 +91,7 @@ This will provide the values that can be seen in table 8 in the paper as an outp
 
 ***** Commissioning times over various assemblies
 #+BEGIN_SRC sh
- python graph_os_results.py analyze -rp [result_path] -tn [table_name]
+ python graph_os_results.py analyze -rp nova/results -tn table_result_nova.tex
 #+END_SRC
 
 This command reproduces the values in table 6 and 7 with the commissionning times for each experiment. 
@@ -101,7 +103,9 @@ The inputs required are the experiments *result_path* and a filename *table_name
 ** Benchmark Graphs
 *** Requirements
 For the benchmark result plotting we use also Python 3.7.
-The requirements are the [[https://click.palletsprojects.com/en/7.x/][click]] and [[https://matplotlib.org][matlplotlib]] library.
+The requirements are the [[https://click.palletsprojects.com/en/7.x/][click]] and [[https://matplotlib.org][matlplotlib]] library, you can use the same virtual environement 
+than in the previous subsection at [[requirement_sec]].
+All commands in this section are launched from the =results/ssh_bench= directory of the repository.
 *** Plotting the curves
 To plot our graphs, we used the resulting files that are in the =results/ssh_bench/raw= directory.
 
@@ -110,9 +114,10 @@ They are sorted by type of experiment, parallel or sequential.
 To plot the graphs, we use the =graph_results_pyplot.py= file is in the =results/ssh_bench= directory of the journal's repository. 
 The command =analyze= is used to create the graphs, and the options to give are the directory containing the dryrun results
 =-drp [directory]=, and the type of experiment, whether sequential or parallel with =-exp [parallel|sequential]=
+and the =-fn= for the resulting filename
 
 #+BEGIN_SRC sh
-python3 graph_results_pyplot.py analyze -drp raw/seq_no_ssh -exp sequential
+python3 graph_results_pyplot.py analyze -drp raw/final_sequential_40_comp -exp sequential -fn result_file
 #+END_SRC
 
 #+NAME: example of a plotted curve from our script
@@ -121,8 +126,10 @@ python3 graph_results_pyplot.py analyze -drp raw/seq_no_ssh -exp sequential
 ** Openstack CI logs
 *** Requirements
 The script uses Python 3.7 and has its requirements listed in the requirements.txt file. 
-Librairy used is [[https://2.python-requests.org/en/master/][requests]].
-It can be installed by using pip:
+We notably use the Library [[https://2.python-requests.org/en/master/][requests]] for our http requests.
+You can follow the same procedure as in the [[requirement_sec][Openstack Deployment]] section to use a virtual environment.
+All commands are launched from the *openstack_ci* directory of the repository.
+The requirements can be installed by using pip:
 #+BEGIN_SRC sh
 pip3 install -r requirements.txt
 #+END_SRC
@@ -131,7 +138,7 @@ To get the log simply go in the openstack_ci repository and launch the *openstac
 #+BEGIN_SRC sh
 python3 openstack_ci_info.py
 #+END_SRC
-This will generate 7 subprocesses to recover all 7 days of logs archived on logstash.openstack.org, 
+This will generate 6 subprocesses to recover all 6 days of logs archived on logstash.openstack.org, 
 taking the kolla-ansible data and processing it to find which processes took more than 15 minutes to finish, 
 which is a good sign that there has been a kolla-ansible deployment during this.
 It saves up all the build_uuids in the results directory.

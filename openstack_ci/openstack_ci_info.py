@@ -75,11 +75,15 @@ def get_log_index_uris():
         month = date_to_add.month
         day = date_to_add.day
         year = date_to_add.year
+        print(date_to_add)
+        print(month)
+        print(day)
+        print(year)
         uri = "{base}{year}.{month}.{day}/_search?q=project:{project}".format(
             base=logstash_index_base,
             year=year,
             month=f"{month:02d}",
-            day=day,
+            day=f"{day:02d}",
             project=project)
         logstash_indexes.append(uri)
     return logstash_indexes
