@@ -9,8 +9,8 @@
 % - performance model
 
 
-\HC[Helene]{encore trop verbeux, si vous voyez des simplifications possibles merci 
-de l'annoter}
+%\HC[Helene]{encore trop verbeux, si vous voyez des simplifications possibles merci 
+%de l'annoter}
 
 In this section we give an overview of existing solutions for the
 automation of distributed software commissioning. Then, we select the
@@ -198,9 +198,9 @@ consider four metrics:
 \end{itemize}
 The level of parallelism offered by a given tool is correlated to the
 type of dependencies that can be declared. For instance, without any
-dependency mechanism, only the SIMH level is achievable, while
-\emph{inter-comp} or \emph{inter-comp-tasks} dependencies allow more
-parallelism between components of different types.
+dependency mechanism, only the SIMH level is achievable.%, while
+%\emph{inter-comp} or \emph{inter-comp-tasks} dependencies allow more
+%parallelism between components of different types.
 
 Figure~\ref{fig:parlevels} illustrates the four parallelism levels
 listed above through an example with three components or modules:
@@ -269,12 +269,12 @@ represented by the height of the figures.
   \end{center}
 \end{figure*}
 
-\SR{Give a reason to exclude declarative approaches, \eg worse/hard to measure performance}
+%\SR{Give a reason to exclude declarative approaches, \eg worse/hard to measure performance}
 
 Metrics for SE and parallelism are suitable for procedural approaches,
 as they consider \emph{tasks} and not \emph{resources}. This excludes
 \puppet or \salt, for instance. While declarative approaches have great
-advantages, they are not considered in this paper.
+advantages, they are not considered in this paper. Indeed we put a strong emphasis on parallelism in this paper. This requires a fine-grain definition of deployments, at the level of tasks. Declarative approaches on the contrary raise the abstraction level at the price of flexibility.
 
 \paragraph{Formalism}
 The metric considered here is the existence of a formal model for each
@@ -403,7 +403,7 @@ provide, or conflict ports to declare dependencies between the
 commissioning steps of different components. Hence, ports enable
 correct coordination of the global deployment process. The deployment
 procedure should then be written by the user or by an external
-tool~\cite{dicosmo:hal-01233489} as a sequence of actions affecting
+tool~\cite{dicosmo:hal-01233489} as a sequence of actions
 leading to a different state. As a result, the internal of each
 component must be known. For this reason, \emph{separation of
   concerns} support is only partial. Furthermore as the deployment
@@ -435,7 +435,9 @@ the exception of the formal aspect.
   \small
   \input{tables/tab_related_work.tex}
   \caption{Comparison of commissioning solutions based on aspects
-  regarding parallelism (performance) and software engineering (SE).}
+  regarding software engineering (SE), parallelism and formalism. A supported metric is denoted
+  \checkmark and counts for 3 points in the score; a partially
+  supported metric is denoted (\checkmark) and counts for 2 points; a manually supported metric is denoted \emph{M} and counts for 1 point; and finally a non-supported metric is denoted -.}
   \label{tab:comparison}
 \end{table*}
 
@@ -512,7 +514,7 @@ structure the code of software commissioning and enhance its
 separation of concerns, while introducing an additional way to model
 the internal commissioning behavior of each component through
 tasks. It seems that \aeolus offers a good trade-off between
-flexibility and automation. However, it handles only provides partial
+flexibility and automation. However, it handles only partial
 separation of concerns.
 
 Furthermore, no existing solution offers full support for
