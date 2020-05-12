@@ -208,9 +208,9 @@ git clone https://gitlab.inria.fr/VeRDi-project/madeus-openstack-benchmarks.git 
 #+END_SRC
 Because we use a submodule for the Madeus assemblies regarding openstack, you need to recover that code as well:
 #+BEGIN_SRC sh
-cd madeus-openstack && git submodule update --init
+cd madeus_openstack && git submodule update --init
 #+END_SRC
-This will clone the proper assembly code in the madeus-openstack directory. The original repository is visible at the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack][Madeus-openstack repository]].
+This will clone the proper assembly code in the madeus_openstack directory. The original repository is visible at the [[https://gitlab.inria.fr/VeRDi-project/madeus-openstack][Madeus-openstack repository]].
 
 *** Starting a virtual environment
 It is recommended to run experiments in a virtual environment to keep your python installation clean.
