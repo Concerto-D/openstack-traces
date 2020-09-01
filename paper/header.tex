@@ -115,11 +115,11 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.95}
 \DeclareCaptionFont{white}{\color{white}}
 \DeclareCaptionFont{gray}{\color{gray}}
-\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\linewidth}{#1#2#3}}}
-\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
+\DeclareCaptionFormat{listing}{\colorbox{backcolour}{\parbox{\linewidth}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing}%,labelfont=white,textfont=white}
 \lstset{language=Python,
         numbers=left,
-        backgroundcolor=\color{backcolour},
+        backgroundcolor=\color{white},
         numbersep=5pt,
         keywordstyle=\color{keywords},
         commentstyle=\color{comments},

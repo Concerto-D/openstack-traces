@@ -203,11 +203,9 @@ dependency mechanism, only the SIMH level is achievable.%, while
 %parallelism between components of different types.
 
 Figure~\ref{fig:parlevels} illustrates the four parallelism levels
-listed above through an example with three components or modules:
-component $C$ is deployed on two hosts while components $A$ and $B$
-are deployed on a single host. Moreover, components $A$ and $B$ need
-to be coordinated while component $C$ is independent from both $A$ and
-$B$. Sub-figure~\ref{fig:simh} illustrates the \emph{SIMH} level,
+listed above through an example with three components or modules deployed on four nodes:
+component $C$ is deployed on two different hosts (namely \emph{Node 1} and \emph{Node 2}) while components $A$ and $B$ are deployed on a single host (namely \emph{Node X} and \emph{Node Y}, where $X$ and $Y$ can take any value and could even be equal). In this example, components $A$ and $B$ need
+to be coordinated. This is represented by the dashed arrow between $A$ and $B$. Component $C$ is independent from both $A$ and $B$. The deployment procedure of each component is made of a sequence of tasks depicted as plain arrows, each one attached to a given label to identify it from one figure to another. Sub-figure~\ref{fig:simh} illustrates the \emph{SIMH} level,
 where parallelism can be introduced for component
 $C$. Sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp}
 parallelism level: as $C$ is independent from $B$, both commissionings
@@ -264,7 +262,7 @@ represented by the height of the figures.
       } \label{fig:intra-comp-tasks}
     }
     \caption{Examples to illustrate the four parallelism levels
-      considered in this paper}
+      considered in this paper. Plain arrows represent tasks to perform within deployments, their length corresponding to their duration. Dashed arrows represents dependencies or coordination between components or modules. The finer the dependencies are specified, the higher the level of parallelism is, and the shorter is the deployment time.}
     \label{fig:parlevels}
   \end{center}
 \end{figure*}

@@ -75,7 +75,7 @@ commissioning procedures for complex distributed software systems.
     docks represented by small squares. Transitions are represented
     by arrows between the docks, and service ports by small black circles and
     semi-circles, data ports by outgoing or incoming arrows from
-    components. Two initial red tokens are placed in each initial
+    components. Bindings of coordination ports are represented by dashed lines between the port and the places and transitions it is bound to. Two initial red tokens are placed in each initial
     place of components in this example.}
   \label{fig:example}
 \end{figure}
@@ -93,7 +93,7 @@ commissioning procedures for complex distributed software systems.
 	Apache uses a service and data. These instances are connected by their ports. 
 	Indeed, the Apache configuration depends on the IP address of the MariaDB 
 	component, and the testing phase for Apache, called \texttt{check}, uses the 
-	MariaDB service.
+	MariaDB service. Each coordination port is bound to internal elements. This is depicted by a dashed line between ports and places or transitions. For instance, the provide port \texttt{@IP mdb} is bound to the second place of the MariaDB component, and the first use port of the component Apache is bound to the transition \texttt{conf}.
 } %\CP{Ne faut il pas dire quelque part que les ports ne passent que les info de synchro et pas les données/services eux-même ? Par exemple est-ce \mad qui transfére les données comme l'@IP mdb?}
 
 \mad involves two kinds of actors. First is the \emph{developer} of a
