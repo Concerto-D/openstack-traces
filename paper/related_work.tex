@@ -203,8 +203,8 @@ dependency mechanism, only the SIMH level is achievable.%, while
 %parallelism between components of different types.
 
 \revised{Figure~\ref{fig:parlevels} illustrates the four parallelism levels
-listed above through an example with three components or modules deployed on four nodes:
-component $C$ is deployed on two different hosts (namely \emph{Node 1} and \emph{Node 2}) while components $A$ and $B$ are deployed on a single host (namely \emph{Node X} and \emph{Node Y}, where $X$ and $Y$ can take any value and could even be equal). In this example, components $A$ and $B$ need
+listed above through an example with three components or modules deployed on four nodes (or hosts):
+component $C$ is deployed on two different nodes (namely \emph{Node 1} and \emph{Node 2}) while components $A$ and $B$ are deployed on a single node (namely \emph{Node X} and \emph{Node Y}, where $X$ and $Y$ can take any value and could even be equal). In this example, components $A$ and $B$ need
 to be coordinated. This is represented by the dashed arrow between $A$ and $B$. Component $C$ is independent from both $A$ and $B$. The deployment procedure of each component is a sequence of tasks depicted as plain arrows, each identified by a label. Sub-figure~\ref{fig:simh} illustrates the \emph{SIMH} level,
 where parallelism can be introduced for component
 $C$.} Sub-figure~\ref{fig:inter-comp} illustrates the \emph{inter-comp}
@@ -262,7 +262,7 @@ represented by the height of the figures.
       } \label{fig:intra-comp-tasks}
     }
     \caption{Examples to illustrate the four parallelism levels
-      considered in this paper. \revised{Plain arrows represent tasks to perform during deployments, their length corresponding to their duration. Dashed arrows represent dependencies or coordination between components or modules. Finer specification of dependencies leads to a higher level of parallelism, and consequently to a shorter deployment time.}}
+      considered in this paper. \revised{Plain arrows represent tasks to perform during deployment, their length corresponding to their duration. Dashed arrows represent dependencies or coordination between components or modules. Finer specification of dependencies leads to a higher level of parallelism, and consequently to a shorter deployment time.}}
     \label{fig:parlevels}
   \end{center}
 \end{figure*}
@@ -446,18 +446,17 @@ partially addresses the commissioning of its
 components. \tosca~\cite{tosca:web,brogi2018} is a standardization
 effort from OASIS to describe cloud applications, their components and
 their deployment artifacts, using standard languages (\ie XML,
-YAML). \tosca has multiple implementations, such as OpenTOSCA~\cite{OpenTOSCA}
+YAML). \tosca has multiple implementations, such as OpenTOSCA~\cite{Binz2013}
 or Cloudify. A \tosca description (or template) corresponds to a graph where
 nodes represent \tosca resources (\eg software components, virtual
 machines, physical servers), and where edges represent the relations
 between these nodes. Artifacts (of any type: scripts, executable etc.)
 can be added to \tosca descriptions in a CSAR (Cloud Service ARchive)
 to detail commissioning steps. Those commissioning steps can thus be
-customized by the developer, but there is no model, nor any guarantees
-associated with them. Therefore, the feature associated with
+customized by the developer. Therefore, the feature associated with
 the \emph{tasks} and \emph{intra-comp-tasks} metrics can be handled
 manually by the user. \tosca also provides the notion of workflow, which could be assimilated to a customized lifecycle made of a sequence of operations that are usually hidden within artifacts of nodes.
-This allows to define more precise life-cycles within \tosca, but require a hand-coded specification of workflows of operations by the user. At the best of our knowledge \tosca is able to handle \emph{SIMH}, \emph{inter-comp}, and partially \emph{inter-comp-tasks} when manually handling workflows. Finally, the \tosca standard~\cite{7561358} is formally defined to an extent.
+This allows to define more precise life-cycles within \tosca, but require a hand-coded specification of workflows of operations by the user. To the best of our knowledge \tosca is able to handle \emph{SIMH}, \emph{inter-comp}, and partially \emph{inter-comp-tasks} when manually handling workflows. Finally, the \tosca standard~\cite{7561358} is formally defined to an extent.
 }
 
 % As there is no way to declare dependencies
@@ -472,7 +471,7 @@ This allows to define more precise life-cycles within \tosca, but require a hand
 \paragraph{Kubernetes}
 \revised{Initiated by Google, \kubernetes (K8S) is a popular framework to
 commission distributed software in the form of microservices that are
-packaged as a hierarchy of Docker containers and \emph{pods}. A
+packaged as a hierarchy of Docker containers managed by \emph{pods}. A
 software component in \kubernetes is defined as a Docker
 container. These components have no ports to manage coordination, and
 their internals are fixed, since containers can only be started and
