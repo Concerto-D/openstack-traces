@@ -25,14 +25,28 @@ shown that
 projection on the traces of the OpenStack CI could save 34 hours of computation a 
 day.
 
-As future work, first, \mad is currently not equipped with mechanisms to handle faults during the commissioning procedure. Notably, the rule $\terminaction$
-does not consider the possibility of a failure during the action
-$\alpha \in \exec$. We would like to equip \mad with if/else statements or switches as well as rollback mechanisms. Moreover, we would like to provide formal guarantees in the presence of faults, for instance by using game theory or stochastic formal methods.
+\revised{As future work, firstly, we wish to equip \mad with mechanisms to
+handle faults during the commissioning procedure. Currently, the rule
+$\terminaction$ does not consider the possibility of a failure during
+the action $\alpha \in \exec$. We would like to introduce if/else
+statements or switches as well as rollback mechanisms. Moreover, we
+would like to provide formal guarantees in the presence of faults, for
+instance by using game theory or stochastic formal methods.}
 
-Secondly,\mad is currently not equipped with a resource model. Indeed, \mad is simply a coordination model that aims to stay light and simple. However, resource model is of high importance when handling deployments to know where (on which machine/node) to perform commissioning actions. For this reason we plan to integrate the \mad execution model to existing tools, such as \ansible for instance, to inherit their resource model as well as their low-level features (ssh connections etc.).
+\revised{Secondly, we want to develop a resource model for
+  \mad. Although \mad is a light and simple coordination model, a
+  resource model is needed to decide on which machine or node
+  commissioning actions should be executed. For this reason we plan to
+  integrate the \mad execution model to existing tools, such as
+  \ansible, to inherit their resource model as well as their low-level
+  features (SSH connections, etc.).}
 
-Thirdly, we wish to study semi-automatic (\eg using a light DSL) or possibly automatic inference of dependencies from \ansible playbooks, so that \mad assemblies may be entirely or partially generated for the user. Indeed, the price to performance is a greater complexity in the design of a deployment in the current version of \mad.
+\revised{Thirdly, we wish to study semi-automatic (\eg using a light
+  DSL) or possibly automatic inference of dependencies from \ansible
+  playbooks, so that \mad assemblies may be entirely or partially
+  generated for the user. This would alleviate the complexity of
+  designing efficient deployments with \mad.}
 
-Finally, we have already generalized \mad to perform dynamic reconfiguration of distributed software~\cite{ccgridmaverick}. Indeed, once commissioned, distributed software may need to adapt dynamically in order to respond to faults, to optimize some metrics (\eg energy, efficiency), or to adapt the services to dynamic requirements (\eg smart cities). When these reconfiguration decisions are taken, especially for critical systems, the duration of the reconfiguration should be taken into account. Thus, generalizing \mad and the performance prediction model of Section~\ref{sec:perf_model} to dynamic reconfiguration is an important contribution. One can note that handling the redeployment of a part of an assembly also falls into the scope of reconfiguration in our work and is handled in another work~\cite{ccgridmaverick}.
+\revised{Finally, we have already generalized \mad to perform dynamic reconfiguration of distributed software~\cite{ccgridmaverick}. Indeed, once commissioned, distributed software may need to adapt dynamically in order to respond to faults, to optimize some metrics (\eg energy, efficiency), or to adapt services to dynamic requirements (\eg smart cities). When these reconfiguration decisions are taken, especially for critical systems, the duration of the reconfiguration should be taken into account. Thus, generalizing \mad and the performance prediction model of Section~\ref{sec:perf_model} to dynamic reconfiguration is an important contribution. One can note that handling the redeployment of a part of an assembly also falls into the scope of reconfiguration in our work and is handled in another work~\cite{ccgridmaverick}.}
 
   
