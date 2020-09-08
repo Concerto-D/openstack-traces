@@ -441,28 +441,31 @@ the exception of the formal aspect.
 
 \paragraph{TOSCA}
 The \emph{Topology and Orchestration Specification for Cloud
-Applications} (TOSCA) is another component-oriented model that
+Applications} (\tosca) is another component-oriented model that
 partially addresses the commissioning of its
-components. TOSCA~\cite{tosca:web,brogi2018} is a standardization
+components. \tosca~\cite{tosca:web,brogi2018} is a standardization
 effort from OASIS to describe cloud applications, their components and
 their deployment artifacts, using standard languages (\ie XML,
-YAML). A TOSCA description (or template) corresponds to a graph where
-nodes represent TOSCA resources (\eg software components, virtual
+YAML). \tosca has multiple implementations, such as OpenTOSCA~\cite{OpenTOSCA}
+or Cloudify. A \tosca description (or template) corresponds to a graph where
+nodes represent \tosca resources (\eg software components, virtual
 machines, physical servers), and where edges represent the relations
 between these nodes. Artifacts (of any type: scripts, executable etc.)
-can be added to TOSCA descriptions in a CSAR (Cloud Service ARchive)
+can be added to \tosca descriptions in a CSAR (Cloud Service ARchive)
 to detail commissioning steps. Those commissioning steps can thus be
 customized by the developer, but there is no model, nor any guarantees
 associated with them. Therefore, the feature associated with
 the \emph{tasks} and \emph{intra-comp-tasks} metrics can be handled
-manually by the user. As there is no way to declare dependencies
-between artifacts of components, \emph{inter-task} parallelism is not
-supported, however, relations between components make both \emph{SIMH}
-and \emph{inter-comp} parallelism theoretically available
-in \tosca. No information has been found on the complete support of
-these features in \tosca
-implementations~\cite{cloudify:web,opentosca:web}. Finally, the \tosca
-standard~\cite{7561358} is formally defined to an extent.
+manually by the user. \tosca also provides the notion of workflow, which could be assimilated to a customized lifecycle made of a sequence of operations that are usually hidden within artifacts of nodes.
+This allows to define more precise life-cycles within \tosca, but require a hand-coded specification of workflows of operations by the user. At the best of our knowledge \tosca is able to handle \emph{SIMH}, \emph{inter-comp}, and partially \emph{inter-comp-tasks} when manually handling workflows. Finally, the \tosca standard~\cite{7561358} is formally defined to an extent.
+
+% As there is no way to declare dependencies
+% between artifacts of components, \emph{inter-task} parallelism is not
+% supported, however, relations between components make both \emph{SIMH}
+% and \emph{inter-comp} parallelism theoretically available
+% in \tosca. No information has been found on the complete support of
+% these features in \tosca
+% implementations~\cite{cloudify:web,opentosca:web}. 
 
 % Kubernetes
 \paragraph{Kubernetes}
@@ -474,12 +477,15 @@ container. These components have no ports to manage coordination, and
 their internals are fixed, since containers can only be started and
 stopped. As a consequence, the commissioning process is
 error-prone. For instance, a web server can be started before the
-required database and thus fail. For this reason, \emph{inter-comp}
-parellelism is only partially supported. \kubernetes requires
+required database and thus fail. 
+%For this reason, \emph{inter-comp}
+%parellelism is only partially supported. 
+\kubernetes requires
 container to be started in any order, therefore any container must
 embed a waiting procedure w.r.t.\ its dependencies. If the deployment of
 a container fails, \kubernetes automatically retries. For stateless
 microservice architectures, this deployment strategy is popular.
+\kubernetes has been extended with workflow engines though. \argo~\footnote{https://argoproj.github.io/argo/examples/} is an open source container-native workflow engine for orchestrating parallel jobs on \kubernetes. If \argo is initially thought to execute scientific workflows it can also be used to add dependencies between containers, unlike the basic usage that launches all containers simultaneously and retries starting operations failures. However, one task in \argo models the starting of one container, and the lifecycle of a container is still limited to either started and stopped. As a result, when two containers have a dependency, the first must stop before the second can start. For this reason we consider that \kubernetes offers the \emph{inter-comp} parallelism level even if \argo is needed to fully support this feature.
 
 %----------------------------
 \subsection{Discussions}
