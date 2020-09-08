@@ -440,7 +440,7 @@ the exception of the formal aspect.
 \end{table*}
 
 \paragraph{TOSCA}
-The \emph{Topology and Orchestration Specification for Cloud
+\revised{The \emph{Topology and Orchestration Specification for Cloud
 Applications} (\tosca) is another component-oriented model that
 partially addresses the commissioning of its
 components. \tosca~\cite{tosca:web,brogi2018} is a standardization
@@ -458,6 +458,7 @@ associated with them. Therefore, the feature associated with
 the \emph{tasks} and \emph{intra-comp-tasks} metrics can be handled
 manually by the user. \tosca also provides the notion of workflow, which could be assimilated to a customized lifecycle made of a sequence of operations that are usually hidden within artifacts of nodes.
 This allows to define more precise life-cycles within \tosca, but require a hand-coded specification of workflows of operations by the user. At the best of our knowledge \tosca is able to handle \emph{SIMH}, \emph{inter-comp}, and partially \emph{inter-comp-tasks} when manually handling workflows. Finally, the \tosca standard~\cite{7561358} is formally defined to an extent.
+}
 
 % As there is no way to declare dependencies
 % between artifacts of components, \emph{inter-task} parallelism is not
@@ -469,7 +470,7 @@ This allows to define more precise life-cycles within \tosca, but require a hand
 
 % Kubernetes
 \paragraph{Kubernetes}
-Initiated by Google, \kubernetes (K8S) is a popular framework to
+\revised{Initiated by Google, \kubernetes (K8S) is a popular framework to
 commission distributed software in the form of microservices that are
 packaged as a hierarchy of Docker containers and \emph{pods}. A
 software component in \kubernetes is defined as a Docker
@@ -486,6 +487,7 @@ embed a waiting procedure w.r.t.\ its dependencies. If the deployment of
 a container fails, \kubernetes automatically retries. For stateless
 microservice architectures, this deployment strategy is popular.
 \kubernetes has been extended with workflow engines though. \argo~\footnote{https://argoproj.github.io/argo/examples/} is an open source container-native workflow engine for orchestrating parallel jobs on \kubernetes. If \argo is initially thought to execute scientific workflows it can also be used to add dependencies between containers, unlike the basic usage that launches all containers simultaneously and retries starting operations failures. However, one task in \argo models the starting of one container, and the lifecycle of a container is still limited to either started and stopped. As a result, when two containers have a dependency, the first must stop before the second can start. For this reason we consider that \kubernetes offers the \emph{inter-comp} parallelism level even if \argo is needed to fully support this feature.
+}
 
 %----------------------------
 \subsection{Discussions}
