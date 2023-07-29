@@ -1,7 +1,0 @@
-cachedir
-exp
-exp_ssh
-exp_no_ssh
-results*.gpl
-results*.json
-times.json
